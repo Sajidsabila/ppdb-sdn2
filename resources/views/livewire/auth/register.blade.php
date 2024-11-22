@@ -8,6 +8,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif(session('success'))
+        <div class="alert alert-success alert-dismissible fade show fw-bold text" role="alert">
+            {{ session('success') }} <a href="{{ route('login') }}" class="text-decoration-none text">login</a> <button
+                type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
     <form wire:submit.prevent="register">
         @csrf
@@ -48,7 +55,7 @@
             <button type="submit" class="btn btn-primary">Register</button>
         </div>
     </form>
-    <div class="text-center mt-3">
+    {{-- <div class="text-center mt-3">
         <p class="text">Or sign up with</p>
         <div class="social-buttons d-grid gap-2">
             <button class="btn btn-outline-primary">
@@ -61,8 +68,9 @@
                 <i class="bi bi-github"></i> GitHub
             </button>
         </div>
-    </div>
+    </div> --}}
     <div class="text-center mt-4">
-        <p class="text">Already have an account? <a href="" class="text-decoration-none text">Login</a></p>
+        <p class="text">Already have an account? <a href="{{ route('login') }}" wire:navigate
+                class="text-decoration-none text">Login</a></p>
     </div>
 </div>

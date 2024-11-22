@@ -53,6 +53,7 @@
          </div>
      </div>
      <div class="text-center mt-4 ">
-         <p class="text">Don't have an account? <a href="" class="text-decoration-none text">Sign Up</a></p>
+         <p class="text">Don't have an account? <a href="{{ route('register') }}" wire:navigate
+                 class="text-decoration-none text">Sign Up</a></p>
      </div>
  </div>
