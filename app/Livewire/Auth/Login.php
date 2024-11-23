@@ -28,6 +28,7 @@ class Login extends Component
         try {
             // Autentikasi pengguna
             if (Auth::attempt($credentials)) {
+                $this->session()->regenerate();
                 $user = Auth::user();
 
                 // Periksa apakah pengguna memiliki role "user"

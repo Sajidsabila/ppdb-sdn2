@@ -12,4 +12,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
     route::get('/register', Register::class)->name('register');
 });
+
+Route::get('/admin', Index::class)->name('admin');
 Route::get('/', Index::class)->name('user.dashboard');

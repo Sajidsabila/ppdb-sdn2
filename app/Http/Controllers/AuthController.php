@@ -28,11 +28,11 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 if ($user->role === 'admin' || $user->role === 'operator') {
-                    dd('berhasil login');
-                } else {
-                    Auth::logout();
-                    return back()->with('error', "Username dan Password Salah");
+                    return redirect()->route('admin');
                 }
+                Auth::logout();
+                return back()->with('error', "Username dan Password Salah");
+
             } else {
                 return back()->with('error', "Email atau Password Salah");
             }
