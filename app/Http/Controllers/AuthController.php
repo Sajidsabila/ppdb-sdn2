@@ -28,7 +28,7 @@ class AuthController extends Controller
                 $user = Auth::user();
 
                 if ($user->role === 'admin' || $user->role === 'operator') {
-                    return redirect()->route('admin');
+                    return redirect()->route('admin.home');
                 }
                 Auth::logout();
                 return back()->with('error', "Username dan Password Salah");
