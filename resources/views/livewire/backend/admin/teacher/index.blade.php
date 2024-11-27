@@ -1,7 +1,7 @@
 @include('sweetalert::alert')
 <div class="col-12">
     <div class="card">
-        <div class="card-header fw-bold bg-primary text-white">Data Galery</div>
+        <div class="card-header fw-bold bg-primary text-white">Data Guru</div>
         <div class="card-body">
             @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -16,7 +16,7 @@
             @endif
             <div class="col-12 d-flex justify-content-between">
                 <div class="flex-start">
-                    <button class="btn btn-primary" wire:click="createGallery">Tambah Data</button>
+                    <button class="btn btn-primary" wire:click="createTeacher">Tambah Data</button>
                 </div>
                 <div class="flex-end">
                     <input type="search" wire:mode.live="search" placeholder="Pencarian ..." class="form-control">
@@ -36,7 +36,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($gallery as $key => $item)
+                            @forelse ($teachers as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td> <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->name }}"
@@ -66,7 +66,7 @@
         </div>
     </div>
     @if ($isModalOpen)
-        @include('livewire.backend.admin.gallery.form')
+        @include('livewire.backend.admin.teacher.form')
     @endif
 </div>
 <script>

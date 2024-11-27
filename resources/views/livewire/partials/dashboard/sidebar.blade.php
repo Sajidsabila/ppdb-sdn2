@@ -1,4 +1,4 @@
-  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
+  <div>
       <div class="sidebar-brand">
           <a href="../index.html" class="brand-link">
               <span class="brand-text fw-light">PPDB Versi 1</span> <!--end::Brand Text--> </a> <!--end::Brand Link-->
@@ -17,9 +17,9 @@
                                       class="nav-icon bi bi-circle"></i>
                                   <p>Halaman Galleri</p>
                               </a></li>
-                          <li class="nav-item"> <a href="../index2.html" class="nav-link"> <i
+                          <li class="nav-item"> <a href="{{ route('admin.teacher') }}" class="nav-link"> <i
                                       class="nav-icon bi bi-circle"></i>
-                                  <p>Dashboard v2</p>
+                                  <p>Halaman Guru</p>
                               </a> </li>
                           <li class="nav-item"> <a href="../index3.html" class="nav-link"> <i
                                       class="nav-icon bi bi-circle"></i>
@@ -193,4 +193,4 @@
               </ul> <!--end::Sidebar Menu-->
           </nav>
       </div> <!--end::Sidebar Wrapper-->
-  </aside>
+  </div>
