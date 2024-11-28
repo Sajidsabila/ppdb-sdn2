@@ -36,16 +36,21 @@ class TeacherComponent extends Component
         $this->resetFields();
     }
 
-    public function editGallery($teacher_id)
+    public function updateTeacher($teacher_id)
     {
         $teacher = Teacher::find($teacher_id);
         if ($teacher) {
             $this->teacher_id = $teacher->id;
-            $this->foto = $teacher->foto;
+            $this->photo = $teacher->photo;
             $this->name = $teacher->name;
+            $this->position = $teacher->position;
+            $this->description = $teacher->description;
             $this->isModalOpen = true;
+        } else {
+            session()->flash('error', 'Data Teacher Tidak Ditemukan');
         }
-        session()->flash('error', 'gallery tidak diteukan');
+
+
     }
 
     public function save()
@@ -69,12 +74,12 @@ class TeacherComponent extends Component
         try {
             $teacher = Teacher::find($this->teacher_id);
 
-            if ($this->foto && $teacher && $teacher->foto) {
+            if ($this->photo && $teacher && $teacher->photo) {
                 Storage::disk('public')->delete($teacher->photo);
             }
 
-            if ($this->foto) {
-                $photoPath = $this->foto->store('teacher', 'public');
+            if ($this->photo) {
+                $photoPath = $this->photo->store('teacher', 'public');
             } else {
                 $photoPath = $teacher ? $teacher->photo : null;
             }
@@ -93,7 +98,7 @@ class TeacherComponent extends Component
             $this->isModalOpen = false;
             session()->flash('success', 'Data Berhasil Disimpan');
         } catch (\Throwable $th) {
-            session()->flash("error", "Terjadi Kesalahan: " . $th->getMessage());
+            dd("error", "Terjadi Kesalahan: " . $th->getMessage());
         }
     }
 

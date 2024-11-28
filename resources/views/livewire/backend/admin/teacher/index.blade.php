@@ -29,9 +29,11 @@
                             <tr>
                                 <th class="fw-bold">#</th>
                                 <th class="fw-bold">
-                                    Gambar Kegiatan
+                                    Foto
                                 </th>
-                                <th class="fw-bold">Keterangan / Deskripsi Kegiatan</th>
+                                <th class="fw-bold">Nama Guru</th>
+                                <th class="fw-bold">Jabatan</th>
+                                <th class="fw-bold">Keterangan</th>
                                 <th class="fw-bold">Aksi</th>
                             </tr>
                         </thead>
@@ -39,14 +41,18 @@
                             @forelse ($teachers as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td> <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->name }}"
-                                            class="img-fluid " width="200" height="200">
+                                    <td>
+                                        <img src="{{ asset('storage/' . $item->photo) }}" alt="{{ $item->name }}"
+                                            class="img-fluid" style="width: 200px; height: 200px; object-fit: cover;">
                                     </td>
+
                                     <td>{{ $item->name }}</td>
+                                    <td>{{ $item->position }}</td>
+                                    <td>{{ $item->description }}</td>
                                     <td>
                                         <div class="d-flex gap-3">
                                             <button class="btn btn-warning"
-                                                wire:click="editGallery({{ $item->id }})">Edit</button>
+                                                wire:click="updateTeacher({{ $item->id }})">Edit</button>
                                             <button type="button" class="btn btn-danger"
                                                 wire:click="deleteGallery({{ $item->id }})"
                                                 wire:confirm="deleteConfirmation()">Hapus

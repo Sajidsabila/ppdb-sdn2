@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
 use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
 use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
@@ -23,6 +24,7 @@ Route::group([
     Route::get('/', DashboardAdminComponent::class)->name('home');
     Route::get('/gallery', GalleryComponent::class)->name('gallery');
     Route::get('/teacher', TeacherComponent::class)->name('teacher');
+    Route::get('/about', AboutComponent::class)->name('about');
 
 });
 Route::group([
