@@ -10,37 +10,58 @@ class AboutComponent extends Component
 {
     use WithFileUploads;
     public $title = "Halaman About Us";
-    public $image, $description;
+    public $foto, $description;
 
     public function mount()
     {
         $about = AboutUs::first();
-        $this->image = $about->image ?? null;
+        $this->foto = $about ? asset('storage/' . $about->foto) : null;
         $this->description = $about->description ?? '';
     }
-
+    public function initializeCKEditor()
+    {
+        return 'CKEditor Initialized';
+    }
     public function save()
     {
         $this->validate([
-            'image' => 'required|mimes:jpg,png,jpeg|max:1024',
+            'foto' => 'required|mimes:jpg,png,jpeg|max:1024',
             'description' => 'required',
         ], [
             'required' => ':attribute harus diisi',
             'max' => ':attribute melebihi batas :max KB',
             'mimes' => ':attribute hanya mendukung file dengan format: :values'
         ], [
-            'image' => 'Foto',
+            'foto' => 'Foto',
             'description' => 'keterangan',
         ]);
 
         try {
             $about = AboutUs::first();
-            if ($about) {
-                dd('ada');
+            $filePath = $about ? $about->foto : null;
+            if ($this->foto) {
+                $filePath = $this->foto->store('about-us', 'public');
             }
-            dd('kosong');
+            if ($about) {
+                $about->update([
+                    'foto' => $filePath,
+                    'description' => $this->description
+                ]);
+                $this->foto = $filePath ? asset('storage/' . $filePath) : null;
+
+                return back()->with('success', "data Berhasil Diupdate");
+            } else {
+                AboutUs::create([
+                    'foto' => $filePath,
+                    'description' => $this->description
+                ]);
+
+            }
+            $this->foto = $filePath ? asset('storage/' . $filePath) : null;
+
+            return back()->with('success', "data Berhasil Diupdate");
         } catch (\Throwable $th) {
-            session()->flash('error', 'Terjadi Kesalahan   : ' . $th->getMessage());
+            return back()->with('error', 'Terjadi Kesalahan   : ' . $th->getMessage());
         }
 
     }
