@@ -9,6 +9,11 @@
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                 <!-- Menu Pengaturan Halaman -->
+                <li class="nav-item"> <a href="{{ route('admin.home') }}" wire:navigate
+                        class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-speedometer me-2"></i>
+                        <p>Dashboard</p>
+                    </a> </li>
                 <li
                     class="nav-item {{ request()->routeIs('admin.gallery', 'admin.teacher', 'admin.about') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
@@ -61,6 +66,16 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item"> <a href="{{ route('admin.user') }}" wire:navigate
+                        class="nav-link {{ request()->routeIs('admin.user') ? 'active' : '' }}"> <i
+                            class="nav-icon bi bi-person-fill me-2"></i>
+                        <p>User</p>
+                    </a> </li>
+                <li class="nav-item"> <a href="{{ route('admin.configuration') }}" wire:navigate
+                        class="nav-link {{ request()->routeIs('admin.configuration') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-gear-fill me-2"></i>
+                        <p>Configuration</p>
+                    </a> </li>
             </ul>
         </nav>
     </div>

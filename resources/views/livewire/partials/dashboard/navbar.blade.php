@@ -7,8 +7,6 @@
                 </a>
             </li>
         </ul>
-
-        <!-- User Dropdown -->
         <ul class="navbar-nav ms-auto text-end"> <!-- ms-auto untuk memindahkan ke sisi kanan -->
             <li class="nav-item dropdown">
                 <a class="nav-link d-flex align-items-center" id="dropdownUserProfile" data-bs-toggle="dropdown"
