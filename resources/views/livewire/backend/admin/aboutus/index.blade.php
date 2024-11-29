@@ -19,9 +19,9 @@
                 <!-- Gambar dan Form Unggah Gambar di sebelah kiri -->
                 <div class="col-md-6">
                     <label for="foto" class="mb-3">
-                        @if ($foto)
+                        @if ($image)
                             <div>
-                                <img src="{{ $foto instanceof \Livewire\TemporaryUploadedFile ? $foto->temporaryUrl() : $foto }}"
+                                <img src="{{ $foto instanceof \Livewire\TemporaryUploadedFile ? $foto->temporaryUrl() : $image }}"
                                     alt="Preview Foto" style="max-width: 200px;">
                             </div>
                         @endif

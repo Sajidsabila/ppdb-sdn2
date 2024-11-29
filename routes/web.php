@@ -8,6 +8,7 @@ use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
 use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
 use App\Livewire\Frontend\Dashboard\Index;
+use App\Livewire\Partials\Dashboard\Navbar;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -25,6 +26,7 @@ Route::group([
     Route::get('/gallery', GalleryComponent::class)->name('gallery');
     Route::get('/teacher', TeacherComponent::class)->name('teacher');
     Route::get('/about', AboutComponent::class)->name('about');
+    Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
 
 });
 Route::group([
