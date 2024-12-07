@@ -131,6 +131,6 @@ class TeacherComponent extends Component
     {
         $teachers = Teacher::paginate(10);
         return view('livewire.backend.admin.teacher.index', compact('teachers'))
-            ->layout('layouts.app', ['title' => $this->title]);
+            ->layout('layouts.admin', ['title' => $this->title]);
     }
 }

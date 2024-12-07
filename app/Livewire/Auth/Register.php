@@ -13,7 +13,8 @@ class Register extends Component
     public $name, $email, $password, $password_confirmation;
     public function render()
     {
-        return view('livewire.auth.register');
+        return view('livewire.auth.register')
+            ->layout('layout.app');
     }
 
     public function register()

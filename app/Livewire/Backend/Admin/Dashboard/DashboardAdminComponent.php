@@ -11,6 +11,6 @@ class DashboardAdminComponent extends Component
     {
 
         return view('livewire.backend.admin.dashboard.index')
-            ->layout('layouts.app', ['title' => $this->title]);
+            ->layout('layouts.admin', ['title' => $this->title]);
     }
 }

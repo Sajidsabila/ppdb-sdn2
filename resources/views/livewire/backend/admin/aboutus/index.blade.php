@@ -39,7 +39,7 @@
                 <div class="col-md-6">
                     <form wire:submit.prevent="save">
                         <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">Keterangan</label>
+                            <label for="description" class="form-label fw-bold">Sambutan Kepala Sekolah</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" wire:model="description"
                                 rows="4" placeholder="Masukkan deskripsi..."></textarea>
                             @error('description')

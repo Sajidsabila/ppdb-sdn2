@@ -10,7 +10,8 @@ class Login extends Component
 
     public function render()
     {
-        return view('livewire.auth.login');
+        return view('livewire.auth.login')
+            ->layout('layouts.app');
     }
 
     public function login()
@@ -20,29 +21,35 @@ class Login extends Component
             'email' => 'required|email',
             'password' => 'required'
         ], [
-            'email.required' => 'Email Tidak Boleh Kosong',
-            'password.required' => 'Password Tidak Boleh Kosong',
-            'email.email' => 'Tipe Data Harus Email'
+            'email.required' => 'Email tidak boleh kosong.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'email.email' => 'Format email tidak valid.'
         ]);
 
         try {
             // Autentikasi pengguna
             if (Auth::attempt($credentials)) {
-                $this->session()->regenerate();
+                // Regenerasi session untuk mencegah session fixation
+                session()->regenerate();
+
                 $user = Auth::user();
 
                 // Periksa apakah pengguna memiliki role "user"
                 if ($user->role === 'user') {
                     return redirect()->route('user.dashboard');
-                } else {
-                    Auth::logout();
-                    return back()->with('error', "Username dan Password Salah");
                 }
-            } else {
-                return back()->with('error', "Email atau Password Salah");
+
+                // Jika role tidak sesuai, logout pengguna
+                Auth::logout();
+                return back()->with('error', 'Anda tidak memiliki akses sebagai user.');
             }
+
+            // Jika kredensial salah
+            return back()->with('error', 'Email atau password salah.');
         } catch (\Throwable $th) {
-            return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
+            // Penanganan error tak terduga
+            return back()->with('error', 'Terjadi kesalahan sistem: ' . $th->getMessage());
         }
     }
+
 }

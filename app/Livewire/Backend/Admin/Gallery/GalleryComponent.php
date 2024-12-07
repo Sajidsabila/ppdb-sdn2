@@ -120,7 +120,7 @@ class GalleryComponent extends Component
 
         $gallery = Gallery::paginate(10);
         return view('livewire.backend.admin.gallery.index', compact('gallery'))
-            ->layout('layouts.app', ['title' => $this->title]);
+            ->layout('layouts.admin', ['title' => $this->title]);
         ;
     }
 

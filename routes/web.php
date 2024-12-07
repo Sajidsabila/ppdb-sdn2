@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Livewire\Auth\AuthAdmin;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
@@ -15,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
-    Route::get('/admin/auth', [AuthController::class, 'index'])->name('admin.login');
+    Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
     route::get('/register', Register::class)->name('register');
+    // Route::get('/auth-admin', AuthAdmin::class)->name('auth-admin');
+
 });
 Route::group([
     'middleware' => ['auth', 'role:admin'],
@@ -33,9 +36,9 @@ Route::group([
     Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
 
 });
-Route::group([
-    'middleware' => ['guest'],
-    ['auth', 'role:user'],
-], function () {
-    Route::get('/', Index::class)->name('user.dashboard');
-});
+// Route::group([
+//     'middleware' => ['guest'],
+//     ['auth', 'role:user'],
+// ], function () {
+Route::get('/', Index::class)->name('user.dashboard');
+// });

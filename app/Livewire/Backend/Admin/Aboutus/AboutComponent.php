@@ -5,6 +5,7 @@ namespace App\Livewire\Backend\Admin\Aboutus;
 use App\Models\AboutUs;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class AboutComponent extends Component
 {
@@ -41,6 +42,9 @@ class AboutComponent extends Component
 
         try {
             $filePath = $about ? $about->foto : null;
+            if ($this->foto && $about && $about->foto) {
+                Storage::disk('public')->delete($about->foto);
+            }
             if (is_object($this->foto)) {
                 $filePath = $this->foto->store('about-us', 'public');
             }
@@ -67,7 +71,7 @@ class AboutComponent extends Component
     public function render()
     {
         return view('livewire.backend.admin.aboutus.index')
-            ->layout('layouts.app', ['title' => $this->title]);
+            ->layout('layouts.admin', ['title' => $this->title]);
     }
 
     public function initializeCKEditor()

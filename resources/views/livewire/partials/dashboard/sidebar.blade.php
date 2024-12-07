@@ -1,23 +1,30 @@
 <!-- Sidebar -->
 <div>
+    <!-- Brand Section -->
     <div class="sidebar-brand">
         <a href="{{ route('admin.home') }}" class="brand-link">
             <span class="brand-text fw-light fs-3">PPDB Versi 1</span>
         </a>
     </div>
+
+    <!-- Sidebar Menu -->
     <div class="sidebar-wrapper fw-bold fs-6">
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                <!-- Menu Pengaturan Halaman -->
-                <li class="nav-item"> <a href="{{ route('admin.home') }}" wire:navigate
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.home') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-speedometer me-2"></i>
                         <p>Dashboard</p>
-                    </a> </li>
+                    </a>
+                </li>
+
+                <!-- Pengaturan Halaman -->
                 <li
                     class="nav-item {{ request()->routeIs('admin.gallery', 'admin.teacher', 'admin.about') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-speedometer"></i>
+                        <i class="nav-icon bi bi-layout-text-sidebar-reverse"></i>
                         <p>
                             Pengaturan Halaman
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -48,7 +55,7 @@
                     </ul>
                 </li>
 
-                <!-- Menu Widgets -->
+                <!-- Widgets -->
                 <li class="nav-item {{ request()->routeIs('widgets.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -66,16 +73,24 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item"> <a href="{{ route('admin.user') }}" wire:navigate
-                        class="nav-link {{ request()->routeIs('admin.user') ? 'active' : '' }}"> <i
-                            class="nav-icon bi bi-person-fill me-2"></i>
+
+                <!-- User Management -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.user') }}" wire:navigate
+                        class="nav-link {{ request()->routeIs('admin.user') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-person-fill me-2"></i>
                         <p>User</p>
-                    </a> </li>
-                <li class="nav-item"> <a href="{{ route('admin.configuration') }}" wire:navigate
+                    </a>
+                </li>
+
+                <!-- Configuration -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.configuration') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('admin.configuration') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-gear-fill me-2"></i>
                         <p>Configuration</p>
-                    </a> </li>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

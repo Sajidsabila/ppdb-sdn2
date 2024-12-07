@@ -4,6 +4,7 @@ namespace App\Livewire\Backend\Admin\User;
 
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Facades\Hash;
 
 class UserComponent extends Component
 {
@@ -114,6 +115,6 @@ class UserComponent extends Component
     {
         $users = User::paginate(10);
         return view('livewire.backend.admin.user.index', compact('users'))
-            ->layout('layouts.app', ['title' => $this->title]);
+            ->layout('layouts.admin', ['title' => $this->title]);
     }
 }
