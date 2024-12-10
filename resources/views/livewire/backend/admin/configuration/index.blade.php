@@ -21,10 +21,25 @@
                     </div>
                     <div class="card-body d-flex flex-column align-items-center">
                         <label for="foto" class="mb-3">
-                            @if ($logo)
-                                <img src="{{ $logo->temporaryUrl() }}" alt="Logo Sekolah" class="img-fluid mb-3"
-                                    style="max-width: 200px;">
-                            @endif
+                            <div wire:loading wire:target="logo">
+                                <!-- Animasi loading -->
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+
+                            <div wire:loading.remove wire:target="logo">
+                                @if (is_object($logo))
+                                    <!-- Jika file upload -->
+                                    <img src="{{ $logo->temporaryUrl() }}" alt="Logo Sekolah" class="img-fluid mb-3"
+                                        style="max-width: 200px;">
+                                @elseif($logo)
+                                    <!-- Jika string URL -->
+                                    <img src="{{ $logo }}" alt="Logo Sekolah" class="img-fluid mb-3"
+                                        style="max-width: 200px;">
+                                @endif
+                            </div>
+
                         </label>
                         <input type="file" class="form-control @error('logo') is-invalid @enderror" id="foto"
                             wire:model="logo">
@@ -52,7 +67,15 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
+                            <div class="col-12 my-2">
+                                <label for="nama-sekolah" class="fw-bold">Alamat Sekolah</label>
+                                <input type="text" id="nama-sekolah"
+                                    class="form-control @error('address') is-invalid @enderror" wire:model="address"
+                                    placeholder="Alamat Sekolah">
+                                @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                             <div class="col-12 my-2">
                                 <label for="email-sekolah" class="fw-bold">Email Sekolah</label>
                                 <input type="email" id="email-sekolah"
@@ -75,7 +98,7 @@
 
                             <div class="col-12 my-2">
                                 <label for="website-sekolah" class="fw-bold">Website Sekolah</label>
-                                <input type="url" id="website-sekolah"
+                                <input type="text" id="website-sekolah"
                                     class="form-control @error('website') is-invalid @enderror" wire:model="website"
                                     placeholder="Website Sekolah">
                                 @error('website')

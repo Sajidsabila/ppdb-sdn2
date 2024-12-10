@@ -74,8 +74,8 @@ class AboutComponent extends Component
             ->layout('layouts.admin', ['title' => $this->title]);
     }
 
-    public function initializeCKEditor()
-    {
-        return 'CKEditor Initialized';
-    }
+    // public function initializeCKEditor()
+    // {
+    //     return 'CKEditor Initialized';
+    // }
 }

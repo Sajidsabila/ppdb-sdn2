@@ -19,8 +19,13 @@
                         <!-- Image Section -->
                         <label for="photo" class="mb-3 text-center">
                             <div>
-                                <img src="{{ empty(!$photo) ? $photo->temporaryUrl() : asset('img/no-image.jpg') }}"
-                                    class="rounded img-fluid" alt="Student Image" width="100px">
+                                @if (is_object($foto))
+                                    <img src="{{ $foto->temporaryUrl() }}" class="rounded img-fluid" alt="Student Image"
+                                        width="100px">
+                                @elseif($foto)
+                                    <img src="{{ $foto }}" class="rounded img-fluid" alt="Student Image"
+                                        width="100px">
+                                @endif
                             </div>
 
                         </label>

@@ -40,17 +40,21 @@ class GalleryComponent extends Component
         $gallery = Gallery::find($gallery_id);
         if ($gallery) {
             $this->gallery_id = $gallery->id;
-            $this->foto = $gallery->foto;
+            $this->foto = $gallery && $gallery->foto
+                ? asset('storage/' . $gallery->foto)
+                : null;
             $this->name = $gallery->name;
             $this->isModalOpen = true;
+        } else {
+
+            session()->flash('error', 'gallery tidak ditemukan');
         }
-        session()->flash('error', 'gallery tidak diteukan');
     }
 
     public function save()
     {
         $this->validate([
-            'foto' => $this->gallery_id ? 'nullable|mimes:jpg,png,jpeg|max:1024' : 'required|mimes:jpg,png,jpeg|max:1024',
+            'foto' => $this->gallery_id ? 'nullable' : 'required|mimes:jpg,png,jpeg|max:1024',
             'name' => 'required',
         ], [
             'required' => ':attribute harus diisi',
@@ -65,15 +69,16 @@ class GalleryComponent extends Component
             $gallery = Gallery::find($this->gallery_id);
 
             if ($this->foto && $gallery && $gallery->foto) {
-                Storage::disk('public')->delete($gallery->photo);
+                // Hapus file lama jika ada
+                Storage::disk('public')->delete($gallery->foto); // Pastikan path lengkap dihapus
             }
 
             if ($this->foto) {
                 $photoPath = $this->foto->store('gallery', 'public');
             } else {
+                // Gunakan file lama jika tidak ada file baru
                 $photoPath = $gallery ? $gallery->foto : null;
             }
-
             Gallery::updateOrCreate(
                 ['id' => $this->gallery_id],
                 [
@@ -86,7 +91,7 @@ class GalleryComponent extends Component
             $this->isModalOpen = false;
             session()->flash('success', 'Data Berhasil Disimpan');
         } catch (\Throwable $th) {
-            session()->flash("error", "Terjadi Kesalahan: " . $th->getMessage());
+            dd("error", "Terjadi Kesalahan: " . $th->getMessage());
         }
     }
 
@@ -98,7 +103,7 @@ class GalleryComponent extends Component
                 $gallery = Gallery::find($gallery_id);
                 if ($gallery) {
                     if ($gallery->foto) {
-                        Storage::disk('public')->delete($gallery->foto);
+                        Storage::disk('public')->delete('gallery/', $gallery->foto);
 
                     }
                     $gallery->delete();
@@ -121,7 +126,6 @@ class GalleryComponent extends Component
         $gallery = Gallery::paginate(10);
         return view('livewire.backend.admin.gallery.index', compact('gallery'))
             ->layout('layouts.admin', ['title' => $this->title]);
-        ;
     }
 
 }
