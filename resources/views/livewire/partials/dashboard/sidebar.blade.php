@@ -82,7 +82,13 @@
                         <p>User</p>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('admin.academic') }}" wire:navigate
+                        class="nav-link {{ request()->routeIs('admin.academic') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-person-fill me-2"></i>
+                        <p>Tahun Pelajaran</p>
+                    </a>
+                </li>
                 <!-- Configuration -->
                 <li class="nav-item">
                     <a href="{{ route('admin.configuration') }}" wire:navigate

@@ -25,7 +25,7 @@
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a href="" class="dropdown-item d-flex align-items-center fw-bold">
+                        <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center fw-bold">
                             <i class="bi bi-person-circle me-2"></i>
                             <span>Profil Saya</span>
                         </a>
