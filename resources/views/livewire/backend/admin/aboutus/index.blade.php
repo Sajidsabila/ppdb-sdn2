@@ -19,16 +19,26 @@
                 <!-- Gambar dan Form Unggah Gambar di sebelah kiri -->
                 <div class="col-md-6">
                     <label for="foto" class="mb-3">
-                        @if ($image)
-                            <div>
-                                <img src="{{ $foto instanceof \Livewire\TemporaryUploadedFile ? $foto->temporaryUrl() : $image }}"
-                                    alt="Preview Foto" style="max-width: 200px;">
+                        <div wire:loading wire:target="foto" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                        @endif
+                        </div>
+
+                        <div wire:loading.remove wire:target="foto">
+                            @if (is_object($foto))
+                                <!-- Jika file upload -->
+                                <img src="{{ $foto->temporaryUrl() }}" alt="Logo Sekolah" class="img-fluid mb-3"
+                                    style="max-width: 200px;">
+                            @elseif($foto)
+                                <img src="{{ $foto }}" alt="Logo Sekolah" class="img-fluid mb-3"
+                                    style="max-width: 200px;">
+                            @endif
+                        </div>
                     </label>
                     <!-- Input file untuk gambar -->
                     <input type="file" class="form-control @error('foto') is-invalid @enderror" id="foto"
-                        wire:model="foto" wire:change="initializeCKEditor">
+                        wire:model="foto">
                     @error('foto')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

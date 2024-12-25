@@ -60,15 +60,21 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-box-seam-fill"></i>
                         <p>
-                            Widgets
+                            PPDB
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="{{ route('admin.form') }}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Form Pendaftaran</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="../widgets/small-box.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Small Box</p>
+                                <p>Calon Siswa Terdaftar</p>
                             </a>
                         </li>
                     </ul>
@@ -85,7 +91,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.academic') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('admin.academic') ? 'active' : '' }}">
-                        <i class="nav-icon bi bi-person-fill me-2"></i>
+                        <i class="nav-icon bi bi-calendar me-2"></i>
                         <p>Tahun Pelajaran</p>
                     </a>
                 </li>

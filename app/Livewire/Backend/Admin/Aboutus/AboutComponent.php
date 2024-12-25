@@ -14,12 +14,12 @@ class AboutComponent extends Component
     public $title = "Halaman About Us";
     public $foto; // Input file baru
     public $description; // Deskripsi baru
-    public $image;
+
 
     public function mount()
     {
         $about = AboutUs::first();
-        $this->image = $about ? asset('storage/' . $about->foto) : null;
+        $this->foto = $about ? asset('storage/' . $about->foto) : null;
         $this->description = $about->description ?? '';
     }
 

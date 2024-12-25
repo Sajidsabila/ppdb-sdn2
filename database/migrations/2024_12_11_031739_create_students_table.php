@@ -13,16 +13,19 @@ return new class extends Migration {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('academic_year_id');
+            $table->uuid('user_id');
             $table->string('name');
             $table->enum('gender', ['Laki - laki', 'Perempuan']);
             $table->string('religion');
             $table->string('place_of_dirth');
             $table->date('date_of_birth');
+            $table->enum('citizenship', ['WNI', 'WNA']);
             $table->integer('number_of_siblings');
             $table->integer('child_order');
             $table->string('nik');
             $table->string('phone')->nullable();
-            $table->email('email')->nullable();
+            $table->string('email')->nullable();
+            $table->foreign('user_id')->references('users')->on('id')->onDelete('casacade');
 
 
             $table->timestamps();

@@ -10,18 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('parents', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->string('father_name');
-            $table->string('father_education_level');
-            $table->string('father_occupation');
-            $table->string('mother_name');
-            $table->string('mother_education_level');
-            $table->string('mother_occupation');
-            $table->timestamps();
+            $table->string('akte_kelahiran');
+            $table->string('kartu_keluarga');
+            $table->string('pas_foto');
             $table->foreign('student_id')->references('id')->on('students')->cascadeOnDelete();
-
+            $table->timestamps();
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('parents');
+        Schema::dropIfExists('files');
     }
 };

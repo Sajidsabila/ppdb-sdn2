@@ -9,6 +9,7 @@ use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
 use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
 use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
+use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
 use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
 use App\Livewire\Backend\Admin\User\UserComponent;
 use App\Livewire\Backend\Profile\ProfileComponent;
@@ -38,6 +39,7 @@ Route::group([
     Route::get('/configuration', ConfigurationComponent::class)->name('configuration');
     Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
     Route::get('/profile', ProfileComponent::class)->name('profile');
+    Route::get('/form-pendaftaran', RegistrationForm::class)->name('form');
 });
 
 Route::get('/', Index::class)->name('user.dashboard');

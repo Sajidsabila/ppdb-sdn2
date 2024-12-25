@@ -4,11 +4,14 @@ namespace App\Livewire\Backend\Admin\Teacher;
 
 use App\Models\Teacher;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 
 class TeacherComponent extends Component
 {
+     use WithPagination;
+      protected $paginationTheme = 'bootstrap';
     public $title = "Halaman Guru";
     use WithFileUploads;
     public $photo, $name, $position, $description;
