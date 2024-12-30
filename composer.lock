@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ecd7a36b29fd6b50eacb90f48cf5c10",
+    "content-hash": "41b8dd26eca714e5b7c1d0e4af2b33c8",
     "packages": [
         {
             "name": "brick/math",
@@ -134,6 +134,50 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "danteb918/livewire-pdf-preview",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DanteB918/livewire-pdf-preview.git",
+                "reference": "1db5bcc9f967a5116421438827b9163f5f85a010"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DanteB918/livewire-pdf-preview/zipball/1db5bcc9f967a5116421438827b9163f5f85a010",
+                "reference": "1db5bcc9f967a5116421438827b9163f5f85a010",
+                "shasum": ""
+            },
+            "require": {
+                "livewire/livewire": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DanteB918\\LivewirePdfPreview\\PdfPreviewServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DanteB918\\LivewirePdfPreview\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dante Bradshaw",
+                    "email": "plansuperior@gmail.com"
+                }
+            ],
+            "description": "Adds a component to easily preview livewire PDFs",
+            "support": {
+                "issues": "https://github.com/DanteB918/livewire-pdf-preview/issues",
+                "source": "https://github.com/DanteB918/livewire-pdf-preview/tree/1.0.0"
+            },
+            "time": "2024-12-24T17:46:07+00:00"
         },
         {
             "name": "dflydev/dot-access-data",

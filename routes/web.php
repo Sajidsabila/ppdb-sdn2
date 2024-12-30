@@ -1,21 +1,26 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Livewire\Auth\AuthAdmin;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
-use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
-use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
-use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
-use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
-use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
-use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
-use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
+use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Backend\Admin\Ppdb\ListComponent;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Livewire\Frontend\Dashboard\Index;
+use App\Livewire\Backend\Admin\Ppdb\Detail;
+use App\Livewire\Partials\Dashboard\Navbar;
 use App\Livewire\Backend\Admin\User\UserComponent;
 use App\Livewire\Backend\Profile\ProfileComponent;
-use App\Livewire\Frontend\Dashboard\Index;
-use App\Livewire\Partials\Dashboard\Navbar;
-use Illuminate\Support\Facades\Route;
+use App\Livewire\Backend\Admin\Ppdb\TableComponent;
+use App\Livewire\Backend\Admin\Ppdb\DetailComponent;
+use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
+use App\Livewire\Backend\Admin\Ppdb\TabelPendaftaran;
+use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
+use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
+use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
+use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
+use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
+use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
 
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
@@ -39,7 +44,9 @@ Route::group([
     Route::get('/configuration', ConfigurationComponent::class)->name('configuration');
     Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
     Route::get('/profile', ProfileComponent::class)->name('profile');
-    Route::get('/form-pendaftaran', RegistrationForm::class)->name('form');
+    Route::get('/form-pendaftaran/{studentId?}', RegistrationForm::class)->name('form');
+    Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
+    Route::get('/pendaftar', ListComponent::class)->name('ppdb');
 });
 
 Route::get('/', Index::class)->name('user.dashboard');

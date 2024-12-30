@@ -103,7 +103,7 @@ class GalleryComponent extends Component
                 $gallery = Gallery::find($gallery_id);
                 if ($gallery) {
                     if ($gallery->foto) {
-                        Storage::disk('public')->delete('gallery/', $gallery->foto);
+                        Storage::disk('public')->delete($gallery->foto);
 
                     }
                     $gallery->delete();

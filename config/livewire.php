@@ -62,7 +62,6 @@ return [
     | a global endpoint for temporary storage. You may configure this below:
     |
     */
-
     'temporary_file_upload' => [
         'disk' => null,        // Example: 'local', 's3'              | Default: 'default'
         'rules' => null,       // Example: ['file', 'mimes:png,jpg']  | Default: ['required', 'file', 'max:12288'] (12MB)
@@ -85,17 +84,17 @@ return [
             'mpga',
             'webp',
             'wma',
-            'application/pdf',      // Tambahkan standar PDF
+            'application/pdf',      // Menambahkan standar PDF
             'application/x-pdf',    // Kadang digunakan untuk PDF
             'application/acrobat',  // Alternatif untuk PDF
             'applications/vnd.pdf', // Alternatif lain
             'text/pdf',             // MIME PDF lain
-            'text/x-pdf',           // MIME PDF lain
+            'text/x-pdf',
+            'pdf',          // MIME PDF lain
         ],
         'max_upload_time' => 5, // Max duration (in minutes) before an upload is invalidated...
         'cleanup' => true, // Should cleanup temporary uploads older than 24 hrs...
     ],
-
     /*
     |---------------------------------------------------------------------------
     | Render On Redirect

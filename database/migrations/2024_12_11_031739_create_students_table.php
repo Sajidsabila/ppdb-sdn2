@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id();
+            $table->char('id')->primary();
             $table->unsignedBigInteger('academic_year_id');
             $table->uuid('user_id');
             $table->string('name');
@@ -25,7 +25,15 @@ return new class extends Migration {
             $table->string('nik');
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->foreign('user_id')->references('users')->on('id')->onDelete('casacade');
+            $table->text('address');
+            $table->enum('status', [
+
+                'pending',
+                'verified',
+                'accepted',
+                'rejected'
+            ])->default('pending');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
 
             $table->timestamps();
@@ -39,4 +47,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('students');
     }
+  
 };

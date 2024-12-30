@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
+            $table->char('student_id');
             $table->string('akte_kelahiran');
             $table->string('kartu_keluarga');
             $table->string('pas_foto');

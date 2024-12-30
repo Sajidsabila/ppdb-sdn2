@@ -56,7 +56,8 @@
                 </li>
 
                 <!-- Widgets -->
-                <li class="nav-item {{ request()->routeIs('widgets.*') ? 'menu-open' : '' }}">
+                <li
+                    class="nav-item {{ request()->routeIs('admin.ppdb', 'admin.form', 'admin.detail') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-box-seam-fill"></i>
                         <p>
@@ -66,13 +67,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.form') }}" class="nav-link">
+                            <a href="{{ route('admin.form') }}"
+                                class="nav-link {{ request()->routeIs('admin.form') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Form Pendaftaran</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../widgets/small-box.html" class="nav-link">
+                            <a href="{{ route('admin.ppdb') }}"
+                                class="nav-link {{ request()->routeIs('admin.ppdb', 'admin.detail') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Calon Siswa Terdaftar</p>
                             </a>

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('parents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
+            $table->char('student_id');
             $table->string('father_name');
             $table->string('father_education_level');
             $table->string('father_occupation');
