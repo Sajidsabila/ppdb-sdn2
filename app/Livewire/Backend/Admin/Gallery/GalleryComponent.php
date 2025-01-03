@@ -69,14 +69,13 @@ class GalleryComponent extends Component
             $gallery = Gallery::find($this->gallery_id);
 
             if ($this->foto && $gallery && $gallery->foto) {
-                // Hapus file lama jika ada
-                Storage::disk('public')->delete($gallery->foto); // Pastikan path lengkap dihapus
+                Storage::disk('public')->delete($gallery->foto);
             }
 
             if ($this->foto) {
                 $photoPath = $this->foto->store('gallery', 'public');
             } else {
-                // Gunakan file lama jika tidak ada file baru
+
                 $photoPath = $gallery ? $gallery->foto : null;
             }
             Gallery::updateOrCreate(
@@ -99,6 +98,11 @@ class GalleryComponent extends Component
     public function deleteGallery($gallery_id)
     {
         try {
+            $this->dispatch('swal:confirm', [
+                'type' => 'warning',
+                'message' => 'Are you sure?',
+                'text' => 'If deleted, you will not be able to recover this item!'
+            ]);
             if ($gallery_id) {
                 $gallery = Gallery::find($gallery_id);
                 if ($gallery) {

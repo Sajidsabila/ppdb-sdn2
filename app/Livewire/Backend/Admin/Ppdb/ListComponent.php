@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
+use App\Models\Configuration;
+use Storage;
 use App\Models\Student;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ListComponent extends Component
 {
@@ -15,7 +17,8 @@ class ListComponent extends Component
     public $id;
 
     public $search;
-
+    public $data;
+    public $item;
     protected $listeners = ['deleteConfirmed'];
 
     public function destroy($id)
@@ -37,7 +40,33 @@ class ListComponent extends Component
             return response()->json(['error' => 'Data siswa tidak ditemukan'], 404);
         }
     }
+    public function generatePdf($id)
+    {
+        try {
+            $configuration = Configuration::first();
+            $student = Student::with('files', 'parents')->findOrFail($id);
+            $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
+                'student' => $student,
+                'configuration' => $configuration
+            ]);
+            $fileName = 'Bukti_Pendaftaran_' . ($student->name ?? $student->id) . '.pdf';
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, $fileName);
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
+    }
+    public function toggleChangeStatus($itemId, $newStatus)
+    {
+        $item = Student::find($itemId);
 
+        if ($item) {
+            $item->status = $newStatus;
+            $item->save();
+
+        }
+    }
     public function render()
     {
         $students = Student::orderBy('id', 'desc')->paginate(10);

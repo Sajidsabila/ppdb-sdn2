@@ -68,6 +68,15 @@
                                 @enderror
                             </div>
                             <div class="col-12 my-2">
+                                <label for="npsn" class="fw-bold">NPSN</label>
+                                <input type="number" id="npsn"
+                                    class="form-control @error('npsn') is-invalid @enderror" wire:model="npsn"
+                                    placeholder="NPSN">
+                                @error('npsn')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-12 my-2">
                                 <label for="nama-sekolah" class="fw-bold">Alamat Sekolah</label>
                                 <input type="text" id="nama-sekolah"
                                     class="form-control @error('address') is-invalid @enderror" wire:model="address"

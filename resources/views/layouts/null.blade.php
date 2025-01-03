@@ -81,7 +81,6 @@
 <body>
 
     <div class="login-container">
-
         {{ $slot }}
     </div>
 

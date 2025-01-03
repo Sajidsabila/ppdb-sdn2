@@ -48,8 +48,7 @@
                                             <button class="btn btn-warning"
                                                 wire:click="editGallery({{ $item->id }})">Edit</button>
                                             <button type="button" class="btn btn-danger"
-                                                wire:click="deleteGallery({{ $item->id }})"
-                                                wire:confirm="deleteConfirmation()">Hapus
+                                                wire:click="deleteGallery({{ $item->id }})">Hapus
                                             </button>
                                         </div>
                                     </td>
@@ -69,24 +68,31 @@
         @include('livewire.backend.admin.gallery.form')
     @endif
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    < script >
-        // Tampilkan konfirmasi SweetAlert
-        window.addEventListener('show-delete-confirmation', event => {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Panggil fungsi Livewire untuk menghapus item
-                    Livewire.emit('deleteItem');
-                }
-            });
+    window.addEventListener('swal:modal', event => {
+        swal({
+            title: event.detail.message,
+            text: event.detail.text,
+            icon: event.detail.type,
         });
+    });
+
+    function deleteConfirmation() {
+
+        window.addEventListener('swal:confirm', event => {
+            swal({
+                    title: event.detail.message,
+                    text: event.detail.text,
+                    icon: event.detail.type,
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.livewire.emit('remove');
+                    }
+                });
+        });
+    }
 </script>

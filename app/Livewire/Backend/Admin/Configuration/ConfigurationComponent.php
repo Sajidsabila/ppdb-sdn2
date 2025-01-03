@@ -12,7 +12,7 @@ class ConfigurationComponent extends Component
     use WithFileUploads;
 
     public $title = "Configuration";
-    public $logo, $email, $phone, $website, $name, $address;
+    public $logo, $email, $phone, $website, $name, $address, $npsn;
 
     public function mount()
     {
@@ -26,6 +26,7 @@ class ConfigurationComponent extends Component
         $this->phone = $configuration->phone ?? '';
         $this->website = $configuration->website ?? '';
         $this->address = $configuration->address ?? ''; // Perbaikan typo "adsress" menjadi "address"
+        $this->npsn = $configuration->npsn ?? ''; // Perbaikan typo "adsress" menjadi "address"
     }
 
     public function save()
@@ -38,7 +39,8 @@ class ConfigurationComponent extends Component
                 'email' => 'required|email|max:255',
                 'phone' => 'required|string|max:15',
                 'website' => 'required|max:255',
-                'address' => 'required|string|max:500', // Tambahkan validasi untuk address
+                'address' => 'required|string|max:500',
+                'npsn' => 'required|integer'
             ],
             [
                 'required' => ':attribute wajib diisi.',
@@ -46,6 +48,7 @@ class ConfigurationComponent extends Component
                 'mimes' => ':attribute harus berupa file berformat: jpg, png, jpeg, atau webp.',
                 'email' => 'Format:attribute tidak valid.',
                 'url' => 'Format :attribute tidak valid.',
+                'number' => ':attribute hrus berupa angka'
             ],
             [
                 'name' => 'Nama',
@@ -54,6 +57,7 @@ class ConfigurationComponent extends Component
                 'phone' => 'Nomor telepon',
                 'website' => 'Website',
                 'address' => 'Alamat',
+                'npsn' => 'npsn'
             ]
         );
 
@@ -78,6 +82,7 @@ class ConfigurationComponent extends Component
                     'phone' => $this->phone,
                     'website' => $this->website,
                     'address' => $this->address,
+                    'npsn' => $this->npsn
                 ]);
                 session()->flash('success', 'Data berhasil diperbarui.');
             } else {
@@ -88,6 +93,7 @@ class ConfigurationComponent extends Component
                     'phone' => $this->phone,
                     'website' => $this->website,
                     'address' => $this->address,
+                    'npsn' => $this->npsn
                 ]);
                 session()->flash('success', 'Data berhasil ditambahkan.');
             }

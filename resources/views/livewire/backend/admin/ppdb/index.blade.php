@@ -71,6 +71,8 @@
                                             <!-- Tombol Hapus -->
                                             <button type="button" class="btn btn-danger"
                                                 data-id="{{ strval($item->id) }}" id="delete-btn">Hapus</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                wire:click="generatePdf('{{ $item->id }}')">Cetak</button>
 
                                     </td>
                                 </tr>

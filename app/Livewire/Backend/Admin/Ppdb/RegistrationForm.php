@@ -27,8 +27,6 @@ class RegistrationForm extends Component
     public $serviceData = [];
     public $title = "Form Pendaftaran";
     public $isEdit = false;
-
-
     private $validationRules = [
         1 => [
             'name' => 'required|min:6',
@@ -57,13 +55,12 @@ class RegistrationForm extends Component
     public function mount($studentId = null)
     {
         if ($studentId) {
-            $this->isEdit = true;  // Menandakan ini adalah form edit
+            $this->isEdit = true;
             $this->studentId = $studentId;
-            $this->loadStudentData();  // Memuat data siswa untuk diubah
+            $this->loadStudentData();
         }
     }
 
-    // Fungsi untuk memuat data siswa saat editing
     public function loadStudentData()
     {
         $student = Student::with(['parents', 'files'])->find($this->studentId);
@@ -128,8 +125,6 @@ class RegistrationForm extends Component
             $user_id = auth()->user()->id;
 
             DB::beginTransaction();
-
-            // Simpan atau perbarui data student
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],
                 [
@@ -148,8 +143,6 @@ class RegistrationForm extends Component
                     'phone' => $this->phone,
                 ]
             );
-
-            // Simpan atau perbarui data parents
             Parents::updateOrCreate(
                 ['student_id' => $student->id],
                 [
@@ -162,42 +155,40 @@ class RegistrationForm extends Component
                 ]
             );
 
-            if ($this->pas_foto && $student->files && $student->files->pas_foto) {
-                // Hapus file lama jika ada
-                Storage::disk('public')->delete($student->files->pas_foto); // Pastikan path lengkap dihapus
-            }
+            // Cek dan hapus pas foto lama jika ada file baru
+            if ($this->pas_foto instanceof \Illuminate\Http\UploadedFile) {
+                if ($student->files && $student->files->pas_foto) {
+                    Storage::disk('public')->delete($student->files->pas_foto);
+                }
 
-            if ($this->pas_foto) {
                 $photoPath = $this->pas_foto->store('dokumen', 'public');
             } else {
-                // Gunakan file lama jika tidak ada file baru
-                $photoPath = $student->files ? $student->files->pas_foto : null;
+                $photoPath = $student->files->pas_foto ?? null;
             }
 
-            if ($this->kartu_keluarga && $student->files && $student->files->kartu_keluarga) {
-                // Hapus file lama jika ada
-                Storage::disk('public')->delete($student->files->kartu_keluarga); // Pastikan path lengkap dihapus
-            }
-
-            if ($this->kartu_keluarga) {
+            // Cek dan hapus kartu keluarga lama jika ada file baru
+            if ($this->kartu_keluarga instanceof \Illuminate\Http\UploadedFile) {
+                if ($student->files && $student->files->kartu_keluarga) {
+                    Storage::disk('public')->delete($student->files->kartu_keluarga);
+                }
                 $kartu_keluarga = $this->kartu_keluarga->store('dokumen', 'public');
             } else {
-                // Gunakan file lama jika tidak ada file baru
-                $kartu_keluarga = $student->files ? $student->files->kartu_keluarga : null;
+
+                $kartu_keluarga = $student->files->kartu_keluarga ?? null;
             }
 
-            if ($this->akte_kelahiran && $student->files && $student->files->akte_kelahiran) {
-                Storage::disk('public')->delete($student->files->akte_kelahiran); // Pastikan path lengkap dihapus
-            }
 
-            if ($this->akte_kelahiran) {
+            if ($this->akte_kelahiran instanceof \Illuminate\Http\UploadedFile) {
+                if ($student->files && $student->files->akte_kelahiran) {
+                    Storage::disk('public')->delete($student->files->akte_kelahiran);
+                }
                 $akte_kelahiran = $this->akte_kelahiran->store('dokumen', 'public');
             } else {
-                // Gunakan file lama jika tidak ada file baru
-                $akte_kelahiran = $student->files ? $student->files->akte_kelahiran : null;
+                $akte_kelahiran = $student->files->akte_kelahiran ?? null;
             }
 
-            // Simpan atau perbarui file
+
+
             File::updateOrCreate(
                 ['student_id' => $student->id],
                 [
@@ -206,24 +197,16 @@ class RegistrationForm extends Component
                     'akte_kelahiran' => $akte_kelahiran,
                 ]
             );
-
             DB::commit();
 
             return redirect()->route('admin.ppdb')->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            session()->flash('error', 'Terjadi Kesalahan: ' . $th->getMessage());
+            return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
         }
 
     }
-    public function toggleStatus($newStatus)
-    {
-        // Validasi dan set status baru
-        if (StatusEnum::tryFrom($newStatus)) {
-            $this->academicYear->status = StatusEnum::from($newStatus);
-            $this->academicYear->save();
-        }
-    }
+
     public function render()
     {
         return view('livewire.backend.admin.ppdb.registration-form')
