@@ -62,7 +62,10 @@
                     </table>
                 </div>
             </div>
+            {{ $gallery->links('pagination::bootstrap-5') }}
         </div>
+
+
     </div>
     @if ($isModalOpen)
         @include('livewire.backend.admin.gallery.form')

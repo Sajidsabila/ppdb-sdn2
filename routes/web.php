@@ -3,12 +3,13 @@
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
-use App\Livewire\Backend\Admin\Ppdb\ListComponent;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Frontend\RegisterForm;
 use App\Http\Controllers\AuthController;
 use App\Livewire\Frontend\Dashboard\Index;
 use App\Livewire\Backend\Admin\Ppdb\Detail;
 use App\Livewire\Partials\Dashboard\Navbar;
+use App\Livewire\Backend\Admin\Ppdb\ListComponent;
 use App\Livewire\Backend\Admin\User\UserComponent;
 use App\Livewire\Backend\Profile\ProfileComponent;
 use App\Livewire\Backend\Admin\Ppdb\TableComponent;
@@ -22,13 +23,20 @@ use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
 use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
 
+
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
     Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
     route::get('/register', Register::class)->name('register');
-    // Route::get('/auth-admin', AuthAdmin::class)->name('auth-admin');
 
+});
+Route::group([
+    'middleware' => ['auth', 'role:user'],
+    'prefix' => '/',
+    'as' => 'user.'
+], function () {
+    Route::get('/registration', RegisterForm::class)->name('register-form');
 });
 Route::group([
     'middleware' => ['auth', 'role:admin'],
@@ -47,6 +55,7 @@ Route::group([
     Route::get('/form-pendaftaran/{studentId?}', RegistrationForm::class)->name('form');
     Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
     Route::get('/pendaftar', ListComponent::class)->name('ppdb');
+    Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
 });
 
 Route::get('/', Index::class)->name('user.dashboard');

@@ -85,65 +85,68 @@
                     </table>
                 </div>
             </div>
+            {{ $students->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
+@push('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
 
-        const showLoading = () => {
-            Swal.fire({
-                title: 'Proses Penghapusan...',
-                text: 'Sedang memproses, harap tunggu...',
-                icon: 'info',
-                allowOutsideClick: false,
-                showCancelButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-        };
+            const showLoading = () => {
+                Swal.fire({
+                    title: 'Proses Penghapusan...',
+                    text: 'Sedang memproses, harap tunggu...',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            };
 
-        $(document).on('click', '#delete-btn', function() {
-            var studentId = $(this).data('id');
-            Swal.fire({
-                title: "Apakah Kamu Yakin?",
-                text: "Ingin menghapus data ini!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, Hapus!",
-                cancelButtonText: "Batal",
-                preConfirm: () => {
-                    showLoading();
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
+            $(document).on('click', '#delete-btn', function() {
+                var studentId = $(this).data('id');
+                Swal.fire({
+                    title: "Apakah Kamu Yakin?",
+                    text: "Ingin menghapus data ini!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Hapus!",
+                    cancelButtonText: "Batal",
+                    preConfirm: () => {
+                        showLoading();
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    $.ajax({
-                        url: '/api/students/' + studentId,
-                        type: 'DELETE',
-                        dataType: 'json',
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Sukses',
-                                text: response.success
-                            });
-                            location.reload();
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: xhr.responseJSON.error
-                            });
-                        }
-                    });
-                }
+                        $.ajax({
+                            url: '/api/students/' + studentId,
+                            type: 'DELETE',
+                            dataType: 'json',
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukses',
+                                    text: response.success
+                                });
+                                location.reload();
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Terjadi Kesalahan',
+                                    text: xhr.responseJSON.error
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
+@endpush

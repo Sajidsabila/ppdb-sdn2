@@ -115,7 +115,12 @@ class AcademicYearComponent extends Component
     }
     public function render()
     {
-        $academics = AcademicYear::paginate(1);
+        $academics = AcademicYear::when($this->search, function ($query) {
+            $query->where('start_year', 'like', '%' . $this->search . '%');
+            $query->where('end_year', 'like', '%' . $this->search . '%');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(1);
         return view('livewire.backend.admin.academicyear.index', compact('academics'))
             ->layout('layouts.admin', ['title' => $this->title]);
         ;

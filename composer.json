@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "asantibanez/livewire-charts": "^4.1",
         "barryvdh/laravel-dompdf": "^3.0",
         "danteb918/livewire-pdf-preview": "^1.0",
         "guzzlehttp/guzzle": "^7.2",

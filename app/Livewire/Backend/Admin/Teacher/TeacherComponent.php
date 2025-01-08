@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Storage;
 
 class TeacherComponent extends Component
 {
-     use WithPagination;
-      protected $paginationTheme = 'bootstrap';
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $title = "Halaman Guru";
     use WithFileUploads;
-    public $photo, $name, $position, $description;
+    public $photo, $name, $position, $description, $search;
     public $teacher_id;
     public $isModalOpen = false;
 
@@ -132,7 +132,12 @@ class TeacherComponent extends Component
 
     public function render()
     {
-        $teachers = Teacher::paginate(10);
+        $teachers = Teacher::when($this->search, function ($query) {
+            $query->where('position', 'like', '%' . $this->search . '%');
+            $query->orWhere('name', 'like', '%' . $this->search . '%');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('livewire.backend.admin.teacher.index', compact('teachers'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

@@ -62,46 +62,19 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center fw-bold">Data Tidak Ditemukan</td>
+                                    <td colspan="6" class="text-center fw-bold">Data Tidak Ditemukan</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
+            {{ $teachers->links('pagination::bootstrap-5') }}
         </div>
     </div>
     @if ($isModalOpen)
         @include('livewire.backend.admin.teacher.form')
     @endif
-    <div class="d-flex justify-content-between align-items-center gap-2">
-        <div class="text-muted m-3 fs-6">
-            Menampilkan {{ $teachers->firstItem() }} hingga {{ $teachers->lastItem() }} dari total
-            {{ $teachers->total() }} data
-        </div>
-        <div class="pagination-container m-2">
-            {{ $teachers->links('pagination::bootstrap-4') }}
-        </div>
-    </div>
+
 </div>
-<script>
-    < script >
-        // Tampilkan konfirmasi SweetAlert
-        window.addEventListener('show-delete-confirmation', event => {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Panggil fungsi Livewire untuk menghapus item
-                    Livewire.emit('deleteItem');
-                }
-            });
-        });
-</script>
+<script></script>

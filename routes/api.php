@@ -1,8 +1,9 @@
 <?php
 
-use App\Livewire\Backend\Admin\Ppdb\ListComponent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Backend\Admin\Ppdb\ListComponent;
+use App\Livewire\Backend\Admin\User\UserComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::delete('students/{id}', [ListComponent::class, 'destroy']);
+Route::delete('user/{id}', [UserComponent::class, 'deleteUser']);

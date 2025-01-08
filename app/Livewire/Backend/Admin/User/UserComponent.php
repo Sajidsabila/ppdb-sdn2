@@ -92,28 +92,32 @@ class UserComponent extends Component
     }
 
 
-    public function deleteUser($user_id)
+    public function deleteUser($id)
     {
         try {
-            if ($user_id) {
-                $user = User::find($user_id);
+            if ($id) {
+                $user = User::find($id);
                 if ($user) {
                     $user->delete();
-                    session()->flash('success', 'Data Berhasil Dihapus');
-
+                    return response()->json(['success' => 'Data siswa berhasil dihapus'], 200);
                 } else {
-                    session()->flash('error', "Data Tidak Ditemukan");
+                    dd(['error' => 'Data siswa gagal dihapus'], 401);
                 }
 
             }
 
         } catch (\Throwable $th) {
-            session()->flash('error', "TErjadi Kesalahan : " . $th->getMessage());
+            dd('error', "Terjadi Kesalahan : " . $th->getMessage());
         }
     }
     public function render()
     {
-        $users = User::paginate(10);
+        $users = User::when($this->search, function ($query) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+            $query->orWhere('email', 'like', '%' . $this->search . '%');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('livewire.backend.admin.user.index', compact('users'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

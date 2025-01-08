@@ -44,7 +44,7 @@ class ListComponent extends Component
     {
         try {
             $configuration = Configuration::first();
-            $student = Student::with('files', 'parents')->findOrFail($id);
+            $student = Student::with('files', 'parents', 'year')->findOrFail($id);
             $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
                 'student' => $student,
                 'configuration' => $configuration
@@ -69,7 +69,14 @@ class ListComponent extends Component
     }
     public function render()
     {
-        $students = Student::orderBy('id', 'desc')->paginate(10);
+        $students = Student::when($this->search, function ($query) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+            $query->orWhere('id', 'like', '%' . $this->search . '%');
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(1);
+
+
         return view('livewire.backend.admin.ppdb.index', compact('students'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

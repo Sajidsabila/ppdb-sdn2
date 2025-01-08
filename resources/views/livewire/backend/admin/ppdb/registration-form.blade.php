@@ -1,3 +1,6 @@
+@push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
 <div>
     <div class="d-flex align-items-center justify-content-center">
         <div class="col-10">
@@ -175,13 +178,30 @@
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="father_occupation" class="fw-bold">Pekerjaan Ayah</label>
-                                            <input type="text" id="father_occupation" name="father_occupation"
+                                            <select id="father_occupation" name="father_occupation"
                                                 class="form-control @error('father_occupation') is-invalid @enderror"
-                                                placeholder="Masukkan pekerjaan ayah" wire:model="father_occupation">
+                                                wire:model="father_occupation">
+                                                <option value="" selected disabled>Pilih pekerjaan ayah</option>
+                                                <option value="Tidak Bekerja">Tidak Bekerja</option>
+                                                <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil (PNS)
+                                                </option>
+                                                <option value="Guru">Guru</option>
+                                                <option value="Dokter">Dokter</option>
+                                                <option value="Perawat">Perawat</option>
+                                                <option value="Pengusaha">Pengusaha</option>
+                                                <option value="Petani">Petani</option>
+                                                <option value="Nelayan">Nelayan</option>
+                                                <option value="Pedagang">Pedagang</option>
+                                                <option value="Karyawan Swasta">Karyawan Swasta</option>
+                                                <option value="Buruh">Buruh</option>
+                                                <option value="Sopir">Sopir</option>
+                                                <option value="Lainnya">Lainnya</option>
+                                            </select>
                                             @error('father_occupation')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
@@ -196,7 +216,7 @@
                                         <div class="form-group mb-3">
                                             <label for="mother_education" class="fw-bold">Pendidikan Ibu</label>
                                             <select id="mother_education" name="mother_education"
-                                                class="form-control @error('mother_education') is-invalid @enderror"
+                                                class="form-control js-example-basic-multiple @error('mother_education') is-invalid @enderror"
                                                 wire:model="mother_education">
                                                 <option value="">Pilih pendidikan ibu</option>
                                                 <option value="SD">SD</option>
@@ -211,15 +231,37 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="form-group mb-3">
                                             <label for="mother_occupation" class="fw-bold">Pekerjaan Ibu</label>
-                                            <input type="text" id="mother_occupation" name="mother_occupation"
-                                                class="form-control @error('mother_occupation') is-invalid @enderror"
-                                                placeholder="Masukkan pekerjaan ibu" wire:model="mother_occupation">
+                                            <select id="mother_occupation" name="mother_occupation"
+                                                class="form-control js-example-basic-single @error('mother_occupation') is-invalid @enderror"
+                                                wire:model="mother_occupation">
+                                                <option value="" selected disabled>Pilih pekerjaan ibu
+                                                </option>
+                                                <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                                                <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil
+                                                    (PNS)</option>
+                                                <option value="Guru">Guru</option>
+                                                <option value="Dokter">Dokter</option>
+                                                <option value="Perawat">Perawat</option>
+                                                <option value="Pengusaha">Pengusaha</option>
+                                                <option value="Petani">Petani</option>
+                                                <option value="Nelayan">Nelayan</option>
+                                                <option value="Pedagang">Pedagang</option>
+                                                <option value="Karyawan Swasta">Karyawan Swasta</option>
+                                                <option value="Buruh">Buruh</option>
+                                                <option value="Sopir">Sopir</option>
+                                                <option value="Lainnya">Lainnya</option>
+                                            </select>
                                             @error('mother_occupation')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
+                                        @error('mother_occupation')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -317,3 +359,12 @@
         </div>
     </div>
 </div>
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    </script>
+@endpush

@@ -12,7 +12,7 @@ class GalleryComponent extends Component
 {
     use WithFileUploads;
     public $title = 'Halaman Gallery';
-    public $foto, $name;
+    public $foto, $name, $search;
     public $gallery_id;
     public $isModalOpen = false;
 
@@ -127,7 +127,12 @@ class GalleryComponent extends Component
     public function render()
     {
 
-        $gallery = Gallery::paginate(10);
+        $gallery = Gallery::when($this->search, function ($query) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+
+        })
+            ->orderBY('created_at', 'desc')
+            ->paginate(10);
         return view('livewire.backend.admin.gallery.index', compact('gallery'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

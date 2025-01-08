@@ -63,21 +63,13 @@
                     </table>
                 </div>
             </div>
+            {{ $academics->links('pagination::bootstrap-5') }}
         </div>
     </div>
     @if ($isModalOpen)
         @include('livewire.backend.admin.academicyear.form')
     @endif
     <!-- Custom Pagination with Showing -->
-    <div class="d-flex justify-content-between align-items-center gap-2">
-        <div class="text-muted m-3 fs-6">
-            Menampilkan {{ $academics->firstItem() }} hingga {{ $academics->lastItem() }} dari total
-            {{ $academics->total() }} data
-        </div>
-        <div class="pagination-container m-2">
-            {{ $academics->links('pagination::bootstrap-4') }}
-        </div>
-    </div>
 </div>
 
 <script>

@@ -14,7 +14,8 @@
                             <h1 class="display-3 text-white">DI SDN PURWOSARI 2</h1>
                             <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
                                 sit diam no.</p>
-                            <a href="" class=" py-md-3 px-md-5 btn btn-primary">Daftarkan Segera</a>
+                            <a href="{{ route('user.register-form') }}" wire:navigate
+                                class=" py-md-3 px-md-5 btn btn-primary">Daftarkan Segera</a>
                         </div>
                     </div>
                 </div>

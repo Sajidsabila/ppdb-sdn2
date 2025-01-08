@@ -20,6 +20,6 @@ class RoleMiddleware
             return $next($request);
         }
 
-        return redirect()->route('unauthorized');
+        return redirect()->route('login');
     }
 }

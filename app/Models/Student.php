@@ -49,10 +49,17 @@ class Student extends Model
     {
         return $this->hasOne(File::class);
     }
+
+    public function year()
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
     public function isFilesComplete()
     {
-        $files = $this->files()->first();  // Mengambil data pertama dari relasi files
+        $files = $this->files()->first();
 
         return !empty($files->pas_foto) && !empty($files->kartu_keluarga) && !empty($files->akte_kelahiran);
     }
+
+
 }
