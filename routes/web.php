@@ -3,6 +3,7 @@
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Frontend\ProfileUser;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Frontend\RegisterForm;
 use App\Http\Controllers\AuthController;
@@ -37,6 +38,8 @@ Route::group([
     'as' => 'user.'
 ], function () {
     Route::get('/registration', RegisterForm::class)->name('register-form');
+    Route::get('/logout', [\App\Livewire\Partials\Frontend\Navbar::class, 'logout'])->name('logout');
+    Route::get('/profile', ProfileUser::class)->name('profile');
 });
 Route::group([
     'middleware' => ['auth', 'role:admin'],
@@ -58,4 +61,8 @@ Route::group([
     Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
 });
 
-Route::get('/', Index::class)->name('user.dashboard');
+Route::get('/', Index::class)->name('home');
+Route::get('/home', function () {
+    return redirect('/');
+});
+

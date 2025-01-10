@@ -36,7 +36,7 @@ class Login extends Component
 
                 // Periksa apakah pengguna memiliki role "user"
                 if ($user->role === 'user') {
-                    return redirect()->route('user.dashboard');
+                    return redirect()->route('home');
                 }
 
                 // Jika role tidak sesuai, logout pengguna

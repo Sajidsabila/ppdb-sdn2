@@ -1,39 +1,53 @@
-  <div class="container-fluid bg-dark text-light footer pt-5 mt-5 d-flex justify-content-center align-items-center min-vh-100 wow fadeIn"
-      data-wow-delay="0.1s">
-      <div class="container">
-          <div class="col-md-6 mx-auto d-flex justify-content-center align-items-center">
-              <div class="card shadow-sm border-0 rounded-3 bg-transparent">
-                  <div class="card-header bg-primary text-white text-center">
-                      <h5 class="mb-0">Kontak Kami</h5>
-                  </div>
-                  <div class="card-body bg-transparent">
-                      <p class="text-muted mb-0">
-                          Jika Anda memiliki pertanyaan atau butuh bantuan, jangan ragu untuk menghubungi kami!
-                      </p>
-                      <ul class="list-unstyled mt-3">
-                          <li><i class="fas fa-phone-alt me-2 text-primary"></i> +62 812 3456 7890</li>
-                          <li><i class="fas fa-envelope me-2 text-primary"></i> support@website.com</li>
-                          <li><i class="fas fa-map-marker-alt me-2 text-primary"></i> Jl. Contoh No.123, Kota</li>
-                      </ul>
-                  </div>
-              </div>
-          </div>
-          <div class="copyright mt-4">
-              <div class="row">
-                  <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                      &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
-                      Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a><br><br>
-                      Distributed By <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
-                  </div>
-                  <div class="col-md-6 text-center text-md-end">
-                      <div class="footer-menu">
-                          <a href="#">Home</a>
-                          <a href="#">Cookies</a>
-                          <a href="#">Help</a>
-                          <a href="#">FAQs</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+ <footer>
+     <div class="container">
+         <div class="row">
+             <div class="col-md-5">
+                 <div class="footer-col">
+                     <div class="brand">
+                         <img src="assets/images/logotoga.png" alt="logo-toga">
+                         <h1>SMKN2 Padang Panjang</h1>
+                     </div>
+                     <p class="tentang">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam, dicta
+                         vel.
+                         Expedita accusamus ipsa officiis quia delectus saepe aliquam, doloribus consectetur laborum,
+                         nemo assumenda excepturi laboriosam unde! Eos, porro doloribus.
+                     </p>
+                     <ul class="sosmed">
+                         <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+                         <li><a href=""><i class="fab fa-instagram"></i></a></li>
+                         <li><a href=""><i class="fab fa-youtube"></i></a></li>
+                     </ul>
+                 </div>
+             </div>
+             <div class="col-md-4">
+                 <div class="footer-col">
+                     <h2>Kontak Kami</h2>
+                     <p class="alamat">Jl. Syech Ibrahim Musa no.3 Ganting Gunung padang panjang timur Sumatera
+                         barat</p>
+                     <ul class="kontak">
+                         <li><i class="fas fa-envelope"></i>Email: smkn2padangpanjang@sch.id</li>
+                         <li><i class="fas fa-phone"></i>Telp/Fax : 0752-0987-0909</li>
+                     </ul>
+                 </div>
+             </div>
+             <div class="col-md-3">
+                 <div class="footer-col">
+                     <h2>Navigasi</h2>
+                     <ul class="footer-nav">
+                         <li><a href="">Profile</a></li>
+                         <li><a href="">Visi & Misi</a></li>
+                         <li><a href="">Struktur Organisai</a></li>
+                         <li><a href="">Sumber Daya Manusia</a></li>
+                         <li><a href="">Pendaftaran PDB 2020</a></li>
+                     </ul>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="footer-copyright">
+         <div class="container text-center">
+             <h6>Hak Cipta dilindungi. Copyright@2019 <a href="">Teamtrainit.com</a> Edit & Cover by
+                 reskiafdhila</h6>
+         </div>
+     </div>
+ </footer>

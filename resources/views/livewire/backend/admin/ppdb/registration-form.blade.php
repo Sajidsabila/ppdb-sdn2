@@ -133,7 +133,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label for="phone" class="fw-bold">NOmer Telepon</label>
+                                            <label for="phone" class="fw-bold">Nomer Telepon</label>
                                             <input type="number"
                                                 class="form-control @error('phone') is-invalid @enderror"
                                                 placeholder="Masukkan NOmer Telepon" wire:model="phone">
