@@ -1,7 +1,5 @@
 <div>
-    <!-- section menu navbar-->
-    @livewire('partials.frontend.navbar')
-    <!-- slider hero area dan jumbrotron-->
+
     <section id="hero-area">
         <div id="slider-hero-nav"></div>
         <div class="owl-carousel" id="slider-hero">
@@ -16,7 +14,7 @@
                         nesciunt quibusdam sit autem quos </p>
                     <p> exercitationem, maxime necessitatibus numquam consequuntur ex quod expedita dolor ea? </p>
                     <p>Obcaecati labore distinctio quos possimus!</p>
-                    <a href="{{ URL::to('/registration') }}" class="btn btn-utama">Daftar PPDB</a>
+                    <a href="{{ route('user.ppdb') }}" class="btn btn-utama">Daftar PPDB</a>
                 </div>
             </div> <!-- slider item -->
             <div class="slider-item">
@@ -30,9 +28,9 @@
                         nesciunt quibusdam sit autem quos </p>
                     <p> exercitationem, maxime necessitatibus numquam consequuntur ex quod expedita dolor ea? </p>
                     <p>Obcaecati labore distinctio quos possimus!</p>
-                    <a href="" class="btn btn-utama">Daftar Multimedia</a>
+                    <a href="{{ route('login') }}" class="btn btn-utama">Daftar Multimedia</a>
                 </div>
-            </div> <!-- slider item -->
+            </div>
         </div>
     </section>
 

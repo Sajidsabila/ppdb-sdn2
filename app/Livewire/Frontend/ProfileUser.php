@@ -3,6 +3,8 @@
 namespace App\Livewire\Frontend;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Hash;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProfileUser extends Component
 {
@@ -41,7 +43,13 @@ class ProfileUser extends Component
             $this->name = $user->name;
             $this->email = $user->email;
 
-            session()->flash('success', 'Profil berhasil diubah.');
+
+            $this->dispatch(
+                'swal',
+                type: "success",
+                title: "Data Berhasil Diubah",
+                position: "center",
+            );
         } catch (\Throwable $th) {
             session()->flash('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }

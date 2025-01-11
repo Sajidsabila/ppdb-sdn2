@@ -21,6 +21,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Kontak</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('user.ppdb') }}">PPDB</a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 @if (auth()->check() && auth()->user()->role === 'user')

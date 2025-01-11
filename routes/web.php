@@ -1,8 +1,11 @@
 <?php
 
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Frontend\DetailRegistration;
+use App\Livewire\Frontend\EditForm;
 use App\Livewire\Frontend\ProfileUser;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Frontend\RegisterForm;
@@ -30,16 +33,18 @@ Route::middleware('guest')->group(function () {
     Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
     route::get('/register', Register::class)->name('register');
-
+    Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
 });
 Route::group([
     'middleware' => ['auth', 'role:user'],
     'prefix' => '/',
     'as' => 'user.'
 ], function () {
-    Route::get('/registration', RegisterForm::class)->name('register-form');
+    Route::get('/ppdb', RegisterForm::class)->name('ppdb');
+    Route::get('/ppdb/edit/{studentId}', EditForm::class)->name('edit');
     Route::get('/logout', [\App\Livewire\Partials\Frontend\Navbar::class, 'logout'])->name('logout');
     Route::get('/profile', ProfileUser::class)->name('profile');
+    Route::get("/detail-ppdb", DetailRegistration::class)->name('detail');
 });
 Route::group([
     'middleware' => ['auth', 'role:admin'],

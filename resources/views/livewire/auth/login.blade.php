@@ -1,7 +1,7 @@
 <section id="login-section"
     style="margin-bottom: 50px; display: flex; align-items: center; justify-content: center; min-height: 100vh;">
     <div class="container">
-        <div class="section-title text-center">
+        <div class="section-title text-center mt-5">
             <h2>Login</h2>
         </div>
         <div class="section-body">
@@ -42,7 +42,8 @@
                                 <input class="form-check-input" type="checkbox" id="remember" name="remember">
                                 <label class="form-check-label text" for="remember">Remember me</label>
                             </div>
-                            <a href="" class="text-decoration-none">Forgot Password?</a>
+                            <a href="{{ route('forgot-password') }}" wire:navigate class="text-decoration-none">Forgot
+                                Password?</a>
                         </div>
 
                         <div class="d-grid gap-2 mt-3">

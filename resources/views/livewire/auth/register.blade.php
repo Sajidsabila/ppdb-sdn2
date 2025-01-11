@@ -1,7 +1,7 @@
 <section id="register-section"
     style="margin-bottom: 50px; display: flex; align-items: center; justify-content: center; min-height: 100vh;">
     <div class="container">
-        <div class="section-title text-center">
+        <div class="section-title text-center mt-5">
             <h2>Register</h2>
         </div>
         <div class="section-body">

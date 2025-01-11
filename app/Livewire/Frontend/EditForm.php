@@ -7,13 +7,11 @@ use App\Models\Parents;
 use App\Models\Student;
 use Livewire\Component;
 use App\Models\AcademicYear;
-use App\Models\Configuration;
 use Livewire\WithFileUploads;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class RegisterForm extends Component
+class EditForm extends Component
 {
     use WithFileUploads;
     public $studentId;
@@ -51,47 +49,6 @@ class RegisterForm extends Component
             'mother_occupation' => 'required',
         ]
     ];
-    public function render()
-    {
-        $user = auth()->user();
-
-        if (!$user) {
-            return redirect()->route('login'); // Redirect jika belum login
-        }
-
-        $auth = $user->role == 'user';
-        $student = Student::where('user_id', $user->id)->first();
-
-        if ($auth && !$student) {
-            return view('livewire.frontend.registration-form')->layout('layouts.app');
-        }
-
-
-        if ($student) {
-            // Tampilkan detail jika data siswa sudah ada
-            return view('livewire.frontend.detail-registration', compact('student'))
-                ->layout('layouts.app');
-        }
-    }
-
-
-    public function generatePdf($id)
-    {
-        try {
-            $configuration = Configuration::first();
-            $student = Student::with('files', 'parents', 'year')->findOrFail($id);
-            $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
-                'student' => $student,
-                'configuration' => $configuration
-            ]);
-            $fileName = 'Bukti_Pendaftaran_' . ($student->name ?? $student->id) . '.pdf';
-            return response()->streamDownload(function () use ($pdf) {
-                echo $pdf->output();
-            }, $fileName);
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
-        }
-    }
     public function mount($studentId = null)
     {
         $this->studentId = $studentId;
@@ -104,8 +61,19 @@ class RegisterForm extends Component
 
     public function loadStudentData()
     {
-        $student = Student::with(['parents', 'files'])->find($this->studentId);
+        $auth = auth()->user()->id;
+
+        // Cari student yang sesuai dengan studentId dan user_id dari user yang login
+        $student = Student::where('user_id', $auth)->with(['parents', 'files'])->find($this->studentId);
+
+        // Jika tidak ditemukan student yang sesuai, cari student berdasarkan user_id yang login
+        if (!$student) {
+            $student = Student::where('user_id', $auth)->with(['parents', 'files'])->first();
+        }
+
+        // Jika student ditemukan, atur data ke dalam properti
         if ($student) {
+            $this->studentId = $student->id; // Pastikan studentId diatur ulang sesuai dengan data yang valid
             $this->name = $student->name;
             $this->gender = $student->gender;
             $this->email = $student->email;
@@ -114,27 +82,23 @@ class RegisterForm extends Component
             $this->date_of_birth = $student->date_of_birth;
             $this->nik = $student->nik;
             $this->phone = $student->phone;
-            $this->child_status = $student->child_order;
+            $this->child_status = $student->child_status;
             $this->religion = $student->religion;
             $this->number_of_siblings = $student->number_of_siblings;
 
-            $this->father_name = $student->parents->father_name;
-            $this->mother_name = $student->parents->mother_name;
-            $this->father_education = $student->parents->father_education;
-            $this->mother_education = $student->parents->mother_education;
-            $this->father_occupation = $student->parents->mother_occupation;
-            $this->mother_occupation = $student->parents->mother_occupation;
+            $this->father_name = $student->parents->father_name ?? null;
+            $this->mother_name = $student->parents->mother_name ?? null;
+            $this->father_education = $student->parents->father_education ?? null;
+            $this->mother_education = $student->parents->mother_education ?? null;
+            $this->father_occupation = $student->parents->father_occupation ?? null;
+            $this->mother_occupation = $student->parents->mother_occupation ?? null;
 
             $this->pas_foto = $student->files && $student->files->pas_foto ? asset('storage/' . $student->files->pas_foto) : null;
             $this->akte_kelahiran = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
-            $this->kartu_keluarga = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
+            $this->kartu_keluarga = $student->files && $student->files->kartu_keluarga ? asset('storage/' . $student->files->kartu_keluarga) : null;
 
         }
     }
-
-
-
-
     public function nextPage()
     {
         $this->validate($this->validationRules[$this->currentPage]);
@@ -207,7 +171,7 @@ class RegisterForm extends Component
                 $photoPath = $student->files->pas_foto ?? null;
             }
 
-            // Cek dan hapus kartu keluarga lama jika ada file baru
+
             if ($this->kartu_keluarga instanceof \Illuminate\Http\UploadedFile) {
                 if ($student->files && $student->files->kartu_keluarga) {
                     Storage::disk('public')->delete($student->files->kartu_keluarga);
@@ -240,7 +204,7 @@ class RegisterForm extends Component
             );
             DB::commit();
 
-            return redirect()->route('admin.ppdb')->with('success', 'Form berhasil disubmit!');
+            return redirect()->route('user.ppdb')->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
@@ -248,4 +212,9 @@ class RegisterForm extends Component
 
     }
 
+    public function render()
+    {
+        return view('livewire.frontend.edit-form')
+            ->layout('layouts.app');
+    }
 }
