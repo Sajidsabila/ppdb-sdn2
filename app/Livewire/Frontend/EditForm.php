@@ -63,10 +63,9 @@ class EditForm extends Component
     {
         $auth = auth()->user()->id;
 
-        // Cari student yang sesuai dengan studentId dan user_id dari user yang login
         $student = Student::where('user_id', $auth)->with(['parents', 'files'])->find($this->studentId);
 
-        // Jika tidak ditemukan student yang sesuai, cari student berdasarkan user_id yang login
+    
         if (!$student) {
             $student = Student::where('user_id', $auth)->with(['parents', 'files'])->first();
         }

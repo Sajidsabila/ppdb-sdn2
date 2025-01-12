@@ -4,6 +4,7 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Frontend\DetailRegistration;
 use App\Livewire\Frontend\EditForm;
 use App\Livewire\Frontend\ProfileUser;
@@ -34,6 +35,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
     route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
+    ROute::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
+    Route::get('/verification-email/{token}', [Register::class, 'verification'])->name('verification');
 });
 Route::group([
     'middleware' => ['auth', 'role:user'],

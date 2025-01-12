@@ -2,10 +2,15 @@
 
 namespace App\Livewire\Auth;
 
+use Carbon\Carbon;
 use Hash;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use App\Mail\VerificationEmail;
+use Illuminate\Support\Facades\Mail;
+use Redirect;
 
 class Register extends Component
 {
@@ -35,17 +40,41 @@ class Register extends Component
         ]);
 
         try {
+            $veruficationToken = Str::random(mt_rand(4, 5));
             $user = User::create([
                 'id' => (string) Str::uuid(),
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
-                'email_verified_at' => now()
+                'remember_token' => $veruficationToken
             ]);
+            Mail::to($user->email)->send(new VerificationEmail($user));
+            event(new Registered($user));
             return back()->with('success', 'Akun Berhasi Dibuat silahkan');
 
         } catch (\Throwable $th) {
             return back()->with('error', 'Terjadi Kesalahan :' . $th->getMessage());
+        }
+    }
+
+    public function verification($token)
+    {
+        try {
+            $user = User::where('remember_token', $token)->first();
+            if (!$user) {
+                return back()->with('error', 'Token tidak valid');
+            }
+
+            if ($user->email_verified_at !== null) {
+                return back()->with('error', 'email sudah diverifikasi');
+            }
+
+            $user->email_verified_at = Carbon::now();
+            $user->remember_token = null;
+            $user->save();
+            return back()->with('success', 'email berhasil diverifikasi silahkan ');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Terjadi kesalahan' . $th->getMessage());
         }
     }
 }

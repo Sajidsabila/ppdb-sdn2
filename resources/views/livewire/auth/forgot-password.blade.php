@@ -11,11 +11,18 @@
                     @if (session('error'))
                         <div class="alert alert-danger alert-dismissible fade show fw-bold" role="alert">
                             {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @elseif(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show fw-bold" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                     @endif
-
 
                     <form wire:submit.prevent="sendToken">
                         @csrf
@@ -29,7 +36,12 @@
                         </div>
 
                         <div class="d-grid gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <div wire:loading>
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                            <button wire:loading.remove type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                     <div class="mt-4">
