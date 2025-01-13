@@ -17,20 +17,7 @@
                     <a href="{{ route('user.ppdb') }}" class="btn btn-utama">Daftar PPDB</a>
                 </div>
             </div> <!-- slider item -->
-            <div class="slider-item">
-                <div class="slider-item-img">
-                    <img src="assets/images/3.jpg" alt="" class="src">
-                </div>
-                <div class="slider-item-content">
-                    <h2>Jurusan terbaru Multimedia Tahun 2020/2021</h2>
-                    <h2>Angkatan Pertama</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. In corporis
-                        nesciunt quibusdam sit autem quos </p>
-                    <p> exercitationem, maxime necessitatibus numquam consequuntur ex quod expedita dolor ea? </p>
-                    <p>Obcaecati labore distinctio quos possimus!</p>
-                    <a href="{{ route('login') }}" class="btn btn-utama">Daftar Multimedia</a>
-                </div>
-            </div>
+
         </div>
     </section>
 

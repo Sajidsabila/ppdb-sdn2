@@ -72,7 +72,7 @@ class Register extends Component
             $user->email_verified_at = Carbon::now();
             $user->remember_token = null;
             $user->save();
-            return back()->with('success', 'email berhasil diverifikasi silahkan ');
+            return redirect()->route('login')->with('success', 'email berhasil diverifikasi silahkan login');
         } catch (\Throwable $th) {
             return back()->with('error', 'Terjadi kesalahan' . $th->getMessage());
         }

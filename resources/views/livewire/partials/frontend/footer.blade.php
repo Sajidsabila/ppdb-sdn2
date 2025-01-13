@@ -5,7 +5,7 @@
                  <div class="footer-col">
                      <div class="brand">
                          <img src="assets/images/logotoga.png" alt="logo-toga">
-                         <h1>SMKN2 Padang Panjang</h1>
+                         <h1>{{ $configuration->name }}</h1>
                      </div>
                      <p class="tentang">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam, dicta
                          vel.
@@ -22,11 +22,10 @@
              <div class="col-md-4">
                  <div class="footer-col">
                      <h2>Kontak Kami</h2>
-                     <p class="alamat">Jl. Syech Ibrahim Musa no.3 Ganting Gunung padang panjang timur Sumatera
-                         barat</p>
+                     <p class="alamat">{{ $configuration->address }}</p>
                      <ul class="kontak">
-                         <li><i class="fas fa-envelope"></i>Email: smkn2padangpanjang@sch.id</li>
-                         <li><i class="fas fa-phone"></i>Telp/Fax : 0752-0987-0909</li>
+                         <li><i class="fas fa-envelope"></i>Email: {{ $configuration->email }}</li>
+                         <li><i class="fas fa-phone"></i>Telp/Fax : {{ $configuration->phone }}</li>
                      </ul>
                  </div>
              </div>

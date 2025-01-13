@@ -1,19 +1,20 @@
 <div class="container">
     <!-- Statistics Cards -->
     <div class="my-4">
-        <div class="row">
-            <!-- Total Pendaftar -->
-            <div class="col-md-3 mb-4">
-                <div class="card text-white bg-primary">
-                    <div class="card-header text-center">Total Pendaftar</div>
-                    <div class="card-body text-center">
-                        <h1 class="card-title">{{ $data['all'] }}</h1>
-                        <p class="card-text">Jumlah siswa terdaftar.</p>
-                    </div>
+        <div class="col-12">
+            <div class="alert alert-success d-flex align-items-center" role="alert"
+                style="background: linear-gradient(90deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%); border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: #fff; margin-right: 15px;"></i>
+                <div>
+                    <h5 class="text-white" style="font-weight: bold; font-size: 1.5rem;">Selamat Datang
+                        {{ auth()->user()->name }} Di Aplikasi PPDB SDN Purwosari 2</h5>
+                    <p class="mb-0 text-white" style="font-size: 1rem; opacity: 0.9;">Semoga hari Anda menyenankan!
+                        Silakan pilih menu yang ada di sebelah kiri.</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Belum Diverifikasi -->
+        <div class="row">
             <div class="col-md-3 mb-4">
                 <div class="card text-white bg-warning">
                     <div class="card-header text-center">Belum Diverifikasi</div>
@@ -59,15 +60,69 @@
         </div>
     </div>
 
-    <!-- Chart Section -->
-    <div class="container my-5">
+    <div class="col-12">
         <div class="row">
-            <div class="col-6">
-                <canvas id="myChart"></canvas>
+            <!-- Kolom Kiri -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h6 class="text-white fw-bold">Profil Sekolah</h6>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row ms-5">
+                                <div class="col-12 mb-3 ">
+                                    <div class="d-flex align-items-center">
+                                        <label for="schoolName" class="fw-bold me-3" style="min-width: 150px;">Nama
+                                            Sekolah</label>
+                                        <input type="text" class="form-control" wire:model="name" id="schoolName"
+                                            value="SD Negeri Contoh" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <label for="schoolAddress" class="fw-bold me-3"
+                                            style="min-width: 150px;">Alamat</label>
+                                        <input type="text" class="form-control" id="schoolAddress"
+                                            wire:model="address" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <label for="schoolEmail" class="fw-bold me-3"
+                                            style="min-width: 150px;">Email</label>
+                                        <input type="email" class="form-control" id="schoolEmail" wire:model="email"
+                                            readonly>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <label for="schoolPhone" class="fw-bold me-3"
+                                            style="min-width: 150px;">Telepon</label>
+                                        <input type="text" class="form-control" id="schoolPhone" wire:model="phone"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Kolom Kanan -->
+            <div class="col-md-6">
+                <div class="container my-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
+
 </div>
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

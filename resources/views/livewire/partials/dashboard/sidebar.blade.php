@@ -12,6 +12,7 @@
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                 <!-- Dashboard -->
+
                 <li class="nav-item">
                     <a href="{{ route('admin.home') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">
@@ -19,6 +20,7 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+
 
                 <!-- Pengaturan Halaman -->
                 <li
@@ -55,7 +57,6 @@
                     </ul>
                 </li>
 
-                <!-- Widgets -->
                 <li
                     class="nav-item {{ request()->routeIs('admin.ppdb', 'admin.form', 'admin.detail') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
@@ -80,8 +81,16 @@
                                 <p>Calon Siswa Terdaftar</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.ppdb-acepted') }}"
+                                class="nav-link {{ request()->routeIs('admin.ppdb', 'admin.detail') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Siswa Diterima</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
 
                 <!-- User Management -->
                 <li class="nav-item">

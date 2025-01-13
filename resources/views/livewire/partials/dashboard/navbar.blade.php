@@ -24,19 +24,44 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li>
-                        <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center fw-bold">
-                            <i class="bi bi-person-circle me-2"></i>
-                            <span>Profil Saya</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.logout') }}" wire:navigate
-                            class="dropdown-item d-flex align-items-center fw-bold">
-                            <i class="bi bi-box-arrow-right me-2"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
+                    @auth
+                        @if (auth()->user()->role === 'admin')
+                            <li>
+                                <a href="{{ route('admin.profile') }}"
+                                    class="dropdown-item d-flex align-items-center fw-bold">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span>Profil Saya</span>
+                                </a>
+                            </li>
+                        @elseif(auth()->user()->role === 'operator')
+                            <li>
+                                <a href="{{ route('operator.profile') }}"
+                                    class="dropdown-item d-flex align-items-center fw-bold">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span>Profil Saya</span>
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
+                    @auth
+                        @if (auth()->user()->role === 'admin')
+                            <li>
+                                <a href="{{ route('admin.logout') }}" wire:navigate
+                                    class="dropdown-item d-flex align-items-center fw-bold">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        @elseif(auth()->user()->role === 'operator')
+                            <li>
+                                <a href="{{ route('operator.logout') }}" wire:navigate
+                                    class="dropdown-item d-flex align-items-center fw-bold">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
 
                 </ul>
             </li>

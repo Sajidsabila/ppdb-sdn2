@@ -4,6 +4,7 @@ namespace App\Livewire\Backend\Admin\Dashboard;
 
 use App\Models\Student;
 use Livewire\Component;
+use App\Models\Configuration;
 use Illuminate\Support\Facades\DB;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
@@ -11,6 +12,7 @@ class DashboardAdminComponent extends Component
 {
     public $title = "Dashboard";
     public $student;
+    public $name, $address, $email, $phone;
 
     public function mount()
     {
@@ -32,6 +34,14 @@ class DashboardAdminComponent extends Component
         }
 
         $this->student = json_encode($data);
+
+        $configuration = Configuration::first();
+        if ($configuration) {
+            $this->name = $configuration->name ?? 'not found';
+            $this->address = $configuration->address ?? 'not found';
+            $this->email = $configuration->email ?? 'not found';
+            $this->phone = $configuration->phone ?? 'not found';
+        }
     }
 
     public function render()
@@ -43,6 +53,8 @@ class DashboardAdminComponent extends Component
             'accepted' => Student::where('status', 'accepted')->count(),
             'rejected' => Student::where('status', 'rejected')->count(),
         ];
+
+
 
         return view('livewire.backend.admin.dashboard.index', compact('data'))
             ->layout('layouts.admin', ['title' => $this->title]);

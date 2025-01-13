@@ -34,14 +34,20 @@ class Login extends Component
 
                 $user = Auth::user();
 
-                // Periksa apakah pengguna memiliki role "user"
+                // Periksa apakah email sudah diverifikasi
+                if ($user->email_verified_at === null) {
+                    Auth::logout();
+                    return back()->with('error', 'Email belum diverifikasi.');
+                }
+
+                // Periksa role pengguna
                 if ($user->role === 'user') {
                     return redirect()->route('home');
                 }
 
                 // Jika role tidak sesuai, logout pengguna
                 Auth::logout();
-                return back()->with('error', 'Anda tidak memiliki akses sebagai user.');
+                return back()->with('error', 'Anda tidak memiliki akses.');
             }
 
             // Jika kredensial salah

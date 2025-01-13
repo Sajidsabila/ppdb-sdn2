@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? 'Page Title' }}</title>
-  
+
     <!-- Stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -66,7 +66,14 @@
         </nav>
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            @livewire('partials.dashboard.sidebar')
+            @auth
+                @if (auth()->user()->role === 'admin')
+                    @livewire('partials.dashboard.sidebar')
+                @elseif(auth()->user()->role === 'operator')
+                    @livewire('partials.dashboard.operator-sidebar')
+                @endif
+            @endauth
+
         </aside>
 
         <main class="app-main">

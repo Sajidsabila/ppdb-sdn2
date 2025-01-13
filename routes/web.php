@@ -5,6 +5,7 @@ use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Backend\Admin\Ppdb\StudentAccepted;
 use App\Livewire\Frontend\DetailRegistration;
 use App\Livewire\Frontend\EditForm;
 use App\Livewire\Frontend\ProfileUser;
@@ -67,8 +68,23 @@ Route::group([
     Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
     Route::get('/pendaftar', ListComponent::class)->name('ppdb');
     Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
+    Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
 });
 
+Route::group([
+    'middleware' => ['auth', 'role:operator'],
+    'prefix' => 'operator',
+    'as' => 'operator.'
+], function () {
+    Route::get('/', DashboardAdminComponent::class)->name('home');
+    Route::get('/form-pendaftaran/{studentId?}', RegistrationForm::class)->name('form');
+    Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
+    Route::get('/pendaftar', ListComponent::class)->name('ppdb');
+    Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
+    Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
+    Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
+    Route::get('/profile', ProfileComponent::class)->name('profile');
+});
 Route::get('/', Index::class)->name('home');
 Route::get('/home', function () {
     return redirect('/');
