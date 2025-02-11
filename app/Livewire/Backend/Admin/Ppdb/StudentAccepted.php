@@ -69,16 +69,30 @@ class StudentAccepted extends Component
         }
     }
 
-    public function print($id)
+    public function print()
     {
         try {
             $configuration = Configuration::first();
-            $student = Student::with('files', 'parents', 'year')->findOrFail($id);
-            $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
-                'student' => $student,
-                'configuration' => $configuration
+            $year = AcademicYear::where('id', $this->selectedYear)->first();
+            $students = Student::with('files', 'parents', 'year')
+                ->whereHas('year', function ($query) {
+                    $query->where('academic_year_id', $this->selectedYear);
+                })
+                ->where('status', 'accepted')
+                ->get();
+
+            if ($students->isEmpty()) {
+                return back()->with('error', 'Tidak ada data siswa untuk tahun yang dipilih.');
+            }
+
+            $pdf = Pdf::loadView('livewire.pdf.laporan-siswa-diterima', [
+                'students' => $students,
+                'configuration' => $configuration,
+                'year' => $year
             ]);
-            $fileName = 'Bukti_Pendaftaran_' . ($student->name ?? $student->id) . '.pdf';
+
+            $fileName = 'Bukti_Pendaftaran_Tahun_' . $this->selectedYear . '.pdf';
+
             return response()->streamDownload(function () use ($pdf) {
                 echo $pdf->output();
             }, $fileName);

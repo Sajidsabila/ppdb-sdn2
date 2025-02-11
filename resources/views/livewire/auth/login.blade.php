@@ -57,6 +57,11 @@
                         </div>
 
                         <div class="d-grid gap-2 mt-3">
+                            <div wire:loading>
+                                <div class="spinner-border text-success" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
                     </form>

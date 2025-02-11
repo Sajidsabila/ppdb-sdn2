@@ -19,43 +19,20 @@
     <link href="{{ asset('css/adminlte.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
-
-    <!-- Custom Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
-    @stack('css')
+
     <!-- OverlayScrollbars -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/styles/overlayscrollbars.min.css">
+    @stack('css')
+    <style>
 
+    </style>
     @livewireStyles
 
     <style>
-        * {
-            font-family: "Fira Sans", sans-serif;
-            margin: 0;
-            padding: 0;
-        }
 
-        .login-container,
-        .register-container {
-            max-width: 450px;
-            margin: 8% auto 0;
-            padding: 20px;
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            border: 2px solid black;
-        }
-
-        .form-check-label {
-            font-size: 0.9rem;
-        }
-
-        .text {
-            color: black;
-            font-weight: 500;
-        }
     </style>
 </head>
 
@@ -81,7 +58,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">{{ $title }}</h3>
+                            <h5 class="">{{ $title }}</h5>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end fw-bold">

@@ -2,12 +2,16 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
-use App\Models\Configuration;
+use App\Mail\NotificationEmailRejected;
 use Storage;
 use App\Models\Student;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotificationEmailAccepted;
+use App\Mail\NotificationEmailVerified;
 
 class ListComponent extends Component
 {
@@ -60,12 +64,19 @@ class ListComponent extends Component
     public function toggleChangeStatus($itemId, $newStatus)
     {
         $item = Student::find($itemId);
-
+        $id = $item->id;
         if ($item) {
             $item->status = $newStatus;
             $item->save();
-
         }
+        if ($item->status == 'verified') {
+            Mail::to($item->email)->send(new NotificationEmailVerified($id));
+        } else if ($item->status == 'accepted') {
+            Mail::to($item->email)->send(new NotificationEmailAccepted($id));
+        } else if ($item->status == 'rejected') {
+            Mail::to($item->email)->send(new NotificationEmailRejected($id));
+        }
+
     }
     public function render()
     {

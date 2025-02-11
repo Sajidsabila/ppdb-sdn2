@@ -1,25 +1,28 @@
 <?php
 
-use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
-use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Backend\Admin\Ppdb\StudentAccepted;
-use App\Livewire\Frontend\DetailRegistration;
 use App\Livewire\Frontend\EditForm;
-use App\Livewire\Frontend\ProfileUser;
+use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Auth\ForgotPassword;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Frontend\DetailAbout;
+use App\Livewire\Frontend\ProfileUser;
 use App\Livewire\Frontend\RegisterForm;
 use App\Http\Controllers\AuthController;
+use App\Livewire\Frontend\DetailGallery;
+use App\Livewire\Frontend\DetailTeacher;
 use App\Livewire\Frontend\Dashboard\Index;
 use App\Livewire\Backend\Admin\Ppdb\Detail;
 use App\Livewire\Partials\Dashboard\Navbar;
+use App\Livewire\Frontend\DetailRegistration;
 use App\Livewire\Backend\Admin\Ppdb\ListComponent;
 use App\Livewire\Backend\Admin\User\UserComponent;
 use App\Livewire\Backend\Profile\ProfileComponent;
 use App\Livewire\Backend\Admin\Ppdb\TableComponent;
 use App\Livewire\Backend\Admin\Ppdb\DetailComponent;
+use App\Livewire\Backend\Admin\Ppdb\StudentAccepted;
 use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
 use App\Livewire\Backend\Admin\Ppdb\TabelPendaftaran;
 use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
@@ -29,6 +32,10 @@ use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
 use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
 
+Route::get('/', Index::class)->name('home');
+Route::get('/home', function () {
+    return redirect('/');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
@@ -38,6 +45,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
     ROute::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
     Route::get('/verification-email/{token}', [Register::class, 'verification'])->name('verification');
+    Route::get('/about', DetailAbout::class)->name('about');
+    Route::get('/gallery', DetailGallery::class)->name('gallery');
+    Route::get('/teacher', DetailTeacher::class)->name('teacher');
 });
 Route::group([
     'middleware' => ['auth', 'role:user'],
@@ -84,9 +94,5 @@ Route::group([
     Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
     Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
     Route::get('/profile', ProfileComponent::class)->name('profile');
-});
-Route::get('/', Index::class)->name('home');
-Route::get('/home', function () {
-    return redirect('/');
 });
 

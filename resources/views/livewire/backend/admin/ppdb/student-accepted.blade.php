@@ -41,7 +41,7 @@
 
             <div class="col-md-4 d-flex align-items-end mb-3">
                 <a href="{{ route('admin.form') }}" class="btn btn-primary" wire:navigate>Tambah Data</a>
-                <a class="btn btn-success ms-2" wire:navigate>Cetak Laporan</a>
+                <a wire:click="print" class="btn btn-success ms-2" wire:navigate>Cetak Laporan</a>
             </div>
 
             <div class="table-responsive">

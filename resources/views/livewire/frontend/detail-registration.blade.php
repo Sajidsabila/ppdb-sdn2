@@ -14,15 +14,15 @@
                         Proses pendaftaran anda masih dalam proses verifikasi oleh panitia
                     </div>
                 @elseif($student->status === 'verified')
-                    <div class="alert alert-info  text-white" role="alert">
-                        Proses pendaftaran anda sudahdiverifikasi oleh panitian tunggu pengumuman selanjutnya
+                    <div class="alert alert-info " role="alert">
+                        Proses pendaftaran anda sudah di verifikasi oleh panitia tunggu pengumuman selanjutnya
                     </div>
                 @elseif($student->status === 'accepted')
                     <div class="alert alert-success " role="alert">
                         Selamat anda diterima sebagai siswa SDN Purwosari 2
                     </div>
                 @elseif($student->status === 'rejected')
-                    <div class="alert alert-danger text-white" role="alert">
+                    <div class="alert alert-danger" role="alert">
                         Mohon Maaf status pendaftaran anda ditolak
                     </div>
                 @endif
@@ -73,9 +73,10 @@
                             @endif
                         </div>
                     </div>
+
                     <div class="text-center mt-4">
                         <a href="{{ route('user.edit', ['studentId' => strval($student->id)]) }}"
-                            class="btn btn-warning">Update</a>
+                            class="{{ $student->status === 'accepted' ? 'd-none' : '' }} btn btn-warning">Update</a>
 
                         <button class="btn btn-primary" wire:click="generatePdf('{{ $student->id }}')">Cetak</button>
                     </div>

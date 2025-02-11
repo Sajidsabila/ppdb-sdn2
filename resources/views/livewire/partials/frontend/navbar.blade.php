@@ -6,22 +6,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('home') }}">Beranda </a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="#">Tentang</a>
+                <li class="nav-item  {{ request()->routeIs('about') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('about') }}" wire:navigate>Tentang</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="#">Gallery</a>
+                <li class="nav-item  {{ request()->routeIs('gallery') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('gallery') }}">Gallery</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="#">Guru Dan Tendik</a>
+                <li class="nav-item  {{ request()->routeIs('teacher') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('teacher') }}">Guru Dan Tendik</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Kontak</a>
-                </li>
-                <li class="nav-item">
+                <li class="nav-item  {{ request()->routeIs('user.ppdb') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('user.ppdb') }}">PPDB</a>
                 </li>
             </ul>

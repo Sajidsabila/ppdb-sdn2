@@ -1,5 +1,5 @@
-<div class="container">
-    <!-- Statistics Cards -->
+<!-- Statistics Cards -->
+<div style="max-height: 100vh; overflow-y: auto;">
     <div class="my-4">
         <div class="col-12">
             <div class="alert alert-success d-flex align-items-center" role="alert"
@@ -70,38 +70,26 @@
                     </div>
                     <div class="card-body">
                         <form>
-                            <div class="row ms-5">
-                                <div class="col-12 mb-3 ">
-                                    <div class="d-flex align-items-center">
-                                        <label for="schoolName" class="fw-bold me-3" style="min-width: 150px;">Nama
-                                            Sekolah</label>
-                                        <input type="text" class="form-control" wire:model="name" id="schoolName"
-                                            value="SD Negeri Contoh" readonly>
-                                    </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="schoolName" class="fw-bold">Nama Sekolah</label>
+                                    <input type="text" class="form-control" id="schoolName" wire:model="name"
+                                        readonly>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <label for="schoolAddress" class="fw-bold me-3"
-                                            style="min-width: 150px;">Alamat</label>
-                                        <input type="text" class="form-control" id="schoolAddress"
-                                            wire:model="address" readonly>
-                                    </div>
+                                    <label for="schoolAddress" class="fw-bold">Alamat</label>
+                                    <input type="text" class="form-control" id="schoolAddress" wire:model="address"
+                                        readonly>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <label for="schoolEmail" class="fw-bold me-3"
-                                            style="min-width: 150px;">Email</label>
-                                        <input type="email" class="form-control" id="schoolEmail" wire:model="email"
-                                            readonly>
-                                    </div>
+                                    <label for="schoolEmail" class="fw-bold">Email</label>
+                                    <input type="email" class="form-control" id="schoolEmail" wire:model="email"
+                                        readonly>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <label for="schoolPhone" class="fw-bold me-3"
-                                            style="min-width: 150px;">Telepon</label>
-                                        <input type="text" class="form-control" id="schoolPhone" wire:model="phone"
-                                            readonly>
-                                    </div>
+                                    <label for="schoolPhone" class="fw-bold">Telepon</label>
+                                    <input type="text" class="form-control" id="schoolPhone" wire:model="phone"
+                                        readonly>
                                 </div>
                             </div>
                         </form>
@@ -109,21 +97,21 @@
                 </div>
             </div>
 
-
             <!-- Kolom Kanan -->
             <div class="col-md-6">
-                <div class="container my-5">
-                    <div class="row">
-                        <div class="col-12">
-                            <canvas id="myChart"></canvas>
-                        </div>
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="fw-bold">Grafik Statistik</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -131,21 +119,12 @@
         let chartData = JSON.parse(`<?php echo $student; ?>`);
 
         const colors = [
-            'rgba(255, 99, 132, 0.6)', // Merah
-            'rgba(54, 162, 235, 0.6)', // Biru
-            'rgba(255, 206, 86, 0.6)', // Kuning
-            'rgba(75, 192, 192, 0.6)', // Hijau
-            'rgba(153, 102, 255, 0.6)', // Ungu
-            'rgba(255, 159, 64, 0.6)', // Oranye
-        ];
-
-        const borderColors = [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
         ];
 
         new Chart(ctx, {
@@ -156,64 +135,16 @@
                     label: 'Jumlah Pendaftar',
                     data: chartData.dataset,
                     backgroundColor: colors.slice(0, chartData.dataset.length),
-                    borderColor: borderColors.slice(0, chartData.dataset.length),
-                    borderWidth: 2,
-                    borderRadius: 5, // Membuat sudut bar lebih bulat
-                    hoverBackgroundColor: 'rgba(0, 123, 255, 0.5)', // Warna saat hover
-                    hoverBorderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1,
                 }]
             },
             options: {
-                responsive: true, // Membuat chart responsif di berbagai ukuran layar
+                responsive: true,
                 scales: {
-                    x: {
-                        ticks: {
-                            font: {
-                                weight: 'bold',
-                                size: 12
-                            },
-                            autoSkip: true, // Menghindari label x yang terlalu padat
-                        }
-                    },
                     y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 5,
-                            callback: function(value) {
-                                return value % 1 === 0 ? value : ''; // Hanya menampilkan bilangan bulat
-                            },
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                family: 'Arial, sans-serif',
-                            }
-                        }
+                        beginAtZero: true
                     }
                 },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        titleFont: {
-                            size: 16,
-                        },
-                        bodyFont: {
-                            size: 14,
-                        },
-                    }
-                },
-                animation: {
-                    duration: 1500, // Durasi animasi chart
-                    easing: 'easeInOutBounce', // Jenis animasi
-                }
             }
         });
     </script>

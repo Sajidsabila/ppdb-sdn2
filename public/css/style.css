@@ -1,4 +1,7 @@
 /********** Template CSS **********/
+body {
+    height: 100vh;
+}
 :root {
     --primary: #21529b;
     --light: #f0fbfc;

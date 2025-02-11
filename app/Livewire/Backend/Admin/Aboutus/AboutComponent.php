@@ -19,7 +19,9 @@ class AboutComponent extends Component
     public function mount()
     {
         $about = AboutUs::first();
-        $this->foto = $about ? asset('storage/' . $about->foto) : null;
+        $this->foto = $about && $about->foto
+            ? asset('storage/' . $about->foto)
+            : null;
         $this->description = $about->description ?? '';
     }
 

@@ -11,7 +11,10 @@ use App\Models\Configuration;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\NotificationPendaftaranPpdb;
 
 class RegisterForm extends Component
 {
@@ -238,9 +241,25 @@ class RegisterForm extends Component
                     'akte_kelahiran' => $akte_kelahiran,
                 ]
             );
+
+            // // Setelah data berhasil diinput kirim notoifikasi ke user melalui whatsapp
+            // $response = Http::withHeaders([
+            //     'Authorization' => 'TcRwbF2SqYBiUAcFWZgE',
+            // ])->post('https://api.fonnte.com/send', [
+            //             'target' => $student->phone,
+            //             'message' => 'Selamat, data pendaftaran dengan ID ' . $student->id . ' berhasil terdaftar sebagai peserta PPDB di SDN Purwosari 2.',
+
+            //         ]);
+
+            // if ($response->failed()) {
+            //     dd('Gagal mengirim pesan ke nomor ' . $student->phone);
+            // }
+            $email = $student->email;
+            $id = $student->id;
+            Mail::to($email)->send(new NotificationPendaftaranPpdb($id));
             DB::commit();
 
-            return redirect()->route('admin.ppdb')->with('success', 'Form berhasil disubmit!');
+            return back()->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());

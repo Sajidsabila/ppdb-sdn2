@@ -298,16 +298,23 @@
                                             @error('pas_foto')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <!-- Preview Pas Foto -->
-                                            @if (is_object($pas_foto))
-                                                <div class="mt-2">
-                                                    <img src="{{ $pas_foto->temporaryUrl() }}" alt="Preview Pas Foto"
-                                                        class="img-fluid" width="150">
+                                            <div wire:loading wire:target="logo">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
                                                 </div>
-                                            @elseif($pas_foto)
-                                                <img src="{{ $pas_foto }}" alt="Preview Pas Foto"
-                                                    class="img-fluid" width="150">
-                                            @endif
+                                            </div>
+                                            <div wire:loading.remove wire:target="logo">
+                                                <!-- Preview Pas Foto -->
+                                                @if (is_object($pas_foto))
+                                                    <div class="mt-2">
+                                                        <img src="{{ $pas_foto->temporaryUrl() }}"
+                                                            alt="Preview Pas Foto" class="img-fluid" width="150">
+                                                    </div>
+                                                @elseif($pas_foto)
+                                                    <img src="{{ $pas_foto }}" alt="Preview Pas Foto"
+                                                        class="img-fluid" width="150">
+                                                @endif
+                                            </div>
                                         </div>
 
                                         <!-- Akte Kelahiran -->
@@ -365,8 +372,15 @@
                                 <button type="button" wire:click="nextPage"
                                     class="btn btn-sm btn-primary">Next</button>
                             @endif
+
                             @if ($currentPage === $totalPages)
-                                <button type="submit" class="btn btn-sm btn-success">Submit</button>
+                                <div wire:loading>
+                                    <div class="spinner-border text-success" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-success"
+                                    wire:loading.remove>Submit</button>
                             @endif
                         </div>
                 </div>
