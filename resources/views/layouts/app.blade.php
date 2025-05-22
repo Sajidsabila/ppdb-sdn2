@@ -50,8 +50,10 @@
     <!-- Owl Carousel JS -->
     <script src="{{ asset('assets/OwlCarousel2-2.3.4/dist/owl.carousel.min.js') }}"></script>
 
+
     <!-- Custom Script JS -->
     <script src="{{ asset('assets/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Livewire Scripts -->
     @livewireScripts

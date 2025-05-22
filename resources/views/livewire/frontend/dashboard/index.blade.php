@@ -1,8 +1,5 @@
 @push('css')
     <style>
-        /* =============================
-                    Owl Carousel Custom Styling
-                ============================= */
         .owl-carousel .gallery-item {
             text-align: center;
             /* Tengahkan isi galeri */
@@ -44,9 +41,6 @@
             /* Teks lebih tebal */
         }
 
-        /* =============================
-                    Responsiveness Styling
-                ============================= */
         @media (max-width: 1024px) {
             .owl-carousel .gallery-item {
                 padding: 8px;
@@ -84,9 +78,6 @@
             }
         }
 
-        /* =============================
-                    Fallback untuk Mobile
-                ============================= */
         @media (max-width: 600px) {
             .owl-carousel .gallery-item {
                 display: block;
@@ -117,12 +108,14 @@
                     <img src="assets/images/2.jpg" alt="" class="src">
                 </div>
                 <div class="slider-item-content">
-                    <h2>Penerimaan Peserta Didik Baru Tahun 2025/2026</h2>
+                    <h2>Penerimaan Peserta Didik Baru Tahun {{ $ppdb->start_year }}/{{ $ppdb->end_year }}</h2>
                     <h2>Telah Dibuka !</h2>
-                    <p>SDN Purwosari 2 membuka pendaftaran siswa baru untuk tahun ajaran 2025/2026. Calon siswa dapat
-                        mendaftar secara online melalui website ini atau langsung ke sekolah.</p>
+                    <p>SDN Purwosari 2 membuka pendaftaran siswa baru untuk tahun ajaran
+                        {{ $ppdb->start_year }}/{{ $ppdb->end_year }}. Calon siswa dapat
+                        mendaftar secara online melalui website ini atau langsung ke sekolah pendaftaran dibuka dari
+                        {{ $ppdb->start_registration }} hingga {{ $ppdb->end_registration }}.</p>
                     <p>Klik <b>"Daftar Sekarang"</b> untuk memulai pendaftaran online. Informasi lebih lanjut, hubungi
-                        (024) 1234567 atau email sdn.purwosari2@gmail.com.</p>
+                        email sdn.purwosari2@gmail.com.</p>
 
                     <a href="{{ route('user.ppdb') }}" class="btn btn-utama">Daftar Sekarang</a>
                 </div>
@@ -220,14 +213,6 @@
             </div>
         </div>
     </section>
-
-    <!-- section alumni -->
-
-
-
-
-
-
 </div>
 @push('js')
     <script>
@@ -248,9 +233,20 @@
                     }
                 }
             });
+        });
+    </script>
 
-            // Debugging log
-            console.log('Owl Carousel initialized.');
+    <script>
+        document.addEventListener('livewire:init', () => {
+            window.Livewire.on('warning', message => {
+                console.log('Event show-warning diterima:', message);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            });
         });
     </script>
 @endpush

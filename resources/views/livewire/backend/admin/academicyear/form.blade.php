@@ -38,6 +38,26 @@
                         @enderror
                     </div>
 
+
+                    <div class="mb-3">
+                        <label for="start_registration" class="form-label fw-bold">Pendaftaran Dibuka</label>
+                        <input type="date" class="form-control @error('start_registration') is-invalid @enderror"
+                            id="start_registration" wire:model.defer="start_registration"
+                            value="{{ $start_registration }}">
+                        @error('start_registration')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="end_registration" class="form-label fw-bold">Pendaftaran Ditutup</label>
+                        <input type="date" class="form-control @error('end_registration') is-invalid @enderror"
+                            id="end_registration" wire:model.defer="end_registration" value="{{ $end_year }}">
+                        @error('end_registration')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">

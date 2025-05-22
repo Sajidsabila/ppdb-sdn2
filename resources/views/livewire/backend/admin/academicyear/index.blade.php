@@ -28,6 +28,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Tahun Pelajaran</th>
+                                <th>Pendafatran Dibuka</th>
+                                <th>Pendaftaran Ditutup</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -37,6 +39,10 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->start_year . '/' . $item->end_year }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->start_registration)->isoFormat('D MMMM YYYY') }}
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($item->end_registrartion)->isoFormat('D MMMM YYYY') }}
+                                    </td>
                                     <td>
                                         <select wire:change="toggleIsActive({{ $item->id }})" class="form-control">
                                             <option value="1" @if ($item->is_active) selected @endif>
