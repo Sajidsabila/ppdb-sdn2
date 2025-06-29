@@ -102,7 +102,7 @@
 <div>
     <section id="hero-area">
         <div id="slider-hero-nav"></div>
-        <div class="owl-carousel" id="slider-hero">
+        <div id="slider-hero">
             <div class="slider-item">
                 <div class="slider-item-img">
                     <img src="assets/images/2.jpg" alt="" class="src">

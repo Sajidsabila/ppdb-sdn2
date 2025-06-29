@@ -20,7 +20,7 @@ class RegistrationForm extends Component
     public $totalPages = 3;
     public $listeners = ['editStudent'];
     public $name, $gender, $religion, $number_of_siblings, $email, $address;
-    public $place_of_birth, $date_of_birth, $nik, $child_order, $phone;
+    public $place_of_birth, $date_of_birth, $nik, $child_status, $phone;
     public $father_name, $father_education, $father_occupation;
     public $mother_name, $mother_education, $mother_occupation;
     public $pas_foto, $akte_kelahiran, $kartu_keluarga;
@@ -38,7 +38,7 @@ class RegistrationForm extends Component
             'place_of_birth' => 'required',
             'date_of_birth' => 'required|date',
             'nik' => 'required|numeric|digits:16',
-            'child_order' => 'required|numeric',
+            'child_status' => 'required',
             'phone' => 'required|numeric',
         ],
         2 => [
@@ -73,7 +73,7 @@ class RegistrationForm extends Component
             $this->date_of_birth = $student->date_of_birth;
             $this->nik = $student->nik;
             $this->phone = $student->phone;
-            $this->child_order = $student->child_order;
+            $this->child_status = $student->child_status;
             $this->religion = $student->religion;
             $this->number_of_siblings = $student->number_of_siblings;
 
@@ -139,7 +139,7 @@ class RegistrationForm extends Component
                     'place_of_birth' => $this->place_of_birth,
                     'date_of_birth' => $this->date_of_birth,
                     'nik' => $this->nik,
-                    'child_order' => $this->child_order,
+                    'child_status' => $this->child_status,
                     'phone' => $this->phone,
                 ]
             );

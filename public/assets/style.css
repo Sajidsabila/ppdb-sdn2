@@ -159,7 +159,6 @@ a.btn.btn-utama {
     background-color: rgba(255, 255, 255, 0.7);
     padding: 30px 30px;
     text-align: center;
-
 }
 
 #slider-hero-nav .owl-prev,
@@ -819,3 +818,69 @@ footer .footer-nav li a:hover{
 .footer-copyright h6 a:hover{
     border-bottom: 1px dashed rgba(255, 255, 255, 0.7)
 }
+
+/* Responsive styling untuk perangkat dengan lebar maksimum 768px */
+/* Responsive styling untuk perangkat dengan lebar maksimum 768px */
+@media (max-width: 768px) {
+    #hero-area {
+        height: 100dvh; /* full layar tanpa scroll */
+        position: relative;
+        overflow: hidden; /* hindari konten meluber */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #hero-area .slider-item-img {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+
+    #hero-area .slider-item-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #hero-area .slider-item-content {
+        position: relative;
+        z-index: 1;
+        width: 90%;
+        max-height: 90dvh; /* biar gak lebih dari tinggi layar */
+        overflow-y: auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px 15px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    #hero-area .slider-item-content h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    #hero-area .slider-item-content p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    #hero-area .slider-item-content .btn.btn-utama {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    #slider-hero-nav .owl-prev,
+    #slider-hero-nav .owl-next {
+        bottom: 10px;
+        top: auto;
+        padding: 6px 12px;
+        font-size: 16px;
+    }
+}
+
+
+
+
+

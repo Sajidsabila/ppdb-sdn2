@@ -124,14 +124,20 @@
                                             @enderror
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label for="child_order" class="fw-bold">Status Dalam Keluarga</label>
-                                            <input type="text"
-                                                class="form-control @error('child_order') is-invalid @enderror"
-                                                placeholder="Masukkan status dalam keluarga" wire:model="child_order">
-                                            @error('child_order')
+                                            <label for="child_status" class="fw-bold">Status Dalam Keluarga</label>
+                                            <select class="form-control @error('child_status') is-invalid @enderror"
+                                                wire:model="child_status" id="child_status">
+                                                <option value="">-- Pilih Status --</option>
+                                                <option value="Anak Kandung">Anak Kandung</option>
+                                                <option value="Anak Tiri">Anak Tiri</option>
+                                                <option value="Anak Angkat">Anak Angkat</option>
+                                                <option value="Lainnya">Lainnya</option>
+                                            </select>
+                                            @error('child_status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="form-group mb-3">
                                             <label for="phone" class="fw-bold">Nomer Telepon</label>
                                             <input type="number"
