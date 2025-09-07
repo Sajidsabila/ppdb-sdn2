@@ -66,21 +66,6 @@
                         </div>
                     </form>
 
-                    <div class="text-center mt-3">
-                        <p class="text">Or login with</p>
-                        <div class="social-buttons d-grid gap-2">
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-facebook"></i> Facebook
-                            </button>
-                            <button class="btn btn-outline-danger">
-                                <i class="bi bi-google"></i> Google
-                            </button>
-                            <button class="btn btn-outline-dark">
-                                <i class="bi bi-github"></i> GitHub
-                            </button>
-                        </div>
-                    </div>
-
                     <div class="text-center mt-4">
                         <p class="text">
                             Don't have an account?

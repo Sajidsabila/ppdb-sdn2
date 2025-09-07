@@ -7,10 +7,7 @@
                          <img src="assets/images/logotoga.png" alt="logo-toga">
                          <h1>{{ $configuration->name }}</h1>
                      </div>
-                     <p class="tentang">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam, dicta
-                         vel.
-                         Expedita accusamus ipsa officiis quia delectus saepe aliquam, doloribus consectetur laborum,
-                         nemo assumenda excepturi laboriosam unde! Eos, porro doloribus.
+                     <p class="tentang">{{ $configuration->description }}
                      </p>
                      <ul class="sosmed">
                          <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
