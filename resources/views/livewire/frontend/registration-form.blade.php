@@ -355,6 +355,26 @@
                                                     style="width: 100%; height: 300px;" allowfullscreen></iframe>
                                             @endif
                                         </div>
+
+                                        <div class="form-floating mb-2">
+                                            <label for="dokumen_tambahan" style="font-size: 0.7rem;"
+                                                class="fw-bold">Kartu Keluarga</label>
+                                            <input type="file" id="dokumen_tambahan"
+                                                class="form-control form-control-sm @error('dokumen_tambahan') is-invalid @enderror"
+                                                wire:model="dokumen_tambahan" style="font-size: 0.7rem;">
+                                            @error('dokumen_tambahan')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @if ($dokumen_tambahan)
+                                                <div class="mt-2">
+                                                    <iframe src="{{ $dokumen_tambahan }}" frameborder="0"
+                                                        style="width: 100%; height: 300px;" allowfullscreen></iframe>
+                                                </div>
+                                            @elseif(is_object($dokumen_tambahan))
+                                                <iframe src="{{ $dokumen_tambahan->temporaryUrl() }}" frameborder="0"
+                                                    style="width: 100%; height: 300px;" allowfullscreen></iframe>
+                                            @endif
+                                        </div>
                                     </div>
                         @endif
 
@@ -390,3 +410,21 @@
     </div>
     </div>
 </section>
+<script>
+    document.addEventListener("livewire:initialized", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    @this.dispatch('setLocation', {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                    console.log("✅ Lokasi dikirim ke Livewire:", position.coords);
+                },
+                (error) => console.error("❌ Gagal ambil lokasi:", error)
+            );
+        } else {
+            console.error("❌ Browser tidak mendukung geolocation");
+        }
+    });
+</script>

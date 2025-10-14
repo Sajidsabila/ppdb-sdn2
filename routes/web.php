@@ -3,6 +3,7 @@
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Backend\Admin\Ppdb\StudentRankComponent;
 use App\Livewire\Frontend\EditForm;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Auth\ForgotPassword;
@@ -79,6 +80,7 @@ Route::group([
     Route::get('/pendaftar', ListComponent::class)->name('ppdb');
     Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
     Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
+    Route::get("/student-rank", StudentRankComponent::class)->name('student-rank');
 });
 
 Route::group([

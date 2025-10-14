@@ -12,60 +12,69 @@ class ConfigurationComponent extends Component
     use WithFileUploads;
 
     public $title = "Configuration";
-    public $logo, $email, $phone, $website, $name, $address, $npsn;
+    public $logo, $email, $phone, $website, $name, $address, $npsn, $latitude, $longitude;
+
+    protected $listeners = ['setLocation'];
 
     public function mount()
     {
-        $configuration = Configuration::first();
+        $config = Configuration::first();
 
-        $this->logo = $configuration && $configuration->logo
-            ? asset('storage/' . $configuration->logo)
-            : null;
-        $this->name = $configuration->name ?? '';
-        $this->email = $configuration->email ?? '';
-        $this->phone = $configuration->phone ?? '';
-        $this->website = $configuration->website ?? '';
-        $this->address = $configuration->address ?? ''; // Perbaikan typo "adsress" menjadi "address"
-        $this->npsn = $configuration->npsn ?? ''; // Perbaikan typo "adsress" menjadi "address"
+        if ($config) {
+            $this->logo = $config->logo ? asset('storage/' . $config->logo) : null;
+            $this->name = $config->name;
+            $this->email = $config->email;
+            $this->phone = $config->phone;
+            $this->website = $config->website;
+            $this->address = $config->address;
+            $this->npsn = $config->npsn;
+            $this->latitude = $config->latitude;
+            $this->longitude = $config->longitude;
+        }
+    }
+
+    public function setLocation($latitude = null, $longitude = null)
+    {
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
+
+        logger("📍 Lokasi diterima dari frontend", [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ]);
     }
 
     public function save()
     {
-        $configuration = Configuration::first();
-        $this->validate(
-            [
-                'name' => 'required|string|max:255',
-                'logo' => $configuration ? 'nullable' : 'required|image|max:1120|mimes:jpg,png,jpeg,webp',
-                'email' => 'required|email|max:255',
-                'phone' => 'required|string|max:15',
-                'website' => 'required|max:255',
-                'address' => 'required|string|max:500',
-                'npsn' => 'required|integer'
-            ],
-            [
-                'required' => ':attribute wajib diisi.',
-                'max' => 'ukuran :attribute maksimal 1120 kilobyte.',
-                'mimes' => ':attribute harus berupa file berformat: jpg, png, jpeg, atau webp.',
-                'email' => 'Format:attribute tidak valid.',
-                'url' => 'Format :attribute tidak valid.',
-                'number' => ':attribute hrus berupa angka'
-            ],
-            [
-                'name' => 'Nama',
-                'logo' => 'Logo',
-                'email' => 'Email',
-                'phone' => 'Nomor telepon',
-                'website' => 'Website',
-                'address' => 'Alamat',
-                'npsn' => 'npsn'
-            ]
-        );
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'website' => 'required|max:255',
+            'address' => 'required|string|max:500',
+            'npsn' => 'required|integer',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ], [
+            'required' => ':attribute wajib diisi.',
+            'numeric' => ':attribute harus berupa angka.',
+        ], [
+            'name' => 'Nama Sekolah',
+            'email' => 'Email',
+            'phone' => 'Nomor Telepon',
+            'website' => 'Website',
+            'address' => 'Alamat',
+            'npsn' => 'NPSN',
+            'latitude' => 'Latitude',
+            'longitude' => 'Longitude',
+        ]);
+
+        $config = Configuration::first();
 
         try {
+            $filePath = $config ? $config->logo : null;
 
-            $filePath = $configuration ? $configuration->logo : null;
-
-            // Hapus logo lama jika ada dan logo baru diunggah
+            // Upload logo jika baru
             if (is_object($this->logo)) {
                 if ($filePath) {
                     Storage::disk('public')->delete($filePath);
@@ -73,31 +82,27 @@ class ConfigurationComponent extends Component
                 $filePath = $this->logo->store('configuration', 'public');
             }
 
-            // Simpan atau perbarui data
-            if ($configuration) {
-                $configuration->update([
-                    'name' => $this->name,
-                    'logo' => $filePath,
-                    'email' => $this->email,
-                    'phone' => $this->phone,
-                    'website' => $this->website,
-                    'address' => $this->address,
-                    'npsn' => $this->npsn
-                ]);
+            $data = [
+                'name' => $this->name,
+                'logo' => $filePath,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'website' => $this->website,
+                'address' => $this->address,
+                'npsn' => $this->npsn,
+                'latitude' => $this->latitude ?? null,
+                'longitude' => $this->longitude ?? null,
+            ];
+
+            if ($config) {
+                $config->update($data);
                 session()->flash('success', 'Data berhasil diperbarui.');
             } else {
-                Configuration::create([
-                    'name' => $this->name,
-                    'logo' => $filePath,
-                    'email' => $this->email,
-                    'phone' => $this->phone,
-                    'website' => $this->website,
-                    'address' => $this->address,
-                    'npsn' => $this->npsn
-                ]);
+                Configuration::create($data);
                 session()->flash('success', 'Data berhasil ditambahkan.');
             }
         } catch (\Throwable $th) {
+            logger(' Gagal menyimpan konfigurasi:', ['error' => $th->getMessage()]);
             session()->flash('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }

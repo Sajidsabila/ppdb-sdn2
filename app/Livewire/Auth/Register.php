@@ -50,7 +50,7 @@ class Register extends Component
             ]);
             Mail::to($user->email)->send(new VerificationEmail($user));
             event(new Registered($user));
-            return back()->with('success', 'Akun Berhasi Dibuat silahkan');
+            return back()->with('success', 'Akun Berhasi Dibuat Silahkan Aktivasi Email');
 
         } catch (\Throwable $th) {
             return back()->with('error', 'Terjadi Kesalahan :' . $th->getMessage());

@@ -125,3 +125,21 @@
         </div>
     </form>
 </div>
+<script>
+    document.addEventListener("livewire:initialized", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    @this.dispatch('setLocation', {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                    console.log("✅ Lokasi dikirim ke Livewire:", position.coords);
+                },
+                (error) => console.error("❌ Gagal ambil lokasi:", error)
+            );
+        } else {
+            console.error("❌ Browser tidak mendukung geolocation");
+        }
+    });
+</script>

@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('address');
+            $table->string("longitude")->nullable();
+            $table->string("latitude")->nullable();
             $table->enum('status', [
 
                 'pending',
@@ -47,5 +49,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('students');
     }
-  
+
 };

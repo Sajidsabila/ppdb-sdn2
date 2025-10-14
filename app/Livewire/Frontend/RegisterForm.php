@@ -11,7 +11,6 @@ use App\Models\Configuration;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\NotificationPendaftaranPpdb;
@@ -19,18 +18,30 @@ use App\Mail\NotificationPendaftaranPpdb;
 class RegisterForm extends Component
 {
     use WithFileUploads;
+
     public $studentId;
     public $currentPage = 1;
     public $totalPages = 3;
-    public $listeners = ['editStudent'];
+    protected $listeners = ['setLocation', 'editStudent'];
+
+    // Data pribadi
     public $name, $gender, $religion, $number_of_siblings, $email, $address;
     public $place_of_birth, $date_of_birth, $nik, $child_status, $phone;
+
+    // Data orang tua
     public $father_name, $father_education, $father_occupation;
     public $mother_name, $mother_education, $mother_occupation;
+
+    // Dokumen
     public $pas_foto, $akte_kelahiran, $kartu_keluarga;
-    public $serviceData = [];
+
+    // Lainnya
     public $title = "Form Pendaftaran";
     public $isEdit = false;
+    public $latitude;
+    public $longitude;
+
+    // Validasi per halaman
     private $validationRules = [
         1 => [
             'name' => 'required|min:6',
@@ -54,60 +65,52 @@ class RegisterForm extends Component
             'mother_occupation' => 'required',
         ]
     ];
+
     public function render()
     {
         $user = auth()->user();
 
         if (!$user) {
-            return redirect()->route('login'); // Redirect jika belum login
+            return redirect()->route('login');
         }
 
-        $auth = $user->role == 'user';
         $student = Student::where('user_id', $user->id)->first();
 
-        if ($auth && !$student) {
+        if ($user->role === 'user' && !$student) {
             return view('livewire.frontend.registration-form')->layout('layouts.app');
         }
 
-
         if ($student) {
-            // Tampilkan detail jika data siswa sudah ada
             return view('livewire.frontend.detail-registration', compact('student'))
                 ->layout('layouts.app');
         }
     }
 
-
-    public function generatePdf($id)
-    {
-        try {
-            $configuration = Configuration::first();
-            $student = Student::with('files', 'parents', 'year')->findOrFail($id);
-            $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
-                'student' => $student,
-                'configuration' => $configuration
-            ]);
-            $fileName = 'Bukti_Pendaftaran_' . ($student->name ?? $student->id) . '.pdf';
-            return response()->streamDownload(function () use ($pdf) {
-                echo $pdf->output();
-            }, $fileName);
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
-        }
-    }
+    // ✅ FIXED: Default value ditambahkan untuk mencegah error
     public function mount($studentId = null)
     {
         $this->studentId = $studentId;
+
         if ($studentId) {
             $this->isEdit = true;
-            $this->studentId = $studentId;
             $this->loadStudentData();
         }
+    }
+    public function setLocation($latitude = null, $longitude = null)
+    {
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
+
+        logger("✅ Lokasi diterima:", [
+            'latitude' => $latitude,
+            'longitude' => $longitude
+        ]);
     }
 
     public function loadStudentData()
     {
         $student = Student::with(['parents', 'files'])->find($this->studentId);
+
         if ($student) {
             $this->name = $student->name;
             $this->gender = $student->gender;
@@ -117,7 +120,7 @@ class RegisterForm extends Component
             $this->date_of_birth = $student->date_of_birth;
             $this->nik = $student->nik;
             $this->phone = $student->phone;
-            $this->child_status = $student->child_order;
+            $this->child_status = $student->child_status;
             $this->religion = $student->religion;
             $this->number_of_siblings = $student->number_of_siblings;
 
@@ -125,22 +128,19 @@ class RegisterForm extends Component
             $this->mother_name = $student->parents->mother_name;
             $this->father_education = $student->parents->father_education;
             $this->mother_education = $student->parents->mother_education;
-            $this->father_occupation = $student->parents->mother_occupation;
+            $this->father_occupation = $student->parents->father_occupation;
             $this->mother_occupation = $student->parents->mother_occupation;
 
             $this->pas_foto = $student->files && $student->files->pas_foto ? asset('storage/' . $student->files->pas_foto) : null;
             $this->akte_kelahiran = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
-            $this->kartu_keluarga = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
-
+            $this->kartu_keluarga = $student->files && $student->files->kartu_keluarga ? asset('storage/' . $student->files->kartu_keluarga) : null;
         }
     }
-
-
-
 
     public function nextPage()
     {
         $this->validate($this->validationRules[$this->currentPage]);
+
         $this->currentPage++;
         if ($this->currentPage > $this->totalPages) {
             $this->currentPage = $this->totalPages;
@@ -158,17 +158,20 @@ class RegisterForm extends Component
     public function save()
     {
         $isUpdate = $this->studentId !== null;
-        $student = Student::with(['parents', 'files'])->find($this->studentId);
+        $student = $isUpdate ? Student::with(['parents', 'files'])->find($this->studentId) : null;
+
         $this->validate([
-            'pas_foto' => $isUpdate ? 'nullable' : 'required|image|max:1024',
-            'akte_kelahiran' => $isUpdate ? 'nullable' : 'required|file|max:1024',
-            'kartu_keluarga' => $isUpdate ? 'nullable' : 'required|file|max:1024',
+            'pas_foto' => $isUpdate ? 'nullable|image|max:1024' : 'required|image|max:1024',
+            'akte_kelahiran' => $isUpdate ? 'nullable|file|max:1024' : 'required|file|max:1024',
+            'kartu_keluarga' => $isUpdate ? 'nullable|file|max:1024' : 'required|file|max:1024',
         ]);
+
         try {
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
             $user_id = auth()->user()->id;
 
             DB::beginTransaction();
+
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],
                 [
@@ -185,8 +188,11 @@ class RegisterForm extends Component
                     'nik' => $this->nik,
                     'child_status' => $this->child_status,
                     'phone' => $this->phone,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                 ]
             );
+
             Parents::updateOrCreate(
                 ['student_id' => $student->id],
                 [
@@ -199,64 +205,31 @@ class RegisterForm extends Component
                 ]
             );
 
-            // Cek dan hapus pas foto lama jika ada file baru
-            if ($this->pas_foto instanceof \Illuminate\Http\UploadedFile) {
-                if ($student->files && $student->files->pas_foto) {
-                    Storage::disk('public')->delete($student->files->pas_foto);
-                }
+            // File upload & replace
+            $photoPath = $this->pas_foto instanceof \Illuminate\Http\UploadedFile
+                ? $this->pas_foto->store('dokumen', 'public')
+                : ($student->files->pas_foto ?? null);
 
-                $photoPath = $this->pas_foto->store('dokumen', 'public');
-            } else {
-                $photoPath = $student->files->pas_foto ?? null;
-            }
+            $aktePath = $this->akte_kelahiran instanceof \Illuminate\Http\UploadedFile
+                ? $this->akte_kelahiran->store('dokumen', 'public')
+                : ($student->files->akte_kelahiran ?? null);
 
-            // Cek dan hapus kartu keluarga lama jika ada file baru
-            if ($this->kartu_keluarga instanceof \Illuminate\Http\UploadedFile) {
-                if ($student->files && $student->files->kartu_keluarga) {
-                    Storage::disk('public')->delete($student->files->kartu_keluarga);
-                }
-                $kartu_keluarga = $this->kartu_keluarga->store('dokumen', 'public');
-            } else {
-
-                $kartu_keluarga = $student->files->kartu_keluarga ?? null;
-            }
-
-
-            if ($this->akte_kelahiran instanceof \Illuminate\Http\UploadedFile) {
-                if ($student->files && $student->files->akte_kelahiran) {
-                    Storage::disk('public')->delete($student->files->akte_kelahiran);
-                }
-                $akte_kelahiran = $this->akte_kelahiran->store('dokumen', 'public');
-            } else {
-                $akte_kelahiran = $student->files->akte_kelahiran ?? null;
-            }
-
-
+            $kkPath = $this->kartu_keluarga instanceof \Illuminate\Http\UploadedFile
+                ? $this->kartu_keluarga->store('dokumen', 'public')
+                : ($student->files->kartu_keluarga ?? null);
 
             File::updateOrCreate(
                 ['student_id' => $student->id],
                 [
                     'pas_foto' => $photoPath,
-                    'kartu_keluarga' => $kartu_keluarga,
-                    'akte_kelahiran' => $akte_kelahiran,
+                    'kartu_keluarga' => $kkPath,
+                    'akte_kelahiran' => $aktePath,
                 ]
             );
 
-            // // Setelah data berhasil diinput kirim notoifikasi ke user melalui whatsapp
-            // $response = Http::withHeaders([
-            //     'Authorization' => 'TcRwbF2SqYBiUAcFWZgE',
-            // ])->post('https://api.fonnte.com/send', [
-            //             'target' => $student->phone,
-            //             'message' => 'Selamat, data pendaftaran dengan ID ' . $student->id . ' berhasil terdaftar sebagai peserta PPDB di SDN Purwosari 2.',
+            // Kirim email bukti
+            Mail::to($student->email)->send(new NotificationPendaftaranPpdb($student->id));
 
-            //         ]);
-
-            // if ($response->failed()) {
-            //     dd('Gagal mengirim pesan ke nomor ' . $student->phone);
-            // }
-            $email = $student->email;
-            $id = $student->id;
-            Mail::to($email)->send(new NotificationPendaftaranPpdb($id));
             DB::commit();
 
             return back()->with('success', 'Form berhasil disubmit!');
@@ -264,7 +237,27 @@ class RegisterForm extends Component
             DB::rollBack();
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
         }
-
     }
 
+    public function generatePdf($id)
+    {
+        try {
+            $configuration = Configuration::first();
+            $student = Student::with('files', 'parents', 'year')->findOrFail($id);
+
+            $pdf = Pdf::loadView('livewire.pdf.buktipendactaran', [
+                'student' => $student,
+                'configuration' => $configuration
+            ]);
+
+            $fileName = 'Bukti_Pendaftaran_' . ($student->name ?? $student->id) . '.pdf';
+
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, $fileName);
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Terjadi kesalahan saat generate PDF: ' . $th->getMessage());
+        }
+    }
 }
