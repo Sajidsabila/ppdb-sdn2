@@ -21,6 +21,10 @@
                 <li class="nav-item  {{ request()->routeIs('user.ppdb') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('user.ppdb') }}">PPDB</a>
                 </li>
+
+                <li class="nav-item  {{ request()->routeIs('pengumuman') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('pengumuman') }}">Pengumuman PPDB</a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 @if (auth()->check() && auth()->user()->role === 'user')

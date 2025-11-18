@@ -56,7 +56,7 @@
                                             wire:change="toggleChangeStatus('{{ $item->id }}', $event.target.value)"
                                             class="form-control">
                                             <option value="pending" @selected($item->status === 'pending')>Pending</option>
-                                            <option value="verified" @selected($item->status === 'verified')>Verified</option>
+                                            {{-- <option value="verified" @selected($item->status === 'verified')>Verified</option> --}}
                                             <option value="accepted" @selected($item->status === 'accepted')>Accepted</option>
                                             <option value="rejected" @selected($item->status === 'rejected')>Rejected</option>
                                         </select>

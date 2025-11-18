@@ -5,6 +5,7 @@ namespace App\Livewire\Frontend;
 use App\Models\File;
 use App\Models\Parents;
 use App\Models\Student;
+use Intervention\Image\ImageManager;
 use Livewire\Component;
 use App\Models\AcademicYear;
 use App\Models\Configuration;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\NotificationPendaftaranPpdb;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class RegisterForm extends Component
 {
@@ -33,7 +35,7 @@ class RegisterForm extends Component
     public $mother_name, $mother_education, $mother_occupation;
 
     // Dokumen
-    public $pas_foto, $akte_kelahiran, $kartu_keluarga;
+    public $pas_foto, $akte_kelahiran, $kartu_keluarga, $dokumen_pendukung;
 
     // Lainnya
     public $title = "Form Pendaftaran";
@@ -86,7 +88,6 @@ class RegisterForm extends Component
         }
     }
 
-    // ✅ FIXED: Default value ditambahkan untuk mencegah error
     public function mount($studentId = null)
     {
         $this->studentId = $studentId;
@@ -96,6 +97,7 @@ class RegisterForm extends Component
             $this->loadStudentData();
         }
     }
+
     public function setLocation($latitude = null, $longitude = null)
     {
         $this->latitude = $latitude;
@@ -124,16 +126,17 @@ class RegisterForm extends Component
             $this->religion = $student->religion;
             $this->number_of_siblings = $student->number_of_siblings;
 
-            $this->father_name = $student->parents->father_name;
-            $this->mother_name = $student->parents->mother_name;
-            $this->father_education = $student->parents->father_education;
-            $this->mother_education = $student->parents->mother_education;
-            $this->father_occupation = $student->parents->father_occupation;
-            $this->mother_occupation = $student->parents->mother_occupation;
+            $this->father_name = $student->parents->father_name ?? null;
+            $this->mother_name = $student->parents->mother_name ?? null;
+            $this->father_education = $student->parents->father_education ?? null;
+            $this->mother_education = $student->parents->mother_education ?? null;
+            $this->father_occupation = $student->parents->father_occupation ?? null;
+            $this->mother_occupation = $student->parents->mother_occupation ?? null;
 
-            $this->pas_foto = $student->files && $student->files->pas_foto ? asset('storage/' . $student->files->pas_foto) : null;
-            $this->akte_kelahiran = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
-            $this->kartu_keluarga = $student->files && $student->files->kartu_keluarga ? asset('storage/' . $student->files->kartu_keluarga) : null;
+            $this->pas_foto = $student->files->pas_foto ?? null;
+            $this->akte_kelahiran = $student->files->akte_kelahiran ?? null;
+            $this->kartu_keluarga = $student->files->kartu_keluarga ?? null;
+            $this->dokumen_pendukung = $student->files->dokumen_pendukung ?? null;
         }
     }
 
@@ -160,17 +163,19 @@ class RegisterForm extends Component
         $isUpdate = $this->studentId !== null;
         $student = $isUpdate ? Student::with(['parents', 'files'])->find($this->studentId) : null;
 
+        // Validasi dokumen
         $this->validate([
-            'pas_foto' => $isUpdate ? 'nullable|image|max:1024' : 'required|image|max:1024',
-            'akte_kelahiran' => $isUpdate ? 'nullable|file|max:1024' : 'required|file|max:1024',
-            'kartu_keluarga' => $isUpdate ? 'nullable|file|max:1024' : 'required|file|max:1024',
+            'pas_foto' => $isUpdate ? 'nullable|image|mimes:jpg,jpeg,png|max:2048' : 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'akte_kelahiran' => $isUpdate ? 'nullable|file|max:2048' : 'required|file|max:2048',
+            'kartu_keluarga' => $isUpdate ? 'nullable|file|max:2048' : 'required|file|max:2048',
+            'dokumen_pendukung' => 'nullable|file|max:2048',
         ]);
 
         try {
+            DB::beginTransaction();
+
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
             $user_id = auth()->user()->id;
-
-            DB::beginTransaction();
 
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],
@@ -205,18 +210,30 @@ class RegisterForm extends Component
                 ]
             );
 
-            // File upload & replace
-            $photoPath = $this->pas_foto instanceof \Illuminate\Http\UploadedFile
-                ? $this->pas_foto->store('dokumen', 'public')
-                : ($student->files->pas_foto ?? null);
+            // ImageManager untuk pas foto
+            $photoPath = $student?->files->pas_foto ?? null;
+            if ($this->pas_foto instanceof \Illuminate\Http\UploadedFile) {
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($this->pas_foto->getRealPath());
+                $image->resize(472, 709); // 4x6 cm
 
+                $filename = uniqid('foto_') . '.' . $this->pas_foto->getClientOriginalExtension();
+                $photoPath = 'dokumen/' . $filename;
+                Storage::disk('public')->put($photoPath, (string) $image->encode());
+            }
+
+            // Dokumen lain
             $aktePath = $this->akte_kelahiran instanceof \Illuminate\Http\UploadedFile
                 ? $this->akte_kelahiran->store('dokumen', 'public')
-                : ($student->files->akte_kelahiran ?? null);
+                : ($student?->files->akte_kelahiran ?? null);
 
             $kkPath = $this->kartu_keluarga instanceof \Illuminate\Http\UploadedFile
                 ? $this->kartu_keluarga->store('dokumen', 'public')
-                : ($student->files->kartu_keluarga ?? null);
+                : ($student?->files->kartu_keluarga ?? null);
+
+            $dokumenPendukungPath = $this->dokumen_pendukung instanceof \Illuminate\Http\UploadedFile
+                ? $this->dokumen_pendukung->store('dokumen', 'public')
+                : ($student?->files->dokumen_pendukung ?? null);
 
             File::updateOrCreate(
                 ['student_id' => $student->id],
@@ -224,10 +241,11 @@ class RegisterForm extends Component
                     'pas_foto' => $photoPath,
                     'kartu_keluarga' => $kkPath,
                     'akte_kelahiran' => $aktePath,
+                    'dokumen_pendukung' => $dokumenPendukungPath,
                 ]
             );
 
-            // Kirim email bukti
+            // Kirim email bukti pendaftaran
             Mail::to($student->email)->send(new NotificationPendaftaranPpdb($student->id));
 
             DB::commit();
@@ -235,6 +253,7 @@ class RegisterForm extends Component
             return back()->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th);
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
         }
     }
@@ -255,7 +274,6 @@ class RegisterForm extends Component
             return response()->streamDownload(function () use ($pdf) {
                 echo $pdf->output();
             }, $fileName);
-
         } catch (\Throwable $th) {
             return back()->with('error', 'Terjadi kesalahan saat generate PDF: ' . $th->getMessage());
         }

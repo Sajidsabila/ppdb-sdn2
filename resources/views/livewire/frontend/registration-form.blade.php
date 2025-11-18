@@ -200,7 +200,7 @@
                                             <select id="father_occupation" name="father_occupation"
                                                 class="form-control form-control-sm @error('father_occupation') is-invalid @enderror"
                                                 wire:model="father_occupation" style="font-size: 0.7rem;">
-                                                <option value="" selected disabled>Pilih pekerjaan ayah</option>
+                                                <option value="">Pilih pekerjaan ayah</option>
                                                 <option value="Tidak Bekerja">Tidak Bekerja</option>
                                                 <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil (PNS)
                                                 </option>
@@ -254,11 +254,11 @@
                                         </div>
                                         <div class="form-floating mb-2">
                                             <label for="father_occupation" style="font-size: 0.7rem;">Pekerjaan
-                                                Ayah</label>
+                                                Ibu</label>
                                             <select id="mother_occupation" name="mother_occupation"
                                                 class="form-control form-control-sm @error('mother_occupation') is-invalid @enderror"
                                                 wire:model="mother_occupation" style="font-size: 0.7rem;">>
-                                                <option value="" selected disabled>Pilih pekerjaan ibu
+                                                <option value="">Pilih pekerjaan ibu
                                                 </option>
                                                 <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
                                                 <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil
@@ -290,7 +290,7 @@
                                         <!-- Pas Foto -->
                                         <div class="form-floating mb-2">
                                             <label for="pas_foto" style="font-size: 0.7rem;" class="fw-bold">Pas
-                                                Foto</label>
+                                                Foto (Background Merah Ukuran 4 * 6) </label>
                                             <input type="file" id="pas_foto"
                                                 class="form-control form-control-sm @error('pas_foto') is-invalid @enderror"
                                                 wire:model="pas_foto" wire:loading.attr="disabled"
@@ -357,22 +357,23 @@
                                         </div>
 
                                         <div class="form-floating mb-2">
-                                            <label for="dokumen_tambahan" style="font-size: 0.7rem;"
-                                                class="fw-bold">Kartu Keluarga</label>
-                                            <input type="file" id="dokumen_tambahan"
-                                                class="form-control form-control-sm @error('dokumen_tambahan') is-invalid @enderror"
-                                                wire:model="dokumen_tambahan" style="font-size: 0.7rem;">
-                                            @error('dokumen_tambahan')
+                                            <label for="dokumen_pendukung" style="font-size: 0.7rem;"
+                                                class="fw-bold">Dokumen Pendukung</label>
+                                            <input type="file" id="dokumen_pendukung"
+                                                class="form-control form-control-sm @error('dokumen_pendukung') is-invalid @enderror"
+                                                wire:model="dokumen_pendukung" style="font-size: 0.7rem;">
+                                            @error('dokumen_pendukung')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            @if ($dokumen_tambahan)
+                                            @if ($dokumen_pendukung)
                                                 <div class="mt-2">
-                                                    <iframe src="{{ $dokumen_tambahan }}" frameborder="0"
+                                                    <iframe src="{{ $dokumen_pendukung }}" frameborder="0"
                                                         style="width: 100%; height: 300px;" allowfullscreen></iframe>
                                                 </div>
-                                            @elseif(is_object($dokumen_tambahan))
-                                                <iframe src="{{ $dokumen_tambahan->temporaryUrl() }}" frameborder="0"
-                                                    style="width: 100%; height: 300px;" allowfullscreen></iframe>
+                                            @elseif(is_object($dokumen_pendukung))
+                                                <iframe src="{{ $dokumen_pendukung->temporaryUrl() }}"
+                                                    frameborder="0" style="width: 100%; height: 300px;"
+                                                    allowfullscreen></iframe>
                                             @endif
                                         </div>
                                     </div>

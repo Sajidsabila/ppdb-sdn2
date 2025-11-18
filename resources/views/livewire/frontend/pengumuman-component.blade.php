@@ -1,89 +1,76 @@
-<div class="container my-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 fw-bold">
-                <i class="ti ti-award me-2"></i> Peringkat Siswa Berdasarkan Jarak & Umur
-            </h5>
-        </div>
+<section id="ppdb-section"
+    style="margin-bottom: 30px; display: flex; align-items: center; justify-content: center; min-height: 80vh;">
+    <div class="container mt-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">📋 Peringkat Siswa Berdasarkan Jarak dan Umur</h4>
+                <span class="badge bg-light text-dark">
+                    Total: {{ $students->total() }}
+                </span>
+            </div>
 
-        <div class="card-body">
-            {{-- 🔔 Pengumuman di atas tabel --}}
-            <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
-                <i class="ti ti-megaphone me-2 fs-4"></i>
-                <div>
-                    <strong>Pengumuman:</strong><br>
-                    Jika Anda sudah mendaftar namun nama belum muncul dalam daftar, silakan hubungi <strong>Panitia
-                        PPDB</strong> untuk konfirmasi data.
+            <div class="card-body">
+                {{-- Keterangan --}}
+                <div class="alert alert-info mb-4" role="alert">
+                    <strong>Keterangan:</strong><br>
+                    <ul class="mb-0 ps-3">
+                        <li>Peringkat dihitung berdasarkan <strong>jarak terdekat</strong> dari sekolah.</li>
+                        <li>Jika jarak sama, maka <strong>umur tertua</strong> akan mendapatkan prioritas lebih tinggi.
+                        </li>
+                        <li>Status siswa:
+                            <span class="badge bg-success">Diterima</span>,
+                            <span class="badge bg-warning text-dark">Cadangan</span>,
+                            <span class="badge bg-danger">Ditolak</span>.
+                        </li>
+                    </ul>
                 </div>
-            </div>
 
-            {{-- Info tambahan --}}
-            <div class="alert alert-info mb-4">
-                <i class="ti ti-info-circle me-2"></i>
-                Ranking ini dihitung berdasarkan jarak rumah ke sekolah dan usia siswa.
-                Jika jarak sama, siswa dengan usia lebih tua akan diprioritaskan.
-            </div>
+                @if ($students->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 60px;">No</th>
+                                    <th>Nama</th>
+                                    <th style="width: 120px;">Umur</th>
+                                    <th style="width: 120px;">Jarak (km)</th>
+                                    <th style="width: 140px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($students as $index => $student)
+                                    <tr>
+                                        <td class="fw-bold text-center">
+                                            {{ $students->firstItem() + $index }}
+                                        </td>
+                                        <td>{{ $student->name }}</td>
+                                        <td>{{ $student->calculated_age ?? '-' }} tahun</td>
+                                        <td>{{ number_format($student->distance, 2) }}</td>
+                                        <td>
+                                            @if ($student->status == 'Diterima')
+                                                <span class="badge bg-success px-3 py-2">Diterima</span>
+                                            @elseif ($student->status == 'Cadangan')
+                                                <span class="badge bg-warning text-dark px-3 py-2">Cadangan</span>
+                                            @else
+                                                <span class="badge bg-danger px-3 py-2">Ditolak</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
-            {{-- Filter dan jumlah siswa --}}
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <span class="fw-semibold">Total Siswa: </span>
-                    <span class="badge bg-secondary">{{ $students->total() }}</span>
-                </div>
-                <input type="search" wire:model.live="search" class="form-control w-50"
-                    placeholder="Cari nama siswa...">
+                    {{-- Pagination --}}
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $students->links() }}
+                    </div>
+                @else
+                    <div class="alert alert-warning text-center">
+                        <strong>Belum ada data siswa</strong> yang memiliki koordinat lokasi.
+                    </div>
+                @endif
             </div>
-
-            {{-- Tabel hasil ranking --}}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="bg-light text-center fw-semibold">
-                        <tr>
-                            <th>#</th>
-                            <th>Nama Siswa</th>
-                            <th>Umur</th>
-                            <th>Jarak ke Sekolah (meter)</th>
-                            <th>Status</th>
-                            <th>Ranking</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($students as $index => $student)
-                            <tr class="text-center">
-                                <td>{{ $loop->iteration + ($students->currentPage() - 1) * $students->perPage() }}</td>
-                                <td class="text-start fw-semibold">{{ $student->name }}</td>
-                                <td>{{ $student->calculated_age }} tahun</td>
-                                <td>{{ number_format($student->distance, 2) }}</td>
-                                <td>
-                                    @if ($student->status === 'Diterima')
-                                        <span class="badge bg-success">Diterima</span>
-                                    @elseif ($student->status === 'Cadangan')
-                                        <span class="badge bg-warning text-dark">Cadangan</span>
-                                    @else
-                                        <span class="badge bg-danger">Ditolak</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <span class="badge bg-primary">{{ $index + 1 }}</span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center text-muted fw-semibold py-4">
-                                    Data siswa belum tersedia.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            {{-- Pagination --}}
-            @if ($students->count() > 0)
-                <div class="mt-3">
-                    {{ $students->links('pagination::bootstrap-5') }}
-                </div>
-            @endif
         </div>
     </div>
-</div>
+</section>

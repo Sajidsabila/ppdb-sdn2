@@ -67,14 +67,25 @@
             <h1>PPDB SDN Purwosari 2</h1>
         </div>
         <div class="content">
-            <p>Mohon maaf, pendaftaran dengan ID <strong>{{ $id }}</strong> tidak dapat kami terima di
-                <strong>SDN Purwosari 2</strong>.</p>
-            <p>Kami mengucapkan terima kasih atas minat Anda untuk mendaftar di SDN Purwosari 2. Jika Anda membutuhkan
-                informasi lebih lanjut atau ingin mengajukan pertanyaan, silakan hubungi kami melalui email ini atau
-                kunjungi website resmi kami.</p>
-
+            <p><strong>Mohon Maaf,</strong></p>
+            <p>
+                Pendaftaran Anda dengan ID <strong>{{ $id }}</strong>
+                <strong>tidak dapat kami terima</strong> karena berkas yang Anda kirimkan
+                <strong>belum memenuhi persyaratan administrasi</strong> di
+                <strong>SDN Purwosari 2</strong>.
+            </p>
+            <p>
+                Apabila Anda merasa terdapat kekeliruan dalam proses verifikasi,
+                Anda dapat mengajukan <strong>sanggahan</strong> atau
+                <strong>melengkapi berkas kembali</strong> dengan menghubungi panitia pendaftaran.
+            </p>
+            <p>
+                Untuk informasi lebih lanjut, silakan hubungi kami melalui email ini
+                atau kunjungi website resmi <strong>SDN Purwosari 2</strong>.
+            </p>
             <a href="https://www.sdn-purwosari2.sch.id" class="btn">Kunjungi Website</a>
         </div>
+
         <div class="footer">
             <p>&copy; 2025 SDN Purwosari 2. All rights reserved.</p>
         </div>

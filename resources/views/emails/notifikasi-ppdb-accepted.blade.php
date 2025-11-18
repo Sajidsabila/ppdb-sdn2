@@ -67,15 +67,20 @@
             <h1>PPDB SDN Purwosari 2</h1>
         </div>
         <div class="content">
-            <p>Selamat!</p>
-            <p>Selamat! Anda dengan ID <strong>{{ $id }}</strong> telah diterima sebagai siswa di <strong>SDN
-                    Purwosari 2</strong>.</p>
-            <p>Terima kasih telah mempercayakan pendidikan Anda kepada SDN Purwosari 2. Kami dengan senang hati
-                menyambut Anda untuk memulai perjalanan pendidikan bersama kami. Untuk informasi lebih lanjut, silakan
-                hubungi kami melalui email ini atau kunjungi website resmi SDN Purwosari 2.</p>
-
+            <p><strong>Selamat!</strong></p>
+            <p>
+                Anda dengan ID <strong>{{ $id }}</strong> telah <strong>lolos seleksi administrasi</strong>
+                dan berkas Anda telah <strong>diterima oleh SDN Purwosari 2</strong>.
+            </p>
+            <p>
+                Terima kasih telah mempercayakan pendidikan Anda kepada SDN Purwosari 2.
+                Kami dengan senang hati menyambut Anda untuk memulai perjalanan pendidikan bersama kami.
+                Untuk informasi lebih lanjut, silakan hubungi kami melalui email ini atau kunjungi website resmi SDN
+                Purwosari 2.
+            </p>
             <a href="https://www.sdn-purwosari2.sch.id" class="btn">Kunjungi Website</a>
         </div>
+
         <div class="footer">
             <p>&copy; 2025 SDN Purwosari 2. All rights reserved.</p>
         </div>
