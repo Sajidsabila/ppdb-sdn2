@@ -166,9 +166,17 @@ class RegisterForm extends Component
         // Validasi dokumen
         $this->validate([
             'pas_foto' => $isUpdate ? 'nullable|image|mimes:jpg,jpeg,png|max:2048' : 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'akte_kelahiran' => $isUpdate ? 'nullable|file|max:2048' : 'required|file|max:2048',
-            'kartu_keluarga' => $isUpdate ? 'nullable|file|max:2048' : 'required|file|max:2048',
-            'dokumen_pendukung' => 'nullable|file|max:2048',
+            'akte_kelahiran' => $isUpdate
+                ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+            'kartu_keluarga' => $isUpdate
+                ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+            'dokumen_pendukung' => $isUpdate
+                ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+                : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         try {
