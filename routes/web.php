@@ -1,37 +1,38 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Livewire\Auth\AuthAdmin;
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
-use App\Livewire\Auth\AuthAdmin;
-use App\Livewire\Backend\Admin\Ppdb\StudentRankComponent;
-use App\Livewire\Frontend\EditForm;
 use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Auth\ForgotPassword;
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Frontend\DetailAbout;
-use App\Livewire\Frontend\ProfileUser;
-use App\Livewire\Frontend\RegisterForm;
-use App\Http\Controllers\AuthController;
-use App\Livewire\Frontend\DetailGallery;
-use App\Livewire\Frontend\DetailTeacher;
-use App\Livewire\Frontend\Dashboard\Index;
-use App\Livewire\Backend\Admin\Ppdb\Detail;
-use App\Livewire\Partials\Dashboard\Navbar;
-use App\Livewire\Frontend\DetailRegistration;
-use App\Livewire\Backend\Admin\Ppdb\ListComponent;
-use App\Livewire\Backend\Admin\User\UserComponent;
-use App\Livewire\Backend\Profile\ProfileComponent;
-use App\Livewire\Backend\Admin\Ppdb\TableComponent;
-use App\Livewire\Backend\Admin\Ppdb\DetailComponent;
-use App\Livewire\Backend\Admin\Ppdb\StudentAccepted;
-use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
-use App\Livewire\Backend\Admin\Ppdb\TabelPendaftaran;
 use App\Livewire\Backend\Admin\Aboutus\AboutComponent;
-use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
-use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
-use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
 use App\Livewire\Backend\Admin\Academicyear\AcademicYearComponent;
 use App\Livewire\Backend\Admin\Configuration\ConfigurationComponent;
+use App\Livewire\Backend\Admin\Dashboard\DashboardAdminComponent;
+use App\Livewire\Backend\Admin\Gallery\GalleryComponent;
+use App\Livewire\Backend\Admin\Ppdb\Detail;
+use App\Livewire\Backend\Admin\Ppdb\DetailComponent;
+use App\Livewire\Backend\Admin\Ppdb\ListComponent;
+use App\Livewire\Backend\Admin\Ppdb\RegistrationForm;
+use App\Livewire\Backend\Admin\Ppdb\StudentAccepted;
+use App\Livewire\Backend\Admin\Ppdb\StudentRankComponent;
+use App\Livewire\Backend\Admin\Ppdb\TabelPendaftaran;
+use App\Livewire\Backend\Admin\Ppdb\TableComponent;
+use App\Livewire\Backend\Admin\Teacher\TeacherComponent;
+use App\Livewire\Backend\Admin\User\UserComponent;
+use App\Livewire\Backend\Profile\ProfileComponent;
+use App\Livewire\Frontend\Dashboard\Index;
+use App\Livewire\Frontend\DetailAbout;
+use App\Livewire\Frontend\DetailGallery;
+use App\Livewire\Frontend\DetailRegistration;
+use App\Livewire\Frontend\DetailTeacher;
+use App\Livewire\Frontend\EditForm;
+use App\Livewire\Frontend\ProfileUser;
+use App\Livewire\Frontend\RegisterForm;
+use App\Livewire\Partials\Dashboard\Navbar;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', Index::class)->name('home');
 Route::get('/home', function () {
@@ -98,4 +99,31 @@ Route::group([
     Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
     Route::get('/profile', ProfileComponent::class)->name('profile');
 });
+Route::get('/reverse-geocode', function (\Illuminate\Http\Request $request) {
+    $response = Http::withHeaders([
+        'User-Agent' => 'Laravel PPDB App'
+    ])->get('https://nominatim.openstreetmap.org/reverse', [
+                'lat' => $request->lat,
+                'lon' => $request->lng,
+                'format' => 'json'
+            ]);
 
+    return response()->json($response->json());
+});
+Route::get('/reverse-geocode', function (\Illuminate\Http\Request $request) {
+    try {
+        $response = Http::withHeaders([
+            'User-Agent' => 'Laravel PPDB App'
+        ])->get('https://nominatim.openstreetmap.org/reverse', [
+                    'lat' => $request->lat,
+                    'lon' => $request->lng,
+                    'format' => 'json'
+                ]);
+
+        return response()->json($response->json());
+    } catch (\Exception $e) {
+        return response()->json([
+            'display_name' => 'Alamat tidak ditemukan'
+        ]);
+    }
+});

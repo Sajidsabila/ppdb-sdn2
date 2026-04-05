@@ -149,14 +149,23 @@
                                 </div>
 
                                 <div class="col-12 mb-2">
-                                    <div class="form-floating">
-                                        <label for="address" style="font-size: 0.7rem;">Alamat Lengkap</label>
-                                        <textarea class="form-control form-control-sm @error('address') is-invalid @enderror" id="address" name="address"
-                                            placeholder="Alamat Lengkap" style="height: 100px; font-size: 0.7rem;" wire:model="address" required></textarea>
-                                        @error('address')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+
+                                    <!-- 🗺️ MAP -->
+                                    <div wire:ignore>
+                                        <div id="map" style="height: 300px; border-radius:10px;"></div>
                                     </div>
+
+                                    <!-- INPUT LAT LONG (hidden atau readonly) -->
+                                    <input type="hidden" wire:model="latitude" class="form-control mt-2" readonly>
+                                    <input type="hidden" wire:model="longitude" class="form-control mt-2" readonly>
+
+                                    <!-- ALAMAT -->
+                                    <div class="form-floating mt-2">
+                                        <label>Alamat Lengkap</label>
+                                        <textarea class="form-control form-control-sm @error('address') is-invalid @enderror"
+                                            style="height: 100px; font-size: 0.7rem;" wire:model="address" readonly></textarea>
+                                    </div>
+
                                 </div>
                             @elseif($currentPage === 2)
                                 <div class="row g-2">
@@ -411,21 +420,85 @@
     </div>
     </div>
 </section>
+
 <script>
-    document.addEventListener("livewire:initialized", () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    @this.dispatch('setLocation', {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
+    let map;
+    let marker;
+    let mapInitialized = false;
+
+    document.addEventListener("livewire:init", () => {
+
+        function initMap() {
+            if (mapInitialized) return;
+
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+
+            map = L.map('map').setView([-6.9, 107.6], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 300);
+
+            // 📍 AUTO DETECT LOKASI
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+
+                    map.setView([lat, lng], 15);
+
+                    marker = L.marker([lat, lng]).addTo(map);
+
+                    Livewire.dispatch('setLocation', {
+                        lat,
+                        lng
                     });
-                    console.log("✅ Lokasi dikirim ke Livewire:", position.coords);
-                },
-                (error) => console.error("❌ Gagal ambil lokasi:", error)
-            );
-        } else {
-            console.error("❌ Browser tidak mendukung geolocation");
+
+                    // 🔥 ambil alamat via Laravel
+                    fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            Livewire.dispatch('setAddress', {
+                                address: data.display_name ?? 'Alamat tidak ditemukan'
+                            });
+                        });
+                });
+            }
+
+            // 📍 KLIK MAP
+            map.on('click', function(e) {
+                let lat = e.latlng.lat;
+                let lng = e.latlng.lng;
+
+                if (marker) map.removeLayer(marker);
+
+                marker = L.marker([lat, lng]).addTo(map);
+
+                Livewire.dispatch('setLocation', {
+                    lat,
+                    lng
+                });
+
+                // 🔥 ambil alamat via Laravel
+                fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        Livewire.dispatch('setAddress', {
+                            address: data.display_name
+                        });
+                    });
+            });
+
+            mapInitialized = true;
         }
+
+        setTimeout(() => {
+            initMap();
+        }, 300);
     });
 </script>

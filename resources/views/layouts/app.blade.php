@@ -9,6 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/bootstrap4/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
     <!-- Owl Carousel CSS -->
     <link rel="stylesheet" href="{{ asset('assets/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css') }}">
@@ -54,6 +55,9 @@
     <!-- Custom Script JS -->
     <script src="{{ asset('assets/main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 
     <!-- Livewire Scripts -->
     @livewireScripts

@@ -24,7 +24,7 @@ class RegisterForm extends Component
     public $studentId;
     public $currentPage = 1;
     public $totalPages = 3;
-    protected $listeners = ['setLocation', 'editStudent'];
+    protected $listeners = ['setLocation', 'editStudent', 'setAddress'];
 
     // Data pribadi
     public $name, $gender, $religion, $number_of_siblings, $email, $address;
@@ -88,6 +88,15 @@ class RegisterForm extends Component
         }
     }
 
+
+    public function setAddress($address = null)
+    {
+        $this->address = $address;
+
+        logger("📍 Alamat diterima:", [
+            'address' => $address
+        ]);
+    }
     public function mount($studentId = null)
     {
         $this->studentId = $studentId;
