@@ -1,5 +1,6 @@
 @push('css')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 @endpush
 <div>
     <div class="d-flex align-items-center justify-content-center">
@@ -86,15 +87,8 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label for="address" class="fw-bold">Alamat</label>
-                                            <textarea id="address" name="address" class="form-control @error('address') is-invalid @enderror"
-                                                placeholder="Masukkan alamat lengkap" wire:model="address"></textarea>
-                                            @error('address')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
                                     </div>
+
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
                                             <label for="place_of_birth" class="fw-bold">Tempat Lahir</label>
@@ -146,6 +140,25 @@
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+
+                                            <div wire:ignore>
+                                                <div id="map"
+                                                    style="height: 350px; width: 100%; border-radius:10px;"></div>
+                                            </div>
+
+                                            <input type="hidden" wire:model="latitude">
+                                            <input type="hidden" wire:model="longitude">
+
+                                            <div class="form-group mt-2">
+                                                <label>Alamat Lengkap</label>
+                                                <textarea class="form-control @error('address') is-invalid @enderror" style="height: 100px;" wire:model="address"
+                                                    readonly></textarea>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -368,9 +381,85 @@
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
+        });
+
+        document.addEventListener("livewire:initialized", () => {
+
+            let map;
+            let marker;
+
+            function initMap() {
+
+                const el = document.getElementById('map');
+                if (!el) return;
+
+                if (map) return;
+
+                let lat = @this.get('latitude') || -6.9;
+                let lng = @this.get('longitude') || 107.6;
+
+                map = L.map('map').setView([lat, lng], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(map);
+
+                marker = L.marker([lat, lng], {
+                    draggable: true
+                }).addTo(map);
+
+                // 🔥 FIX BIAR MUNCUL
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 300);
+
+                // AUTO GPS
+                if (!@this.get('latitude') && navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(pos) {
+
+                        let lat = pos.coords.latitude;
+                        let lng = pos.coords.longitude;
+
+                        map.setView([lat, lng], 15);
+                        marker.setLatLng([lat, lng]);
+
+                        updateLocation(lat, lng);
+                    });
+                }
+
+                map.on('click', function(e) {
+                    let lat = e.latlng.lat;
+                    let lng = e.latlng.lng;
+
+                    marker.setLatLng([lat, lng]);
+                    updateLocation(lat, lng);
+                });
+
+                marker.on('dragend', function() {
+                    let pos = marker.getLatLng();
+                    updateLocation(pos.lat, pos.lng);
+                });
+            }
+
+            function updateLocation(lat, lng) {
+                @this.set('latitude', lat);
+                @this.set('longitude', lng);
+                getAddress(lat, lng);
+            }
+
+            function getAddress(lat, lng) {
+                fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        @this.set('address', data.display_name ?? 'Alamat tidak ditemukan');
+                    });
+            }
+
+            setTimeout(initMap, 500);
         });
     </script>
 @endpush

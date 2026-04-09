@@ -17,7 +17,12 @@ class EditForm extends Component
     public $studentId;
     public $currentPage = 1;
     public $totalPages = 3;
-    public $listeners = ['editStudent'];
+    protected $listeners = [
+        'setLocation' => 'setLocation',
+        'setAddress' => 'setAddress',
+    ];
+    public $latitude;
+    public $longitude;
     public $name, $gender, $religion, $number_of_siblings, $email, $address;
     public $place_of_birth, $date_of_birth, $nik, $child_status, $phone;
     public $father_name, $father_education, $father_occupation;
@@ -59,13 +64,24 @@ class EditForm extends Component
         }
     }
 
+    public function setLocation($lat, $lng)
+    {
+        $this->latitude = $lat;
+        $this->longitude = $lng;
+    }
+    public function setAddress($address = null)
+    {
+        $this->address = $address;
+    }
+
     public function loadStudentData()
     {
         $auth = auth()->user()->id;
 
+
         $student = Student::where('user_id', $auth)->with(['parents', 'files'])->find($this->studentId);
 
-    
+
         if (!$student) {
             $student = Student::where('user_id', $auth)->with(['parents', 'files'])->first();
         }
@@ -75,6 +91,8 @@ class EditForm extends Component
             $this->studentId = $student->id; // Pastikan studentId diatur ulang sesuai dengan data yang valid
             $this->name = $student->name;
             $this->gender = $student->gender;
+            $this->latitude = $student->latitude;
+            $this->longitude = $student->longitude;
             $this->email = $student->email;
             $this->address = $student->address;
             $this->place_of_birth = $student->place_of_birth;
@@ -145,6 +163,8 @@ class EditForm extends Component
                     'nik' => $this->nik,
                     'child_status' => $this->child_status,
                     'phone' => $this->phone,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                 ]
             );
             Parents::updateOrCreate(

@@ -107,17 +107,11 @@ class RegisterForm extends Component
         }
     }
 
-    public function setLocation($latitude = null, $longitude = null)
+    public function setLocation($lat, $lng)
     {
-        $this->latitude = $latitude;
-        $this->longitude = $longitude;
-
-        logger("✅ Lokasi diterima:", [
-            'latitude' => $latitude,
-            'longitude' => $longitude
-        ]);
+        $this->latitude = $lat;
+        $this->longitude = $lng;
     }
-
     public function loadStudentData()
     {
         $student = Student::with(['parents', 'files'])->find($this->studentId);
@@ -193,6 +187,11 @@ class RegisterForm extends Component
 
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
             $user_id = auth()->user()->id;
+            dd([
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+                'address' => $this->address,
+            ]);
 
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],

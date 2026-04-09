@@ -28,31 +28,37 @@ class StudentRankComponent extends Component
             ])->layout('layouts.admin', ['title' => $this->title]);
         }
 
-        // Ambil semua siswa lalu filter hanya yang punya koordinat
+        // 🔥 FILTER LEBIH KETAT
         $siswaList = Student::whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->where('latitude', '!=', '')
             ->where('longitude', '!=', '')
+            ->where('latitude', '!=', 0)
+            ->where('longitude', '!=', 0)
             ->get();
 
-        // Hitung jarak dan umur
+        // 🔥 HITUNG JARAK & UMUR
         $ranking = $siswaList->map(function ($siswa) use ($config) {
-            // Hitung jarak ke sekolah
-            $siswa->distance = calculate_distance(
+
+            $distance = calculate_distance(
                 $siswa->latitude,
                 $siswa->longitude,
                 $config->latitude,
                 $config->longitude
             );
 
-            // Hitung umur dari tanggal lahir
+            // ✅ FIX: pastikan KM
+            $distance = $distance / 1000; // kalau function kamu meter
+
+            $siswa->distance = round($distance, 2);
+
+            // umur
             $siswa->calculated_age = $siswa->date_of_birth
                 ? Carbon::parse($siswa->date_of_birth)->age
                 : 0;
 
             return $siswa;
         })
-            // Urutkan: jarak terdekat dulu, lalu umur tertua
             ->sort(function ($a, $b) {
                 if ($a->distance == $b->distance) {
                     return $b->calculated_age <=> $a->calculated_age;
@@ -61,11 +67,10 @@ class StudentRankComponent extends Component
             })
             ->values();
 
-        // Ambil kuota dari AcademicYear
+        // kuota
         $quota = $academic->quota ?? 0;
         $cadanganLimit = $quota + 2;
 
-        // Tentukan status tanpa simpan ke DB
         foreach ($ranking as $index => $siswa) {
             if ($index < $quota) {
                 $siswa->status = 'Diterima';
@@ -76,9 +81,10 @@ class StudentRankComponent extends Component
             }
         }
 
-        // Manual pagination
+        // pagination
         $perPage = 10;
         $currentPage = request()->get('page', 1);
+
         $pagedData = new LengthAwarePaginator(
             $ranking->forPage($currentPage, $perPage),
             $ranking->count(),

@@ -147,7 +147,10 @@
                                         @enderror
                                     </div>
                                 </div>
-
+                                <div class="col-12 mb-2" wire:ignore>
+                                    <label style="font-size: 0.7rem;" class="fw-bold mb-1">Pilih Lokasi di Map</label>
+                                    <div id="map" style="height: 300px; border-radius: 8px;"></div>
+                                </div>
                                 <div class="col-12 mb-2">
                                     <div class="form-floating">
                                         <label for="address" style="font-size: 0.7rem;">Alamat Lengkap</label>
@@ -376,3 +379,75 @@
     </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("livewire:init", function() {
+
+        let map;
+        let marker;
+
+        function initMap() {
+            let lat = @this.get('latitude') ?? -6.9;
+            let lng = @this.get('longitude') ?? 107.6;
+
+            map = L.map('map').setView([lat, lng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            marker = L.marker([lat, lng], {
+                draggable: true
+            }).addTo(map);
+
+            // ====================
+            // 📍 AUTO DETECT (optional)
+            // ====================
+            if (!@this.get('latitude') && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+
+                    map.setView([lat, lng], 15);
+                    marker.setLatLng([lat, lng]);
+
+                    @this.call('setLocation', lat, lng);
+                    getAddress(lat, lng);
+                });
+            }
+
+            // ====================
+            // 📍 CLICK MAP
+            // ====================
+            map.on('click', function(e) {
+                let lat = e.latlng.lat;
+                let lng = e.latlng.lng;
+
+                marker.setLatLng([lat, lng]);
+
+                @this.call('setLocation', lat, lng);
+                getAddress(lat, lng);
+            });
+
+            // ====================
+            // 📍 DRAG MARKER
+            // ====================
+            marker.on('dragend', function() {
+                let position = marker.getLatLng();
+
+                @this.call('setLocation', position.lat, position.lng);
+                getAddress(position.lat, position.lng);
+            });
+
+            function getAddress(lat, lng) {
+                fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        @this.call('setAddress', data.display_name ?? 'Alamat tidak ditemukan');
+                    });
+            }
+        }
+
+        setTimeout(initMap, 500);
+    });
+</script>

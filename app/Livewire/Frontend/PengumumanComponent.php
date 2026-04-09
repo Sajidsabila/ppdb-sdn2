@@ -22,28 +22,35 @@ class PengumumanComponent extends Component
         $config = Configuration::first();
         $academic = AcademicYear::latest()->first();
 
-        // Jika data konfigurasi atau tahun akademik belum ada
         if (!$config || !$academic) {
             return view('livewire.frontend.pengumuman-component', [
                 'students' => new LengthAwarePaginator([], 0, 10)
             ])->layout('layouts.frontend', ['title' => $this->title]);
         }
 
-        // Ambil semua siswa yang punya koordinat
+        // 🔥 FILTER LEBIH AMAN
         $students = Student::whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->where('latitude', '!=', '')
             ->where('longitude', '!=', '')
+            ->where('latitude', '!=', 0)
+            ->where('longitude', '!=', 0)
             ->get();
 
-        // Hitung jarak dan umur
+        // 🔥 HITUNG JARAK & UMUR
         $ranking = $students->map(function ($siswa) use ($config) {
-            $siswa->distance = calculate_distance(
+
+            $distance = calculate_distance(
                 $siswa->latitude,
                 $siswa->longitude,
                 $config->latitude,
                 $config->longitude
             );
+
+            // ✅ FIX: jadikan KM
+            $distance = $distance / 1000; // HAPUS kalau function kamu sudah KM
+
+            $siswa->distance = round($distance, 2);
 
             $siswa->calculated_age = $siswa->date_of_birth
                 ? Carbon::parse($siswa->date_of_birth)->age
@@ -51,7 +58,6 @@ class PengumumanComponent extends Component
 
             return $siswa;
         })
-            // Urutkan jarak terdekat lalu umur tertua
             ->sort(function ($a, $b) {
                 if ($a->distance == $b->distance) {
                     return $b->calculated_age <=> $a->calculated_age;
@@ -60,7 +66,7 @@ class PengumumanComponent extends Component
             })
             ->values();
 
-        // Tentukan status berdasarkan kuota
+        // 🔥 STATUS
         $quota = $academic->quota ?? 0;
         $cadanganLimit = $quota + 2;
 
@@ -74,9 +80,10 @@ class PengumumanComponent extends Component
             }
         }
 
-        // Manual pagination
+        // 🔥 PAGINATION
         $perPage = 10;
         $currentPage = request()->get('page', 1);
+
         $pagedData = new LengthAwarePaginator(
             $ranking->forPage($currentPage, $perPage),
             $ranking->count(),

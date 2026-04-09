@@ -36,11 +36,13 @@
                                 </td>
                                 <td class="text-center">{{ $umur }}</td>
                                 <td class="text-center">{{ number_format($student->distance, 2) }}</td>
-                                <td class="text-center">
-                                    @if ($key + 1 <= 10)
-                                        <span class="badge bg-success">Diterima</span>
+                                <td>
+                                    @if ($student->status == 'Diterima')
+                                        <span class="badge bg-success px-3 py-2">Diterima</span>
+                                    @elseif ($student->status == 'Cadangan')
+                                        <span class="badge bg-warning text-dark px-3 py-2">Cadangan</span>
                                     @else
-                                        <span class="badge bg-danger">Cadangan</span>
+                                        <span class="badge bg-danger px-3 py-2">Ditolak</span>
                                     @endif
                                 </td>
                             </tr>

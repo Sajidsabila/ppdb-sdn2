@@ -19,6 +19,8 @@ class RegistrationForm extends Component
     public $currentPage = 1;
     public $totalPages = 3;
     public $listeners = ['editStudent'];
+    public $latitude;
+    public $longitude;
     public $name, $gender, $religion, $number_of_siblings, $email, $address;
     public $place_of_birth, $date_of_birth, $nik, $child_status, $phone;
     public $father_name, $father_education, $father_occupation;
@@ -76,6 +78,8 @@ class RegistrationForm extends Component
             $this->child_status = $student->child_status;
             $this->religion = $student->religion;
             $this->number_of_siblings = $student->number_of_siblings;
+            $this->latitude = $student->latitude;
+            $this->longitude = $student->longitude;
 
             $this->father_name = $student->parents->father_name;
             $this->mother_name = $student->parents->mother_name;
@@ -141,6 +145,8 @@ class RegistrationForm extends Component
                     'nik' => $this->nik,
                     'child_status' => $this->child_status,
                     'phone' => $this->phone,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                 ]
             );
             Parents::updateOrCreate(

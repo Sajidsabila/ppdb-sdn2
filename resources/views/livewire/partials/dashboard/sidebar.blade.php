@@ -88,6 +88,14 @@
                                 <p>Siswa Diterima</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.student-rank') }}"
+                                class="nav-link {{ request()->routeIs('admin.student-rank') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Ranking</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

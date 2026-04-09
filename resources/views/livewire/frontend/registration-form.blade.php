@@ -160,6 +160,7 @@
                                     <input type="hidden" wire:model="longitude" class="form-control mt-2" readonly>
 
                                     <!-- ALAMAT -->
+
                                     <div class="form-floating mt-2">
                                         <label>Alamat Lengkap</label>
                                         <textarea class="form-control form-control-sm @error('address') is-invalid @enderror"
@@ -420,13 +421,12 @@
     </div>
     </div>
 </section>
-
 <script>
     let map;
     let marker;
     let mapInitialized = false;
 
-    document.addEventListener("livewire:init", () => {
+    document.addEventListener("livewire:initialized", () => {
 
         function initMap() {
             if (mapInitialized) return;
@@ -434,7 +434,12 @@
             const mapContainer = document.getElementById('map');
             if (!mapContainer) return;
 
-            map = L.map('map').setView([-6.9, 107.6], 13);
+            // 🔥 AMBIL DATA DARI LIVEWIRE (kalau ada)
+            let lat = @this.get('latitude') ?? -6.9;
+            let lng = @this.get('longitude') ?? 107.6;
+
+            // 🔥 INIT MAP
+            map = L.map('map').setView([lat, lng], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap'
@@ -444,61 +449,83 @@
                 map.invalidateSize();
             }, 300);
 
-            // 📍 AUTO DETECT LOKASI
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    let lat = position.coords.latitude;
-                    let lng = position.coords.longitude;
+            // 🔥 MARKER AWAL
+            marker = L.marker([lat, lng], {
+                draggable: true
+            }).addTo(map);
 
-                    map.setView([lat, lng], 15);
+            // =========================
+            // 📍 AUTO DETECT LOKASI (hanya kalau belum ada data)
+            // =========================
+            if (!@this.get('latitude') && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
 
-                    marker = L.marker([lat, lng]).addTo(map);
+                        map.setView([lat, lng], 15);
 
-                    Livewire.dispatch('setLocation', {
-                        lat,
-                        lng
-                    });
+                        marker.setLatLng([lat, lng]);
 
-                    // 🔥 ambil alamat via Laravel
-                    fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            Livewire.dispatch('setAddress', {
-                                address: data.display_name ?? 'Alamat tidak ditemukan'
-                            });
-                        });
-                });
+                        // 🔥 KIRIM KE LIVEWIRE
+                        @this.call('setLocation', lat, lng);
+
+                        // 🔥 GET ADDRESS
+                        getAddress(lat, lng);
+                    },
+                    (error) => {
+                        console.error('❌ Gagal ambil lokasi:', error);
+                    }
+                );
             }
 
-            // 📍 KLIK MAP
-            map.on('click', function(e) {
-                let lat = e.latlng.lat;
-                let lng = e.latlng.lng;
-
-                if (marker) map.removeLayer(marker);
-
-                marker = L.marker([lat, lng]).addTo(map);
-
-                Livewire.dispatch('setLocation', {
-                    lat,
-                    lng
-                });
-
-                // 🔥 ambil alamat via Laravel
+            // =========================
+            // 📍 FUNCTION GET ADDRESS
+            // =========================
+            function getAddress(lat, lng) {
                 fetch(`/reverse-geocode?lat=${lat}&lng=${lng}`)
                     .then(res => res.json())
                     .then(data => {
-                        Livewire.dispatch('setAddress', {
-                            address: data.display_name
-                        });
-                    });
+                        @this.call('setAddress', data.display_name ?? 'Alamat tidak ditemukan');
+                    })
+                    .catch(err => console.error('❌ Reverse geocode error:', err));
+            }
+
+            // =========================
+            // 📍 KLIK MAP
+            // =========================
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                marker.setLatLng([lat, lng]);
+
+                // 🔥 KIRIM KE LIVEWIRE
+                @this.call('setLocation', lat, lng);
+
+                // 🔥 UPDATE ALAMAT
+                getAddress(lat, lng);
+
+                console.log('🖱️ CLICK:', lat, lng);
+            });
+
+            // =========================
+            // 📍 DRAG MARKER
+            // =========================
+            marker.on('dragend', function(e) {
+                const position = marker.getLatLng();
+
+                @this.call('setLocation', position.lat, position.lng);
+
+                getAddress(position.lat, position.lng);
+
+                console.log('📦 DRAG:', position.lat, position.lng);
             });
 
             mapInitialized = true;
         }
 
-        setTimeout(() => {
-            initMap();
-        }, 300);
+        // 🔥 INIT DELAY
+        setTimeout(initMap, 500);
     });
 </script>
