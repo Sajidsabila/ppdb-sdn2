@@ -58,6 +58,15 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label for="end_registration" class="form-label fw-bold">Kuota Pendaftar</label>
+                        <input type="number" class="form-control @error('quota') is-invalid @enderror"
+                            id="end_registration" wire:model.defer="quota" value="{{ $quota }}">
+                        @error('quota')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">

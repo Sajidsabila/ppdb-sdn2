@@ -5,6 +5,7 @@ namespace App\Livewire\Backend\Admin\Configuration;
 use Livewire\Component;
 use App\Models\Configuration;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ConfigurationComponent extends Component
@@ -12,7 +13,9 @@ class ConfigurationComponent extends Component
     use WithFileUploads;
 
     public $title = "Configuration";
-    public $logo, $email, $phone, $website, $name, $address, $npsn, $latitude, $longitude;
+
+    public $logo, $email, $phone, $website, $name, $address, $npsn;
+    public $latitude, $longitude;
 
     protected $listeners = ['setLocation'];
 
@@ -33,15 +36,52 @@ class ConfigurationComponent extends Component
         }
     }
 
+    /**
+     * dari map picker
+     */
     public function setLocation($latitude = null, $longitude = null)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
 
-        logger("📍 Lokasi diterima dari frontend", [
+        // auto generate alamat
+        $this->generateAddressFromCoordinate();
+
+        logger("📍 Lokasi diterima", [
             'latitude' => $latitude,
             'longitude' => $longitude,
+            'address' => $this->address
         ]);
+    }
+
+    /**
+     * reverse geocoding otomatis jadi alamat
+     */
+    public function generateAddressFromCoordinate()
+    {
+        try {
+            if (!$this->latitude || !$this->longitude) {
+                return;
+            }
+
+            $response = Http::withHeaders([
+                'User-Agent' => 'Laravel Livewire App'
+            ])->get('https://nominatim.openstreetmap.org/reverse', [
+                        'format' => 'jsonv2',
+                        'lat' => $this->latitude,
+                        'lon' => $this->longitude
+                    ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                $this->address = $data['display_name'] ?? $this->address;
+            }
+        } catch (\Throwable $th) {
+            logger('Gagal generate alamat otomatis', [
+                'error' => $th->getMessage()
+            ]);
+        }
     }
 
     public function save()
@@ -74,11 +114,12 @@ class ConfigurationComponent extends Component
         try {
             $filePath = $config ? $config->logo : null;
 
-            // Upload logo jika baru
+            // upload logo baru
             if (is_object($this->logo)) {
                 if ($filePath) {
                     Storage::disk('public')->delete($filePath);
                 }
+
                 $filePath = $this->logo->store('configuration', 'public');
             }
 
@@ -90,8 +131,8 @@ class ConfigurationComponent extends Component
                 'website' => $this->website,
                 'address' => $this->address,
                 'npsn' => $this->npsn,
-                'latitude' => $this->latitude ?? null,
-                'longitude' => $this->longitude ?? null,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
             ];
 
             if ($config) {
@@ -101,8 +142,12 @@ class ConfigurationComponent extends Component
                 Configuration::create($data);
                 session()->flash('success', 'Data berhasil ditambahkan.');
             }
+
         } catch (\Throwable $th) {
-            logger(' Gagal menyimpan konfigurasi:', ['error' => $th->getMessage()]);
+            logger('Gagal simpan konfigurasi', [
+                'error' => $th->getMessage()
+            ]);
+
             session()->flash('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
@@ -110,6 +155,8 @@ class ConfigurationComponent extends Component
     public function render()
     {
         return view('livewire.backend.admin.configuration.index')
-            ->layout('layouts.admin', ['title' => $this->title]);
+            ->layout('layouts.admin', [
+                'title' => $this->title
+            ]);
     }
 }

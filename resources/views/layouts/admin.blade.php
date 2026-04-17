@@ -44,10 +44,10 @@
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             @auth
-                @if (auth()->user()->role === 'admin')
+                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'operator')
                     @livewire('partials.dashboard.sidebar')
-                @elseif(auth()->user()->role === 'operator')
-                    @livewire('partials.dashboard.operator-sidebar')
+                    {{-- @elseif(auth()->user()->role === 'operator')
+                    @livewire('partials.dashboard.operator-sidebar') --}}
                 @endif
             @endauth
 

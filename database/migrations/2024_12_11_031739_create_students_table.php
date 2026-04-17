@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->date('date_of_birth');
             $table->enum('citizenship', ['WNI', 'WNA']);
             $table->integer('number_of_siblings');
-            $table->integer('child_order');
             $table->string('nik');
             $table->string('phone')->nullable();
             $table->string('email')->nullable();

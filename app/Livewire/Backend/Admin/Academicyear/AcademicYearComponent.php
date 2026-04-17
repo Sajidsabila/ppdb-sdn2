@@ -12,7 +12,7 @@ class AcademicYearComponent extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $title = "Tahun Pelajaran";
-    public $start_year, $end_year, $is_active, $start_registration, $end_registration;
+    public $start_year, $end_year, $is_active, $quota, $start_registration, $end_registration;
     public $academic_id;
     public $search;
     public $isModalOpen = false;
@@ -28,6 +28,7 @@ class AcademicYearComponent extends Component
         $this->end_year = '';
         $this->start_registration = '';
         $this->end_registration = '';
+        $this->quota = '';
 
     }
 
@@ -58,6 +59,7 @@ class AcademicYearComponent extends Component
             $this->end_year = $academic->end_year;
             $this->start_registration = $academic->start_registration;
             $this->end_registration = $academic->end_registration;
+            $this->quota = $academic->quota;
             $this->isModalOpen = true;
         } else {
             session()->flash('error', 'user tidak ditemukan');
@@ -72,6 +74,7 @@ class AcademicYearComponent extends Component
             'end_year' => 'required|numeric|digits:4|unique:academic_years,end_year',
             'start_registration' => 'required',
             'end_registration' => 'required',
+            'quota' => 'required|numeric'
         ], [
             'required' => ':attribute harus diisi',
             'numeric' => ':attribute harus berupa angka',
@@ -82,6 +85,7 @@ class AcademicYearComponent extends Component
             'end_year' => 'tahun akhir',
             'start_registration' => 'mulai pendaftaran',
             'end_registration' => 'akhir pendaftaran',
+            'quota' => 'kuota'
         ]);
 
         try {
@@ -92,7 +96,8 @@ class AcademicYearComponent extends Component
                     'start_year' => $this->start_year,
                     'end_year' => $this->end_year,
                     'start_registration' => $this->start_registration,
-                    'end_registration' => $this->end_registration
+                    'end_registration' => $this->end_registration,
+                    'quota' => $this->quota
                 ]
             );
 

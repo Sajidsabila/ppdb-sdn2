@@ -29,10 +29,10 @@ class AuthAdmin extends Component
                 session()->regenerate();
                 $user = Auth::user();
 
-                if ($user->role === 'admin') {
+                if ($user->role === 'admin' || $user->role === 'operator') {
                     return redirect()->route('admin.home');
-                } else if ($user->role === 'operator') {
-                    return redirect()->route('operator.home');
+                    // } else if ($user->role === 'operator') {
+                    //     return redirect()->route('operator.home');
                 }
                 Auth::logout();
                 return back()->with('error', "Username dan Password Salah");

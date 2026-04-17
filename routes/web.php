@@ -43,9 +43,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
     Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
     Route::post('/admin/auth/credential', [AuthController::class, 'auth'])->name('auth.admin');
-    route::get('/register', Register::class)->name('register');
+    Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
-    ROute::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
     Route::get('/verification-email/{token}', [Register::class, 'verification'])->name('verification');
     Route::get('/about', DetailAbout::class)->name('about');
     Route::get('/gallery', DetailGallery::class)->name('gallery');
@@ -64,7 +64,7 @@ Route::group([
     Route::get("/detail-ppdb", DetailRegistration::class)->name('detail');
 });
 Route::group([
-    'middleware' => ['auth', 'role:admin'],
+    'middleware' => ['auth', 'role:admin,operator'],
     'prefix' => 'admin',
     'as' => 'admin.'
 ], function () {
@@ -85,20 +85,27 @@ Route::group([
     Route::get("/student-rank", StudentRankComponent::class)->name('student-rank');
 });
 
-Route::group([
-    'middleware' => ['auth', 'role:operator'],
-    'prefix' => 'operator',
-    'as' => 'operator.'
-], function () {
-    Route::get('/', DashboardAdminComponent::class)->name('home');
-    Route::get('/form-pendaftaran/{studentId?}', RegistrationForm::class)->name('form');
-    Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
-    Route::get('/pendaftar', ListComponent::class)->name('ppdb');
-    Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
-    Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
-    Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
-    Route::get('/profile', ProfileComponent::class)->name('profile');
-});
+// Route::group([
+//     'middleware' => ['auth', 'role:operator'],
+//     'prefix' => 'operator',
+//     'as' => 'operator.'
+// ], function () {
+//     Route::get('/', DashboardAdminComponent::class)->name('home');
+//     Route::get('/gallery', GalleryComponent::class)->name('gallery');
+//     Route::get('/teacher', TeacherComponent::class)->name('teacher');
+//     Route::get('/about', AboutComponent::class)->name('about');
+//     Route::get('/user', UserComponent::class)->name('user');
+//     Route::get('/academic-year', AcademicYearComponent::class)->name('academic');
+//     Route::get('/configuration', ConfigurationComponent::class)->name('configuration');
+//     Route::get('/logout', [Navbar::class, 'logout'])->name('logout');
+//     Route::get('/profile', ProfileComponent::class)->name('profile');
+//     Route::get('/form-pendaftaran/{studentId?}', RegistrationForm::class)->name('form');
+//     Route::get('/detail-pendaftar/{studentId}', DetailComponent::class)->name('detail');
+//     Route::get('/pendaftar', ListComponent::class)->name('ppdb');
+//     Route::get('/generate-pdf/{id}', [ListComponent::class, 'generatePdf'])->name('generate-pdf');
+//     Route::get('/diterima', StudentAccepted::class)->name('ppdb-acepted');
+//     Route::get("/student-rank", StudentRankComponent::class)->name('student-rank');
+// });
 Route::get('/reverse-geocode', function (\Illuminate\Http\Request $request) {
     $response = Http::withHeaders([
         'User-Agent' => 'Laravel PPDB App'

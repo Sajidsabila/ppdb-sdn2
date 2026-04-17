@@ -34,8 +34,14 @@
                                 <td class="text-center">
                                     {{ $student->date_of_birth ? \Carbon\Carbon::parse($student->date_of_birth)->format('d-m-Y') : '-' }}
                                 </td>
-                                <td class="text-center">{{ $umur }}</td>
-                                <td class="text-center">{{ number_format($student->distance, 2) }}</td>
+                                <td class="text-center">
+                                    {{ $student->age_detail ?? '-' }}
+                                </td>
+
+                                {{-- 🔥 jarak detail --}}
+                                <td class="text-center">
+                                    {{ $student->distance_detail ?? '-' }}
+                                </td>
                                 <td>
                                     @if ($student->status == 'Diterima')
                                         <span class="badge bg-success px-3 py-2">Diterima</span>
@@ -48,6 +54,7 @@
                             </tr>
                         @empty
                             <tr>
+
                                 <td colspan="6" class="text-center fw-bold text-muted">
                                     Data siswa tidak ditemukan.
                                 </td>

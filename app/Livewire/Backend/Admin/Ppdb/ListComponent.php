@@ -85,7 +85,7 @@ class ListComponent extends Component
             $query->orWhere('id', 'like', '%' . $this->search . '%');
         })
             ->orderBy('id', 'desc')
-            ->paginate(1);
+            ->paginate(10);
 
 
         return view('livewire.backend.admin.ppdb.index', compact('students'))

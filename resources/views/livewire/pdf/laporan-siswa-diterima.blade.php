@@ -89,7 +89,7 @@
                 <th>No</th>
                 <th>ID Pendaftaran</th>
                 <th>Nama Siswa</th>
-                <th>Nama Orang Tua</th>
+                <th>Umur</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -99,8 +99,8 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $student->id }}</td>
                     <td>{{ $student->name }}</td>
-                    <td>{{ $student->parents->name ?? 'Tidak Diketahui' }}</td>
-                    <td>{{ $student->status == 'accepted' ? 'Diterima' : 'Not Found' }}</td>
+                    <td>{{ $student->parents->father_name ?? 'Tidak Diketahui' }}</td>
+                    <td>{{ 'Diterima' }}</td>
                 </tr>
             @endforeach
         </tbody>

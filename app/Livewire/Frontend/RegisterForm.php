@@ -2,20 +2,21 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Mail\NotificationPendaftaranPpdb;
+use App\Models\AcademicYear;
+use App\Models\Configuration;
 use App\Models\File;
 use App\Models\Parents;
 use App\Models\Student;
-use Intervention\Image\ImageManager;
-use Livewire\Component;
-use App\Models\AcademicYear;
-use App\Models\Configuration;
-use Livewire\WithFileUploads;
+use App\Rules\NikValidasi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use App\Mail\NotificationPendaftaranPpdb;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class RegisterForm extends Component
 {
@@ -54,7 +55,7 @@ class RegisterForm extends Component
             'address' => 'required',
             'place_of_birth' => 'required',
             'date_of_birth' => 'required|date',
-            'nik' => 'required|numeric|digits:16',
+            'nik' => 'required',
             'child_status' => 'required',
             'phone' => 'required|numeric',
         ],
@@ -145,9 +146,37 @@ class RegisterForm extends Component
 
     public function nextPage()
     {
-        $this->validate($this->validationRules[$this->currentPage]);
+        $rules = $this->validationRules[$this->currentPage];
+
+        // Tambahkan validasi custom NIK di step 1
+        if ($this->currentPage == 1) {
+            $rules['nik'] = ['required', new NikValidasi];
+        }
+
+        $this->validate($rules);
+
+        if ($this->currentPage == 1) {
+
+            $academicYear = AcademicYear::where('is_active', 1)->first();
+
+            $tanggalAcuan = \Carbon\Carbon::parse($academicYear->end_registration);
+
+            $umur = \Carbon\Carbon::parse($this->date_of_birth)
+                ->diffInYears($tanggalAcuan);
+
+            if ($umur < 6) {
+                $this->addError('date_of_birth', 'Umur minimal 6 tahun saat penutupan pendaftaran.');
+                return;
+            }
+
+            if ($umur > 8) {
+                $this->addError('date_of_birth', 'Umur maksimal 8 tahun saat penutupan pendaftaran.');
+                return;
+            }
+        }
 
         $this->currentPage++;
+
         if ($this->currentPage > $this->totalPages) {
             $this->currentPage = $this->totalPages;
         }

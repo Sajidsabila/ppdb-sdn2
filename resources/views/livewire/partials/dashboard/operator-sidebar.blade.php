@@ -13,7 +13,7 @@
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                 <!-- Dashboard -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.home') }}" wire:navigate
+                    <a href="{{ route('operator.home') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('operator.home') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-speedometer me-2"></i>
                         <p>Dashboard</p>
