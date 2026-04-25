@@ -216,11 +216,11 @@ class RegisterForm extends Component
 
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
             $user_id = auth()->user()->id;
-            dd([
-                'latitude' => $this->latitude,
-                'longitude' => $this->longitude,
-                'address' => $this->address,
-            ]);
+            // dd([
+            //     'latitude' => $this->latitude,
+            //     'longitude' => $this->longitude,
+            //     'address' => $this->address,
+            // ]);
 
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],
@@ -298,7 +298,6 @@ class RegisterForm extends Component
             return back()->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
         }
     }

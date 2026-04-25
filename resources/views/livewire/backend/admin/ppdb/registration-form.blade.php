@@ -291,7 +291,8 @@
                                     <div class="col-md-6">
                                         <!-- Pas Foto -->
                                         <div class="form-group mb-3">
-                                            <label for="pas_foto" class="fw-bold">Pas Foto</label>
+                                            <label for="pas_foto" class="fw-bold">Pas Foto (maximal: 1mb, format: jpg,
+                                                png, jpeg)</label>
                                             <input type="file" id="pas_foto"
                                                 class="form-control @error('pas_foto') is-invalid @enderror"
                                                 wire:model="pas_foto" wire:loading.attr="disabled">
@@ -312,7 +313,8 @@
 
                                         <!-- Akte Kelahiran -->
                                         <div class="form-group mb-3">
-                                            <label for="akte_kelahiran" class="fw-bold">Akte Kelahiran</label>
+                                            <label for="akte_kelahiran" class="fw-bold">Akte Kelahiran (maximal: 1mb,
+                                                format: pdf)</label>
                                             <input type="file" id="akte_kelahiran"
                                                 class="form-control @error('akte_kelahiran') is-invalid @enderror"
                                                 wire:model="akte_kelahiran">
@@ -330,7 +332,8 @@
 
                                         <!-- Kartu Keluarga -->
                                         <div class="form-group mb-3">
-                                            <label for="kartu_keluarga" class="fw-bold">Kartu Keluarga</label>
+                                            <label for="kartu_keluarga" class="fw-bold">Akte Kelahiran (maximal: 1mb,
+                                                format: pdf)</label>
                                             <input type="file" id="kartu_keluarga"
                                                 class="form-control @error('kartu_keluarga') is-invalid @enderror"
                                                 wire:model="kartu_keluarga">

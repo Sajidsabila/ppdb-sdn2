@@ -120,7 +120,7 @@
                     <a href="{{ route('admin.configuration') }}" wire:navigate
                         class="nav-link {{ request()->routeIs('admin.configuration') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-gear-fill me-2"></i>
-                        <p>Configuration</p>
+                        <p>Profil Sekolah</p>
                     </a>
                 </li>
             </ul>

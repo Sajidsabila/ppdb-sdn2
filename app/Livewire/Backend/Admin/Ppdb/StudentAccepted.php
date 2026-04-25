@@ -104,8 +104,6 @@ class StudentAccepted extends Component
                     || stripos($item->id, $this->search) !== false;
             })->values();
         }
-
-        // 🔥 PAGINATION MANUAL
         $perPage = 10;
         $currentPage = request()->get('page', 1);
 
@@ -219,18 +217,31 @@ class StudentAccepted extends Component
 
                 return $siswa;
             })
-                ->sort(function ($a, $b) {
+                // ->sort(function ($a, $b) {
 
-                    // 1. umur dulu (lebih tua = diffInDays lebih besar)
-                    if ($a->calculated_age != $b->calculated_age) {
-                        return $b->calculated_age <=> $a->calculated_age;
-                    }
+                //     // 1. umur dulu (lebih tua = diffInDays lebih besar)
+                //     if ($a->calculated_age != $b->calculated_age) {
+                //         return $b->calculated_age <=> $a->calculated_age;
+                //     }
 
-                    // 2. kalau umur sama → jarak
+                //     // 2. kalau umur sama → jarak
+                //     return $a->distance <=> $b->distance;
+                // })
+
+                  ->sort(function ($a, $b) {
+
+                // 1. jarak dulu (lebih kecil = lebih prioritas)
+                if ($a->distance != $b->distance) {
                     return $a->distance <=> $b->distance;
-                })
+                }
+
+                // 2. kalau jarak sama → umur (lebih tua = lebih prioritas)
+                return $b->calculated_age <=> $a->calculated_age;
+            })
 
                 ->values();
+
+                
 
             // QUOTA
             $quota = $year->quota ?? 0;

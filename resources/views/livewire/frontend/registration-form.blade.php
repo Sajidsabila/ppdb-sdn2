@@ -300,7 +300,8 @@
                                         <!-- Pas Foto -->
                                         <div class="form-floating mb-2">
                                             <label for="pas_foto" style="font-size: 0.7rem;" class="fw-bold">Pas
-                                                Foto (Background Merah Ukuran 4 * 6) </label>
+                                                Foto Background Merah Ukuran 4 * 6 (maximal : 1 mb, format: png, jpg,
+                                                jpeg)</label>
                                             <input type="file" id="pas_foto"
                                                 class="form-control form-control-sm @error('pas_foto') is-invalid @enderror"
                                                 wire:model="pas_foto" wire:loading.attr="disabled"
@@ -330,7 +331,8 @@
                                         <!-- Akte Kelahiran -->
                                         <div class="form-floating mb-2">
                                             <label for="akte_kelahiran" style="font-size: 0.7rem;"
-                                                class="fw-bold">Akte Kelahiran</label>
+                                                class="fw-bold">Akte Kelahiran Akte Kelahiran (maximal: 1mb, format:
+                                                pdf)</label>
                                             <input type="file" id="akte_kelahiran"
                                                 class="form-control form-control-sm @error('akte_kelahiran') is-invalid @enderror"
                                                 wire:model="akte_kelahiran" style="font-size: 0.7rem;">
@@ -348,7 +350,8 @@
                                         <!-- Kartu Keluarga -->
                                         <div class="form-floating mb-2">
                                             <label for="kartu_keluarga" style="font-size: 0.7rem;"
-                                                class="fw-bold">Kartu Keluarga</label>
+                                                class="fw-bold">Kartu Keluarga Akte Kelahiran (maximal: 1mb, format:
+                                                pdf)</label>
                                             <input type="file" id="kartu_keluarga"
                                                 class="form-control form-control-sm @error('kartu_keluarga') is-invalid @enderror"
                                                 wire:model="kartu_keluarga" style="font-size: 0.7rem;">
@@ -368,7 +371,8 @@
 
                                         <div class="form-floating mb-2">
                                             <label for="dokumen_pendukung" style="font-size: 0.7rem;"
-                                                class="fw-bold">Dokumen Pendukung</label>
+                                                class="fw-bold">Dokumen Pendukung Akte Kelahiran (maximal: 1mb, format:
+                                                pdf)</label>
                                             <input type="file" id="dokumen_pendukung"
                                                 class="form-control form-control-sm @error('dokumen_pendukung') is-invalid @enderror"
                                                 wire:model="dokumen_pendukung" style="font-size: 0.7rem;">

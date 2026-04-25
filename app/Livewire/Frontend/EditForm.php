@@ -116,15 +116,43 @@ class EditForm extends Component
 
         }
     }
-    public function nextPage()
+      public function nextPage()
     {
-        $this->validate($this->validationRules[$this->currentPage]);
+        $rules = $this->validationRules[$this->currentPage];
+
+        // Tambahkan validasi custom NIK di step 1
+        if ($this->currentPage == 1) {
+            $rules['nik'] = ['required', new NikValidasi];
+        }
+
+        $this->validate($rules);
+
+        if ($this->currentPage == 1) {
+
+            $academicYear = AcademicYear::where('is_active', 1)->first();
+
+            $tanggalAcuan = \Carbon\Carbon::parse($academicYear->end_registration);
+
+            $umur = \Carbon\Carbon::parse($this->date_of_birth)
+                ->diffInYears($tanggalAcuan);
+
+            if ($umur < 6) {
+                $this->addError('date_of_birth', 'Umur minimal 6 tahun saat penutupan pendaftaran.');
+                return;
+            }
+
+            if ($umur > 8) {
+                $this->addError('date_of_birth', 'Umur maksimal 8 tahun saat penutupan pendaftaran.');
+                return;
+            }
+        }
+
         $this->currentPage++;
+
         if ($this->currentPage > $this->totalPages) {
             $this->currentPage = $this->totalPages;
         }
     }
-
     public function previousPage()
     {
         $this->currentPage--;

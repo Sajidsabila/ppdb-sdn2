@@ -87,23 +87,23 @@ class StudentRankComponent extends Component
 
             return $siswa;
         })
-            // ->sort(function ($a, $b) {
-            //     if ($a->distance == $b->distance) {
-            //         return $b->calculated_age <=> $a->calculated_age;
-            //     }
-
-            //     return $a->distance <=> $b->distance;
-            // })
             ->sort(function ($a, $b) {
-
-                // 1. umur dulu (lebih tua = diffInDays lebih besar)
-                if ($a->calculated_age != $b->calculated_age) {
+                if ($a->distance == $b->distance) {
                     return $b->calculated_age <=> $a->calculated_age;
                 }
 
-                // 2. kalau umur sama → jarak
                 return $a->distance <=> $b->distance;
             })
+            // ->sort(function ($a, $b) {
+
+            //     // 1. umur dulu (lebih tua = diffInDays lebih besar)
+            //     if ($a->calculated_age != $b->calculated_age) {
+            //         return $b->calculated_age <=> $a->calculated_age;
+            //     }
+
+            //     // 2. kalau umur sama → jarak
+            //     return $a->distance <=> $b->distance;
+            // })
             ->values();
 
         $quota = $academic->quota ?? 0;
