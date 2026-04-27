@@ -414,8 +414,15 @@
                                         <span class="sr-only">Loading...</span>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-success"
-                                    wire:loading.remove>Submit</button>
+                                @if (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration)
+                                    <button type="submit" class="btn btn-sm btn-success"
+                                        wire:loading.remove>Submit</button>
+                                @else
+                                    <button class="btn btn-utama" onclick="alert('Maaf, pendaftaran sudah ditutup')">
+                                        Daftar Sekarang
+                                    </button>
+                                @endif
+
                             @endif
                         </div>
                 </div>

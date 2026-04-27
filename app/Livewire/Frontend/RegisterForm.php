@@ -72,7 +72,9 @@ class RegisterForm extends Component
     public function render()
     {
         $user = auth()->user();
-
+        $registrationDate = AcademicYear::where('is_active', '1')
+            ->orderBy('id', 'desc')
+            ->first();
         if (!$user) {
             return redirect()->route('login');
         }

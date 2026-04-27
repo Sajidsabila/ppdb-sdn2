@@ -103,7 +103,7 @@
     <section id="hero-area">
         <div id="slider-hero-nav"></div>
         <div id="slider-hero">
-            <div class="slider-item">
+            <div class="slider-item ">
                 <div class="slider-item-img">
                     <img src="assets/images/2.jpg" alt="" class="src">
                 </div>
@@ -113,11 +113,23 @@
                     <p>SDN Purwosari 2 membuka pendaftaran siswa baru untuk tahun ajaran
                         {{ $ppdb->start_year }}/{{ $ppdb->end_year }}. Calon siswa dapat
                         mendaftar secara online melalui website ini atau langsung ke sekolah pendaftaran dibuka dari
-                        {{ $ppdb->start_registration }} hingga {{ $ppdb->end_registration }}.</p>
+                        <span
+                            class="fw-bold">{{ \Carbon\Carbon::parse($ppdb->start_registration)->locale('id')->isoFormat('D MMMM YYYY') }}
+                            hingga
+                            {{ \carbon\Carbon::parse($ppdb->end_registration)->locale('id')->isoFormat('D MMMM YYYY') }}.
+                        </span>
+                    </p>
                     <p>Klik <b>"Daftar Sekarang"</b> untuk memulai pendaftaran online. Informasi lebih lanjut, hubungi
                         email sdn.purwosari2@gmail.com.</p>
-
-                    <a href="{{ route('user.ppdb') }}" class="btn btn-utama">Daftar Sekarang</a>
+                    @if (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration)
+                        <a href="{{ route('user.ppdb') }}" class="btn btn-utama">
+                            Daftar Sekarang
+                        </a>
+                    @else
+                        <button class="btn btn-utama" onclick="alert('Maaf, pendaftaran sudah ditutup')">
+                            Daftar Sekarang
+                        </button>
+                    @endif
                 </div>
             </div> <!-- slider item -->
 
