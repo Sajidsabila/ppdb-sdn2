@@ -39,6 +39,7 @@ class StudentAccepted extends Component
 
         // 🔥 ambil semua siswa (tanpa status DB)
         $studentsRaw = Student::where('academic_year_id', $academic->id)
+            ->where('status', 'accepted')
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->get();
@@ -228,20 +229,20 @@ class StudentAccepted extends Component
                 //     return $a->distance <=> $b->distance;
                 // })
 
-                  ->sort(function ($a, $b) {
+                ->sort(function ($a, $b) {
 
-                // 1. jarak dulu (lebih kecil = lebih prioritas)
-                if ($a->distance != $b->distance) {
-                    return $a->distance <=> $b->distance;
-                }
+                    // 1. jarak dulu (lebih kecil = lebih prioritas)
+                    if ($a->distance != $b->distance) {
+                        return $a->distance <=> $b->distance;
+                    }
 
-                // 2. kalau jarak sama → umur (lebih tua = lebih prioritas)
-                return $b->calculated_age <=> $a->calculated_age;
-            })
+                    // 2. kalau jarak sama → umur (lebih tua = lebih prioritas)
+                    return $b->calculated_age <=> $a->calculated_age;
+                })
 
                 ->values();
 
-                
+
 
             // QUOTA
             $quota = $year->quota ?? 0;

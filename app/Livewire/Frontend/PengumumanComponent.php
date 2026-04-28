@@ -56,6 +56,7 @@ class PengumumanComponent extends Component
 
         // 1. ambil semua data (WAJIB karena ranking)
         $students = Student::where('academic_year_id', $academic->id)
+            ->where('status', 'accepted')
             ->when($this->search, function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
             })

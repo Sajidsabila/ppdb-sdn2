@@ -85,7 +85,7 @@
                             <a href="{{ route('admin.ppdb-acepted') }}"
                                 class="nav-link {{ request()->routeIs('admin.ppdb', 'admin.detail') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Siswa Diterima</p>
+                                <p>Siswa Berkas Diterima</p>
                             </a>
                         </li>
 

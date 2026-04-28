@@ -36,6 +36,7 @@ class StudentRankComponent extends Component
 
         // 🔥 hanya siswa tahun ajaran aktif
         $siswaList = Student::where('academic_year_id', $academic->id)
+            ->where('status', 'accepted')
             ->when($this->search, function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
