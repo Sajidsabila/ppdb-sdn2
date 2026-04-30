@@ -134,6 +134,19 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <div class="form-group mb-3">
+                                <label for="kartu_keluarga" class="fw-bold">Kartu Keluarga</label>
+                                <div class="mt-2">
+                                    @if ($student->files->dokumen_pendukung)
+                                        <iframe src="{{ asset('storage/' . $student->files->dokumen_pendukung) }}"
+                                            frameborder="0" style="width: 100%; height: 300px;"
+                                            allowfullscreen></iframe>
+                                    @else
+                                        <p class="text-warning">Berkas dokumen pendukung belum diupload</p>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <a class="btn btn-primary" href="{{ route('admin.ppdb') }}" wire:navigate>Kembali</a>

@@ -25,7 +25,7 @@ class RegistrationForm extends Component
     public $place_of_birth, $date_of_birth, $nik, $child_status, $phone;
     public $father_name, $father_education, $father_occupation;
     public $mother_name, $mother_education, $mother_occupation;
-    public $pas_foto, $akte_kelahiran, $kartu_keluarga;
+    public $pas_foto, $akte_kelahiran, $kartu_keluarga, $dokumen_pendukung;
     public $serviceData = [];
     public $title = "Form Pendaftaran";
     public $isEdit = false;
@@ -91,6 +91,7 @@ class RegistrationForm extends Component
             $this->pas_foto = $student->files && $student->files->pas_foto ? asset('storage/' . $student->files->pas_foto) : null;
             $this->akte_kelahiran = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
             $this->kartu_keluarga = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
+            $this->dokumen_pendukung = $student->files && $student->files->dokumen_pendukung ? asset('storage/' . $student->files->dokumen_pendukung) : null;
 
         }
     }
@@ -123,6 +124,7 @@ class RegistrationForm extends Component
             'pas_foto' => $isUpdate ? 'nullable' : 'required|image|max:1024',
             'akte_kelahiran' => $isUpdate ? 'nullable' : 'required|file|max:1024',
             'kartu_keluarga' => $isUpdate ? 'nullable' : 'required|file|max:1024',
+            'dokumen_pendukung' => $isUpdate ? 'nullable' : 'required|file|max:1024',
         ]);
         try {
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
@@ -193,7 +195,14 @@ class RegistrationForm extends Component
                 $akte_kelahiran = $student->files->akte_kelahiran ?? null;
             }
 
-
+            if ($this->dokumen_pendukung instanceof \Illuminate\Http\UploadedFile) {
+                if ($student->files && $student->files->dokumen_pendukung) {
+                    Storage::disk('public')->delete($student->files->dokumen_pendukung);
+                }
+                $dokumen_pendukung = $this->dokumen_pendukung->store('dokumen', 'public');
+            } else {
+                $dokumen_pendukung = $student->files->dokumen_pendukung ?? null;
+            }
 
             File::updateOrCreate(
                 ['student_id' => $student->id],
@@ -201,6 +210,7 @@ class RegistrationForm extends Component
                     'pas_foto' => $photoPath,
                     'kartu_keluarga' => $kartu_keluarga,
                     'akte_kelahiran' => $akte_kelahiran,
+                    'dokumen_pendukung' => $dokumen_pendukung
                 ]
             );
             DB::commit();

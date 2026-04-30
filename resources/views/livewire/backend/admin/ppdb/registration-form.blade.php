@@ -352,6 +352,30 @@
                                                 </iframe>
                                             @endif
                                         </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="kartu_keluarga" class="fw-bold">Dokumen Pendukung (maximal:
+                                                1mb,
+                                                format: pdf)</label>
+                                            <input type="file" id="dokumen_pendukung"
+                                                class="form-control @error('kartu_keluarga') is-invalid @enderror"
+                                                wire:model="dokumen_pendukung">
+                                            @error('kartu_keluarga')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @if ($dokumen_pendukung)
+                                                <div class="mt-2">
+                                                    <iframe src="{{ $dokumen_pendukung }}" frameborder="0"
+                                                        style="width: 100%; height: 300px;" allowfullscreen>
+                                                    </iframe>
+                                                </div>
+                                            @elseif(is_object($dokumen_pendukung))
+                                                <iframe src="{{ $dokumen_pendukung->temporaryUrl() }}"
+                                                    frameborder="0" style="width: 100%; height: 300px;"
+                                                    allowfullscreen>
+                                                </iframe>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
