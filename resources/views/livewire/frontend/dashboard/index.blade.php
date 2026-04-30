@@ -111,17 +111,18 @@
                     <h2>Penerimaan Peserta Didik Baru Tahun {{ $ppdb->start_year }}/{{ $ppdb->end_year }}</h2>
                     <h2>Telah Dibuka !</h2>
                     <p>SDN Purwosari 2 membuka pendaftaran siswa baru untuk tahun ajaran
-                        {{ $ppdb->start_year }}/{{ $ppdb->end_year }}. Calon siswa dapat
+                        {{ $ppdb->start_year ?? 'Tahun Tidak Ada' }}/{{ $ppdb->end_year ?? 'Tahun Tidak Ada' }}. Calon
+                        siswa dapat
                         mendaftar secara online melalui website ini atau langsung ke sekolah pendaftaran dibuka dari
                         <span
                             class="fw-bold">{{ \Carbon\Carbon::parse($ppdb->start_registration)->locale('id')->isoFormat('D MMMM YYYY') }}
                             hingga
-                            {{ \carbon\Carbon::parse($ppdb->end_registration)->locale('id')->isoFormat('D MMMM YYYY') }}.
+                            {{ \carbon\Carbon::parse($ppdb->end_registration)->locale('id')->isoFormat('D MMMM YYYY') ?? 'Tanggal Tidak Ada' }}.
                         </span>
                     </p>
                     <p>Klik <b>"Daftar Sekarang"</b> untuk memulai pendaftaran online. Informasi lebih lanjut, hubungi
                         email sdn.purwosari2@gmail.com.</p>
-                    @if (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration)
+                    @if (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration ?? 'Tanggal Tidak Ada')
                         <a href="{{ route('user.ppdb') }}" class="btn btn-utama">
                             Daftar Sekarang
                         </a>
