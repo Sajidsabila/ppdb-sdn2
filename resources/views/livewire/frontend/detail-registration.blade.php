@@ -19,11 +19,11 @@
                     </div>
                 @elseif($student->status === 'accepted')
                     <div class="alert alert-success " role="alert">
-                        Selamat anda diterima sebagai siswa SDN Purwosari 2
+                        Berkas anda sudah di terima oleh panitia
                     </div>
                 @elseif($student->status === 'rejected')
                     <div class="alert alert-danger" role="alert">
-                        Mohon Maaf status pendaftaran anda ditolak
+                        Mohon Maaf Berkas Anda Ditolak
                     </div>
                 @endif
             </diV>
@@ -35,8 +35,11 @@
                 <div class="card-body">
                     <div class="text-center mb-3">
                         <!-- Tampilkan Foto Pendaftar -->
-                        <img src="{{ asset('storage/' . $student->files->pas_foto) }}" alt="Foto Pendaftar"
-                            class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        <img src="{{ $student->files && $student->files->pas_foto
+                            ? asset('storage/' . $student->files->pas_foto)
+                            : asset('img/no-image.jpg') }}"
+                            alt="Foto Pendaftar" class="rounded-circle"
+                            style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 fw-bold">Nama Lengkap:</div>

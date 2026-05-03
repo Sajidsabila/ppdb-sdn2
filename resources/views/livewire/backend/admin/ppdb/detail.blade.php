@@ -29,7 +29,9 @@
                             <div class="col-md-4 d-flex justify-content-center">
                                 <div class="form-group mb-3">
                                     <div class="mt-2">
-                                        <img src="{{ asset('storage/' . $student->files->pas_foto) }}"
+                                        <img src="{{ $student->files && $student->files->pas_foto
+                                            ? asset('storage/' . $student->files->pas_foto)
+                                            : asset('img/no-image.jpg') }}"
                                             alt="Preview Pas Foto" class="img-fluid rounded-circle shadow-lg"
                                             style="width: 150px; height: 150px; object-fit: cover;">
                                     </div>
@@ -111,7 +113,7 @@
                             <div class="form-group mb-3">
                                 <label for="akte_kelahiran" class="fw-bold">Akte Kelahiran</label>
                                 <div class="mt-2">
-                                    @if ($student->files->akte_kelahiran)
+                                    @if (isset($student->files->akte_kelahiran))
                                         <iframe src="{{ asset('storage/' . $student->files->akte_kelahiran) }}"
                                             frameborder="0" style="width: 100%; height: 300px;"
                                             allowfullscreen></iframe>
@@ -125,7 +127,7 @@
                             <div class="form-group mb-3">
                                 <label for="kartu_keluarga" class="fw-bold">Kartu Keluarga</label>
                                 <div class="mt-2">
-                                    @if ($student->files->kartu_keluarga)
+                                    @if (isset($student->files->kartu_keluarga))
                                         <iframe src="{{ asset('storage/' . $student->files->kartu_keluarga) }}"
                                             frameborder="0" style="width: 100%; height: 300px;"
                                             allowfullscreen></iframe>
@@ -138,7 +140,7 @@
                             <div class="form-group mb-3">
                                 <label for="kartu_keluarga" class="fw-bold">Kartu Keluarga</label>
                                 <div class="mt-2">
-                                    @if ($student->files->dokumen_pendukung)
+                                    @if (isset($student->files->dokumen_pendukung))
                                         <iframe src="{{ asset('storage/' . $student->files->dokumen_pendukung) }}"
                                             frameborder="0" style="width: 100%; height: 300px;"
                                             allowfullscreen></iframe>
