@@ -16,16 +16,27 @@ class PengumumanComponent extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $title = 'Pengumuman Hasil Seleksi';
+    public $academicYears = [];
 
     public $academic_year_id;
     public $search = '';
 
     // 🔥 INI PENTING (load lebih banyak data)
+
     public $perPage = 10;
+
+    public function updatedAcademicYearId()
+    {
+        $this->perPage = 10;
+    }
 
     public function mount($academic_year_id = null)
     {
-        $this->academic_year_id = $academic_year_id;
+        $this->academicYears = AcademicYear::latest()->get();
+
+        $this->academic_year_id =
+            $academic_year_id
+            ?? AcademicYear::latest()->value('id');
     }
 
     public function updatingSearch()
@@ -135,13 +146,12 @@ class PengumumanComponent extends Component
                 $siswa->status = 'Ditolak';
             }
         }
-
-        // 4. 🔥 INI LOAD MORE SYSTEM (Bukan paginate)
         $studentsShow = $ranking->take($this->perPage);
 
         return view('livewire.frontend.pengumuman-component', [
             'students' => $studentsShow,
             'total' => $ranking->count(),
+            'academicYears' => $this->academicYears,
         ])->layout('layouts.app', [
                     'title' => $this->title
                 ]);

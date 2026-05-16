@@ -19,11 +19,24 @@
             <div class="card-body">
 
                 {{-- SEARCH --}}
-                <div class="mb-3">
+                <div class="mb-3 d-flex justify-content-between gap-3">
+
+                    <select class="form-select w-25" wire:model.live="academic_year_id">
+
+                        @foreach ($academicYears as $year)
+                            <option value="{{ $year->id }}">
+                                {{ $year->year }}
+                            </option>
+                        @endforeach
+
+                    </select>
+
                     <input type="text" class="form-control w-50" placeholder="Cari nama siswa..."
                         wire:model.live="search">
-                </div>
 
+
+
+                </div>
                 {{-- KETERANGAN --}}
                 <div class="alert alert-info mb-4">
                     <strong>Keterangan:</strong><br>

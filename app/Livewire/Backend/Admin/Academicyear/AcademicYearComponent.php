@@ -70,11 +70,16 @@ class AcademicYearComponent extends Component
     public function save()
     {
         $this->validate([
-            'start_year' => 'required|numeric|digits:4|unique:academic_years,start_year',
-            'end_year' => 'required|numeric|digits:4|unique:academic_years,end_year',
+            'start_year' => 'required|numeric|digits:4|unique:academic_years,start_year,' . $this->academic_id,
+
+            'end_year' => 'required|numeric|digits:4|unique:academic_years,end_year,' . $this->academic_id,
+
             'start_registration' => 'required',
+
             'end_registration' => 'required',
+
             'quota' => 'required|numeric'
+
         ], [
             'required' => ':attribute harus diisi',
             'numeric' => ':attribute harus berupa angka',
