@@ -40,7 +40,9 @@ Route::get('/home', function () {
 });
 
 Route::get('/pengumuman-ppdb', \App\Livewire\Frontend\PengumumanComponent::class)->name('pengumuman');
-
+Route::get('/about', DetailAbout::class)->name('about');
+Route::get('/gallery', DetailGallery::class)->name('gallery');
+Route::get('/teacher', DetailTeacher::class)->name('teacher');
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
     Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
@@ -49,9 +51,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
     Route::get('/verification-email/{token}', [Register::class, 'verification'])->name('verification');
-    Route::get('/about', DetailAbout::class)->name('about');
-    Route::get('/gallery', DetailGallery::class)->name('gallery');
-    Route::get('/teacher', DetailTeacher::class)->name('teacher');
 
 });
 Route::group([

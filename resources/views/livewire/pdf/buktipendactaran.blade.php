@@ -84,7 +84,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('storage/' . $configuration->logo ?? 'image.jpg') }}" alt="Logo" class="logo">
+            {{-- <img src="{{ asset('storage/' . $configuration->logo ?? 'image.jpg') }}" alt="Logo" class="logo"> --}}
 
             <div class="header-text">
                 <h3>Penerimaan Peserta Didik Baru (PPDB)</h3>
