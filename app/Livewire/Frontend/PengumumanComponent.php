@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\AcademicYear;
+use App\Models\Configuration;
+use App\Models\Student;
+use App\Services\StudentRankingService;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\AcademicYear;
-use App\Models\Student;
-use App\Models\Configuration;
-use Carbon\Carbon;
 
 class PengumumanComponent extends Component
 {
@@ -52,100 +53,11 @@ class PengumumanComponent extends Component
 
     public function render()
     {
-        $config = Configuration::first();
+        $ranking = StudentRankingService::calculate(
+            $this->academic_year_id,
+            $this->search
+        );
 
-        $academic = AcademicYear::find($this->academic_year_id)
-            ?? AcademicYear::latest()->first();
-
-        if (!$config || !$academic) {
-            return view('livewire.frontend.pengumuman-component', [
-                'students' => collect([])
-            ])->layout('layouts.app', ['title' => $this->title]);
-        }
-
-        $tanggalAcuan = Carbon::parse($academic->end_registration);
-
-        // 1. ambil semua data (WAJIB karena ranking)
-        $students = Student::where('academic_year_id', $academic->id)
-            ->where('status', 'accepted')
-            ->when($this->search, function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->get();
-
-        // 2. hitung ranking
-        $ranking = $students->map(function ($siswa) use ($config, $tanggalAcuan) {
-
-            $distance = calculate_distance(
-                $siswa->latitude,
-                $siswa->longitude,
-                $config->latitude,
-                $config->longitude
-            ) / 1000;
-
-            $siswa->distance = $distance;
-
-            $km = floor($distance);
-            $meter = round(($distance - $km) * 1000);
-
-            $siswa->distance_detail =
-                $km > 0 ? "$km Km $meter Meter" : "$meter Meter";
-
-            if ($siswa->date_of_birth) {
-                $lahir = Carbon::parse($siswa->date_of_birth);
-                $umur = $lahir->diff($tanggalAcuan);
-
-                $siswa->calculated_age = $lahir->diffInDays($tanggalAcuan);
-
-                $siswa->age_detail =
-                    $umur->y . ' Tahun ' .
-                    $umur->m . ' Bulan ' .
-                    $umur->d . ' Hari';
-            } else {
-                $siswa->calculated_age = 0;
-                $siswa->age_detail = '-';
-            }
-
-            return $siswa;
-        })
-            // ->sort(function ($a, $b) {
-
-            //     // 1. umur dulu (lebih tua = diffInDays lebih besar)
-            //     if ($a->calculated_age != $b->calculated_age) {
-            //         return $b->calculated_age <=> $a->calculated_age;
-            //     }
-
-            //     // 2. kalau umur sama → jarak
-            //     return $a->distance <=> $b->distance;
-            // })
-
-            ->sort(function ($a, $b) {
-
-                // 1. jarak dulu (lebih kecil = lebih prioritas)
-                if ($a->distance != $b->distance) {
-                    return $a->distance <=> $b->distance;
-                }
-
-                // 2. kalau jarak sama → umur (lebih tua = lebih prioritas)
-                return $b->calculated_age <=> $a->calculated_age;
-            })
-            ->values();
-
-        // 3. status ranking
-        $quota = $academic->quota ?? 0;
-        $cadanganLimit = $quota + 2;
-
-        foreach ($ranking as $i => $siswa) {
-            if ($i < $quota) {
-                $siswa->status = 'Diterima';
-            } elseif ($i < $cadanganLimit) {
-                $siswa->status = 'Cadangan';
-            } else {
-                $siswa->status = 'Ditolak';
-            }
-        }
         $studentsShow = $ranking->take($this->perPage);
 
         return view('livewire.frontend.pengumuman-component', [

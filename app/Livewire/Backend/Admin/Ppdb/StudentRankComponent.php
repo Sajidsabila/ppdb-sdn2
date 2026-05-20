@@ -2,138 +2,105 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
+use App\Exports\StudentRankingExport;
 use App\Models\AcademicYear;
-use App\Models\Student;
 use App\Models\Configuration;
+use App\Services\StudentRankingService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentRankComponent extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
+
     public $search = '';
 
+    public $academic_year_id = null;
 
     public $title = "Peringkat Siswa Berdasarkan Jarak dan Umur";
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingAcademicYearId()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $config = Configuration::first();
-        $academic = AcademicYear::latest()->first();
-
-        if (!$config || !$academic) {
-            return view('livewire.backend.admin.ppdb.student-rank-component', [
-                'students' => new LengthAwarePaginator([], 0, 10)
-            ])->layout('layouts.admin', ['title' => $this->title]);
-        }
-
-        // 🔥 tanggal acuan = akhir pendaftaran
-        $tanggalAcuan = Carbon::parse($academic->end_registration);
-
-        // 🔥 hanya siswa tahun ajaran aktif
-        $siswaList = Student::where('academic_year_id', $academic->id)
-            ->where('status', 'accepted')
-            ->when($this->search, function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->get();
-
-        $ranking = $siswaList->map(function ($siswa) use ($config, $tanggalAcuan) {
-
-            $distance = calculate_distance(
-                $siswa->latitude,
-                $siswa->longitude,
-                $config->latitude,
-                $config->longitude
-            );
-
-            // meter -> km
-            $distance = $distance / 1000;
-
-            // simpan raw distance
-            $siswa->distance = round($distance, 3);
-
-            // 🔥 format jarak detail
-            $km = floor($distance);
-            $meter = round(($distance - $km) * 1000);
-
-            if ($km > 0) {
-                $siswa->distance_detail = $km . ' Km ' . $meter . ' Meter';
-            } else {
-                $siswa->distance_detail = $meter . ' Meter';
-            }
-
-            // 🔥 umur detail
-            if ($siswa->date_of_birth) {
-                $lahir = Carbon::parse($siswa->date_of_birth);
-                $umur = $lahir->diff($tanggalAcuan);
-
-                // untuk ranking umur tertua
-                $siswa->calculated_age = $lahir->diffInDays($tanggalAcuan);
-
-                $siswa->age_detail =
-                    $umur->y . ' Tahun ' .
-                    $umur->m . ' Bulan ' .
-                    $umur->d . ' Hari';
-            } else {
-                $siswa->calculated_age = 0;
-                $siswa->age_detail = '-';
-            }
-
-            return $siswa;
-        })
-            ->sort(function ($a, $b) {
-                if ($a->distance == $b->distance) {
-                    return $b->calculated_age <=> $a->calculated_age;
-                }
-
-                return $a->distance <=> $b->distance;
-            })
-            // ->sort(function ($a, $b) {
-
-            //     // 1. umur dulu (lebih tua = diffInDays lebih besar)
-            //     if ($a->calculated_age != $b->calculated_age) {
-            //         return $b->calculated_age <=> $a->calculated_age;
-            //     }
-
-            //     // 2. kalau umur sama → jarak
-            //     return $a->distance <=> $b->distance;
-            // })
-            ->values();
-
-        $quota = $academic->quota ?? 0;
-        $cadanganLimit = $quota + 2;
-
-        foreach ($ranking as $index => $siswa) {
-            if ($index < $quota) {
-                $siswa->status = 'Diterima';
-            } elseif ($index < $cadanganLimit) {
-                $siswa->status = 'Cadangan';
-            } else {
-                $siswa->status = 'Ditolak';
-            }
-        }
+        $ranking = StudentRankingService::calculate(
+            $this->academic_year_id,
+            $this->search
+        );
 
         $perPage = 10;
-        $currentPage = request()->get('page', 1);
 
-        $pagedData = new LengthAwarePaginator(
-            $ranking->forPage($currentPage, $perPage),
+        // ambil page current dari livewire
+        $currentPage = Paginator::resolveCurrentPage();
+
+        $currentItems = $ranking
+            ->slice(($currentPage - 1) * $perPage, $perPage)
+            ->values();
+
+        $students = new LengthAwarePaginator(
+            $currentItems,
             $ranking->count(),
             $perPage,
             $currentPage,
-            ['path' => request()->url()]
+            [
+                'path' => Paginator::resolveCurrentPath(),
+            ]
         );
 
         return view('livewire.backend.admin.ppdb.student-rank-component', [
-            'students' => $pagedData,
-            'academic' => $academic
-        ])->layout('layouts.admin', ['title' => $this->title]);
+            'students' => $students,
+            'academicYears' => AcademicYear::latest()->get(),
+            'academic' => AcademicYear::find($this->academic_year_id)
+                ?? AcademicYear::latest()->first()
+        ])->layout('layouts.admin', [
+                    'title' => $this->title
+                ]);
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new StudentRankingExport(
+                $this->academic_year_id,
+                $this->search
+            ),
+            'ranking-siswa.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $configuration = Configuration::first();
+        $students = StudentRankingService::calculate(
+            $this->academic_year_id,
+            $this->search
+        );
+
+        $academic = AcademicYear::find($this->academic_year_id)
+            ?? AcademicYear::latest()->first();
+
+        $pdf = Pdf::loadView(
+            'livewire.pdf.student-ranking',
+            compact('students', 'academic', 'configuration')
+        );
+
+        return response()->streamDownload(
+            fn() => print ($pdf->output()),
+            'ranking-siswa.pdf'
+        );
     }
 }

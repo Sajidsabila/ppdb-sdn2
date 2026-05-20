@@ -64,8 +64,28 @@
                                     <label for="address" class="fw-bold">Alamat</label>
                                     <p>{{ $student->address }}</p>
                                 </div>
+
+                                @if ($student->latitude && $student->longitude)
+                                    <div class="form-group mb-3">
+                                        <label class="fw-bold">Lokasi Rumah</label>
+
+                                        <div class="rounded overflow-hidden shadow-sm border mt-2">
+                                            <iframe
+                                                src="https://maps.google.com/maps?q={{ $student->latitude }},{{ $student->longitude }}&hl=id&z=15&output=embed"
+                                                width="100%" height="250" style="border:0;" allowfullscreen
+                                                loading="lazy">
+                                            </iframe>
+                                        </div>
+
+                                        <small class="text-muted d-block mt-2">
+                                            Latitude: {{ $student->latitude }} |
+                                            Longitude: {{ $student->longitude }}
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                         </div>
+
 
                         <!-- Step 2: Data Orang Tua -->
                         <h5 class="mb-3 fw-bold">Data Orang Tua</h5>

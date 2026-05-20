@@ -69,12 +69,129 @@ class RegisterForm extends Component
         ]
     ];
 
+    private function calculateRanking($student)
+    {
+        $config = Configuration::first();
+
+        $academic = AcademicYear::find($student?->academic_year_id);
+
+        if (!$student || !$config || !$academic) {
+            return $student;
+        }
+
+        $tanggalAcuan = \Carbon\Carbon::parse($academic->end_registration);
+
+        $students = Student::where('academic_year_id', $academic->id)
+            ->where('status', 'accepted')
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get();
+
+        $ranking = $students->map(function ($siswa) use ($config, $tanggalAcuan) {
+
+            // Hitung jarak
+            $distance = calculate_distance(
+                $siswa->latitude,
+                $siswa->longitude,
+                $config->latitude,
+                $config->longitude
+            ) / 1000;
+
+            $siswa->distance = $distance;
+
+            // Detail jarak
+            $km = floor($distance);
+
+            $meter = round(($distance - $km) * 1000);
+
+            $siswa->distance_detail =
+                $km > 0
+                ? $km . ' Km ' . $meter . ' Meter'
+                : $meter . ' Meter';
+
+            // Hitung umur
+            if ($siswa->date_of_birth) {
+
+                $lahir = \Carbon\Carbon::parse($siswa->date_of_birth);
+
+                $umur = $lahir->diff($tanggalAcuan);
+
+                $siswa->calculated_age =
+                    $lahir->diffInDays($tanggalAcuan);
+
+                $siswa->age_detail =
+                    $umur->y . ' Tahun ' .
+                    $umur->m . ' Bulan ' .
+                    $umur->d . ' Hari';
+
+            } else {
+
+                $siswa->calculated_age = 0;
+
+                $siswa->age_detail = '-';
+            }
+
+            return $siswa;
+        })
+
+            ->sort(function ($a, $b) {
+
+                // Jarak lebih dekat prioritas
+                if ($a->distance != $b->distance) {
+                    return $a->distance <=> $b->distance;
+                }
+
+                // Kalau jarak sama → umur lebih tua prioritas
+                return $b->calculated_age <=> $a->calculated_age;
+            })
+
+            ->values();
+
+        $quota = $academic->quota ?? 0;
+
+        $cadanganLimit = $quota + 2;
+
+        foreach ($ranking as $i => $siswa) {
+
+            $siswa->ranking = $i + 1;
+
+            if ($i < $quota) {
+
+                $siswa->result_status = 'Diterima';
+
+            } elseif ($i < $cadanganLimit) {
+
+                $siswa->result_status = 'Cadangan';
+
+            } else {
+
+                $siswa->result_status = 'Ditolak';
+            }
+        }
+
+        $myRank = $ranking->firstWhere('id', $student->id);
+
+        if ($myRank) {
+
+            $student->ranking = $myRank->ranking;
+
+            $student->distance = $myRank->distance;
+
+            $student->distance_detail = $myRank->distance_detail;
+
+            $student->calculated_age = $myRank->calculated_age;
+
+            $student->age_detail = $myRank->age_detail;
+
+            $student->result_status = $myRank->result_status;
+        }
+
+        return $student;
+    }
     public function render()
     {
         $user = auth()->user();
-        $registrationDate = AcademicYear::where('is_active', '1')
-            ->orderBy('id', 'desc')
-            ->first();
+
         if (!$user) {
             return redirect()->route('login');
         }
@@ -82,13 +199,21 @@ class RegisterForm extends Component
         $student = Student::where('user_id', $user->id)->first();
 
         if ($user->role === 'user' && !$student) {
-            return view('livewire.frontend.registration-form')->layout('layouts.app');
+
+            return view('livewire.frontend.registration-form')
+                ->layout('layouts.app');
         }
 
         if ($student) {
+
+            $student = $this->calculateRanking($student);
+
             return view('livewire.frontend.detail-registration', compact('student'))
                 ->layout('layouts.app');
         }
+
+        return view('livewire.frontend.registration-form')
+            ->layout('layouts.app');
     }
 
 
@@ -152,7 +277,13 @@ class RegisterForm extends Component
 
         // Tambahkan validasi custom NIK di step 1
         if ($this->currentPage == 1) {
-            $rules['nik'] = ['required', new NikValidasi];
+            $rules['nik'] = [
+                'required',
+                new NikValidasi(
+                    $this->date_of_birth,
+                    $this->gender
+                )
+            ];
         }
 
         $this->validate($rules);
@@ -303,6 +434,8 @@ class RegisterForm extends Component
             return back()->with('error', 'Terjadi Kesalahan: ' . $th->getMessage());
         }
     }
+
+
 
     public function generatePdf($id)
     {

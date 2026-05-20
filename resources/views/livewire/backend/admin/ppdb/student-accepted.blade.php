@@ -30,7 +30,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-6"></div> <!-- Spacer untuk mendorong elemen ke kanan -->
+                <div class="col-md-6"></div>
 
                 <div class="col-md-3">
                     <label for="search" class="form-label">Pencarian</label>
@@ -39,9 +39,18 @@
                 </div>
             </div>
 
-            <div class="col-md-4 d-flex align-items-end mb-3">
-                <a href="{{ route('admin.form') }}" class="btn btn-primary" wire:navigate>Tambah Data</a>
-                <a wire:click="print" class="btn btn-success ms-2" wire:navigate>Cetak Laporan</a>
+            <div class="col-md-4 d-flex align-items-end mb-3 gap-3">
+                <button wire:click="exportExcel" class="btn btn-outline-success">
+                    <i class="ti ti-file-spreadsheet"></i>
+                    Export Excel
+                </button>
+
+                {{-- EXPORT PDF --}}
+                <button wire:click="print" class="btn btn-outline-danger">
+                    <i class="ti ti-file-type-pdf"></i>
+                    Export PDF
+                </button>
+
             </div>
 
             <div class="table-responsive">
@@ -73,7 +82,6 @@
                                     <select wire:change="toggleChangeStatus('{{ $item->id }}', $event.target.value)"
                                         class="form-control">
                                         <option value="pending" @selected($item->status === 'pending')>Pending</option>
-                                        <option value="verified" @selected($item->status === 'verified')>Verified</option>
                                         <option value="accepted" @selected($item->status === 'accepted')>Accepted</option>
                                         <option value="rejected" @selected($item->status === 'rejected')>Rejected</option>
                                     </select>

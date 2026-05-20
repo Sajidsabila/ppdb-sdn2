@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
+use App\Models\AcademicYear;
 use App\Models\File;
 use App\Models\Parents;
 use App\Models\Student;
-use Livewire\Component;
-use App\Models\AcademicYear;
-use Livewire\WithFileUploads;
+use App\Rules\NikValidasi;
 use App\Services\StudentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class RegistrationForm extends Component
 {
@@ -39,7 +40,7 @@ class RegistrationForm extends Component
             'address' => 'required',
             'place_of_birth' => 'required',
             'date_of_birth' => 'required|date',
-            'nik' => 'required|numeric|digits:16',
+            'nik' => 'required',
             'child_status' => 'required',
             'phone' => 'required|numeric',
         ],
@@ -101,8 +102,44 @@ class RegistrationForm extends Component
 
     public function nextPage()
     {
-        $this->validate($this->validationRules[$this->currentPage]);
+        $rules = $this->validationRules[$this->currentPage];
+
+        // Validasi custom NIK
+        if ($this->currentPage == 1) {
+            $rules['nik'] = [
+                'required',
+                new NikValidasi(
+                    $this->date_of_birth,
+                    $this->gender
+                )
+            ];
+        }
+
+        $this->validate($rules);
+
+        // Validasi umur
+        if ($this->currentPage == 1) {
+
+            $academicYear = AcademicYear::where('is_active', 1)->first();
+
+            $tanggalAcuan = \Carbon\Carbon::parse($academicYear->end_registration);
+
+            $umur = \Carbon\Carbon::parse($this->date_of_birth)
+                ->diffInYears($tanggalAcuan);
+
+            if ($umur < 6) {
+                $this->addError('date_of_birth', 'Umur minimal 6 tahun saat penutupan pendaftaran.');
+                return;
+            }
+
+            if ($umur > 8) {
+                $this->addError('date_of_birth', 'Umur maksimal 8 tahun saat penutupan pendaftaran.');
+                return;
+            }
+        }
+
         $this->currentPage++;
+
         if ($this->currentPage > $this->totalPages) {
             $this->currentPage = $this->totalPages;
         }

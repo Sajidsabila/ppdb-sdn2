@@ -41,7 +41,7 @@
                                     <td>{{ $item->start_year . '/' . $item->end_year }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->start_registration)->isoFormat('D MMMM YYYY') }}
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($item->end_registrartion)->isoFormat('D MMMM YYYY') }}
+                                    <td>{{ \Carbon\Carbon::parse($item->end_registration)->isoFormat('D MMMM YYYY') }}
                                     </td>
                                     <td>
                                         <select wire:change="toggleIsActive({{ $item->id }})" class="form-control">

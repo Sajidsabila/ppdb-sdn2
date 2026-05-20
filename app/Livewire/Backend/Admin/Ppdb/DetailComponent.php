@@ -10,6 +10,10 @@ class DetailComponent extends Component
     public $studentId;
     public $title = "Detail Pendaftar";
 
+    public $latitude;
+    public $longitude;
+    public $address;
+
 
     public function render()
     {

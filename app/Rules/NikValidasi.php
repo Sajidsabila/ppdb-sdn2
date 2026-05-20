@@ -4,9 +4,19 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Carbon\Carbon;
 
 class NikValidasi implements ValidationRule
 {
+    protected $tanggalLahir;
+    protected $jenisKelamin;
+
+    public function __construct($tanggalLahir, $jenisKelamin)
+    {
+        $this->tanggalLahir = $tanggalLahir;
+        $this->jenisKelamin = $jenisKelamin;
+    }
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // 16 digit angka
@@ -21,24 +31,30 @@ class NikValidasi implements ValidationRule
             return;
         }
 
-        // Ambil bagian tanggal lahir
-        $tgl = (int) substr($value, 6, 2);
-        $bln = (int) substr($value, 8, 2);
-        $thn = (int) substr($value, 10, 2);
+        // Ambil tanggal dari NIK
+        $nikTanggal = (int) substr($value, 6, 2);
+        $nikBulan = (int) substr($value, 8, 2);
+        $nikTahun = (int) substr($value, 10, 2);
 
-        // Perempuan +40
-        if ($tgl > 40) {
-            $tgl -= 40;
+        // Parse tanggal lahir
+        $tanggalLahir = Carbon::parse($this->tanggalLahir);
+
+        $tgl = (int) $tanggalLahir->format('d');
+        $bln = (int) $tanggalLahir->format('m');
+        $thn = (int) $tanggalLahir->format('y');
+
+        // Jika perempuan tambah 40
+        if (strtolower($this->jenisKelamin) == 'perempuan') {
+            $tgl += 40;
         }
 
-        if ($tgl < 1 || $tgl > 31) {
-            $fail('Nik tidak valid.');
-            return;
-        }
-
-        if ($bln < 1 || $bln > 12) {
-            $fail('Nik tidak valid.');
-            return;
+        // Validasi cocok
+        if (
+            $nikTanggal !== $tgl ||
+            $nikBulan !== $bln ||
+            $nikTahun !== $thn
+        ) {
+            $fail('NIK tidak sesuai dengan tanggal lahir atau jenis kelamin.');
         }
     }
 }

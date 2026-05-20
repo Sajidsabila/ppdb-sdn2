@@ -2,16 +2,19 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
+use App\Exports\StudentExport;
+use App\Mail\NotificationEmailAccepted;
 use App\Mail\NotificationEmailRejected;
-use Storage;
-use App\Models\Student;
-use Livewire\Component;
-use Livewire\WithPagination;
+use App\Mail\NotificationEmailVerified;
+use App\Models\AcademicYear;
 use App\Models\Configuration;
+use App\Models\Student;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\NotificationEmailAccepted;
-use App\Mail\NotificationEmailVerified;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use Storage;
 
 class ListComponent extends Component
 {
@@ -21,6 +24,9 @@ class ListComponent extends Component
     public $id;
 
     public $search;
+    public $selectedYear;
+
+    public $selectedStatus;
     public $data;
     public $item;
     protected $listeners = ['deleteConfirmed'];
@@ -78,17 +84,90 @@ class ListComponent extends Component
         }
 
     }
+
+    public function print()
+    {
+        try {
+            $configuration = Configuration::first();
+            $year = AcademicYear::find($this->selectedYear);
+
+            $students = Student::with('files', 'parents', 'year')
+
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('name', 'like', '%' . $this->search . '%')
+                            ->orWhere('id', 'like', '%' . $this->search . '%');
+                    });
+                })
+
+                ->when($this->selectedYear, function ($query) {
+                    $query->where('academic_year_id', $this->selectedYear);
+                })
+
+                ->when($this->selectedStatus, function ($query) {
+                    $query->where('status', $this->selectedStatus);
+                })
+
+                ->orderBy('id', 'desc')
+                ->get();
+
+            if ($students->isEmpty()) {
+                return back()->with('error', 'Tidak ada data siswa untuk filter yang dipilih.');
+            }
+
+            $pdf = Pdf::loadView('livewire.pdf.laporan-pendaftaran-siswa', [
+                'students' => $students,
+                'configuration' => $configuration,
+                'year' => $year
+            ]);
+
+            $fileName = 'dataPendaftaran_Siswa_' . now()->format('Ymd_His') . '.pdf';
+
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, $fileName);
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new StudentExport(
+                $this->search,
+                $this->selectedYear,
+                $this->selectedStatus
+            ),
+            'data-siswa.xlsx'
+        );
+    }
     public function render()
     {
-        $students = Student::when($this->search, function ($query) {
-            $query->where('name', 'like', '%' . $this->search . '%');
-            $query->orWhere('id', 'like', '%' . $this->search . '%');
-        })
+        $years = AcademicYear::limit(10)->get();
+
+        $students = Student::query()
+
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('id', 'like', '%' . $this->search . '%');
+                });
+            })
+
+            ->when($this->selectedYear, function ($query) {
+                $query->where('academic_year_id', $this->selectedYear);
+            })
+
+            ->when($this->selectedStatus, function ($query) {
+                $query->where('status', $this->selectedStatus);
+            })
+
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-
-        return view('livewire.backend.admin.ppdb.index', compact('students'))
+        return view('livewire.backend.admin.ppdb.index', compact('students', 'years'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }
 }

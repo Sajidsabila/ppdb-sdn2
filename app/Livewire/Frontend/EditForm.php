@@ -2,14 +2,15 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\AcademicYear;
 use App\Models\File;
 use App\Models\Parents;
 use App\Models\Student;
-use Livewire\Component;
-use App\Models\AcademicYear;
-use Livewire\WithFileUploads;
+use App\Rules\NikValidasi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class EditForm extends Component
 {
@@ -41,7 +42,7 @@ class EditForm extends Component
             'address' => 'required',
             'place_of_birth' => 'required',
             'date_of_birth' => 'required|date',
-            'nik' => 'required|numeric|digits:16',
+            'nik' => 'required',
             'child_status' => 'required',
             'phone' => 'required|numeric',
         ],
@@ -116,13 +117,19 @@ class EditForm extends Component
 
         }
     }
-      public function nextPage()
+    public function nextPage()
     {
         $rules = $this->validationRules[$this->currentPage];
 
         // Tambahkan validasi custom NIK di step 1
         if ($this->currentPage == 1) {
-            $rules['nik'] = ['required', new NikValidasi];
+            $rules['nik'] = [
+                'required',
+                new NikValidasi(
+                    $this->date_of_birth,
+                    $this->gender
+                )
+            ];
         }
 
         $this->validate($rules);

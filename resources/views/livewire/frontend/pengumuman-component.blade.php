@@ -25,7 +25,7 @@
 
                         @foreach ($academicYears as $year)
                             <option value="{{ $year->id }}">
-                                {{ $year->year }}
+                                {{ $year->start_year . '/' . $year->end_year }}
                             </option>
                         @endforeach
 
@@ -61,6 +61,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
+                                    <th>Tanggal Lahir</th>
                                     <th>Umur</th>
                                     <th>Jarak</th>
                                     <th>Status</th>
@@ -77,7 +78,9 @@
                                         </td>
 
                                         <td>{{ $student->name }}</td>
-
+                                        <td>
+                                            {{ $student->date_of_birth ? \Carbon\Carbon::parse($student->date_of_birth)->locale('id')->translatedFormat('d F Y') : '-' }}
+                                        </td>
                                         <td>{{ $student->age_detail ?? '-' }}</td>
 
                                         <td>

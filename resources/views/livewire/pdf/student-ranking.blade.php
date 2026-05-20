@@ -2,9 +2,11 @@
 <html>
 
 <head>
-    <title>Laporan Siswa Diterima</title>
+    <title>Laporan Ranking Siswa</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap"
         rel="stylesheet">
+
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
@@ -52,6 +54,15 @@
             text-align: left;
         }
 
+        th {
+            background: #f2f2f2;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -72,39 +83,70 @@
     <div class="header">
         <div class="header-text">
             <h3>Penerimaan Peserta Didik Baru (PPDB)</h3>
+
             <h1>{{ $configuration->name }}</h1>
-            <h3>Tahun Pelajaran
-                {{ $year->start_year ?? 'Tahun Tidak Ada' }}/{{ $year->end_year ?? 'Tahun Tidak Ada' }}
+
+            <h3>
+                Tahun Pelajaran
+                {{ $academic->start_year ?? 'Tahun Tidak Ada' }}/{{ $academic->end_year ?? 'Tahun Tidak Ada' }}
             </h3>
         </div>
     </div>
 
     <hr>
 
-    <h2>Daftar Siswa Berkas Diterima</h2>
+    <h2>Daftar Ranking Siswa</h2>
 
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>ID Pendaftaran</th>
+                <th>Ranking</th>
                 <th>Nama Siswa</th>
+                <th>Tanggal Lahir</th>
                 <th>Umur</th>
-                <th>Status Berkas</th>
+                <th>Jarak Rumah</th>
+                <th>Status</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach ($students as $index => $student)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $student->id }}</td>
-                    <td>{{ $student->name }}</td>
-                    <td>{{ $student->parents->father_name ?? 'Tidak Diketahui' }}</td>
-                    <td>{{ 'Diterima' }}</td>
+                    <td class="text-center">
+                        {{ $index + 1 }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ $student->ranking ?? '-' }}
+                    </td>
+
+                    <td>
+                        {{ $student->name }}
+                    </td>
+
+                    <td>
+                        {{ $student->date_of_birth
+                            ? \Carbon\Carbon::parse($student->date_of_birth)->locale('id')->translatedFormat('d F Y')
+                            : '-' }}
+                    </td>
+
+                    <td>
+                        {{ $student->age_detail ?? '-' }}
+                    </td>
+
+                    <td>
+                        {{ $student->distance_detail ?? '-' }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ $student->status ?? '-' }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
 </body>
 
 </html>

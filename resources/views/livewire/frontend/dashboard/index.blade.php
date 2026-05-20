@@ -122,7 +122,7 @@
                     </p>
                     <p>Klik <b>"Daftar Sekarang"</b> untuk memulai pendaftaran online. Informasi lebih lanjut, hubungi
                         email sdn.purwosari2@gmail.com.</p>
-                    @if (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration ?? 'Tanggal Tidak Ada')
+                    @if ($student || (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration))
                         <a href="{{ route('user.ppdb') }}" class="btn btn-utama">
                             Daftar Sekarang
                         </a>

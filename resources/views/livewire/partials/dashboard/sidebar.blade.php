@@ -81,13 +81,13 @@
                                 <p>Calon Siswa Terdaftar</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('admin.ppdb-acepted') }}"
                                 class="nav-link {{ request()->routeIs('admin.ppdb', 'admin.detail') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Siswa Berkas Diterima</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="nav-item">
                             <a href="{{ route('admin.student-rank') }}"

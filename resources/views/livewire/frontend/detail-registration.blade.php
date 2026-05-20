@@ -57,23 +57,101 @@
                         <div class="col-md-4 fw-bold">Alamat:</div>
                         <div class="col-md-8">{{ $student->address }}</div>
                     </div>
+
                     <div class="row mb-3">
                         <div class="col-md-4 fw-bold">Tanggal Pendaftaran:</div>
                         <div class="col-md-8">{{ \Carbon\Carbon::parse($student->registration_date)->format('d F Y') }}
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Status Pendaftaran</div>
-                        <div class="col-md-8">
-                            @if ($student->status === 'pending')
-                                <span class="badge bg-warning text-dark">Menunggu</span>
-                            @elseif($student->status === 'verified')
-                                <span class="badge bg-info text-dark">Terverifikasi</span>
-                            @elseif($student->status === 'accepted')
-                                <span class="badge bg-success text-white">Diterima</span>
-                            @elseif($student->status === 'rejected')
-                                <span class="badge bg-danger text-white">Ditolak</span>
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px; background: #f8fafc;">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold mb-4 text-primary">
+                                <i class="bi bi-bar-chart-line-fill"></i>
+                                Hasil Perhitungan Seleksi
+                            </h5>
+                            @if (!$student->status === 'accepted')
+                                <div class="row g-3">
+
+                                    <!-- Ranking -->
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-white shadow-sm h-100"
+                                            style="border-radius: 12px; border-left: 5px solid #0d6efd;">
+
+                                            <small class="text-muted d-block mb-1">
+                                                Ranking
+                                            </small>
+
+                                            <h4 class="fw-bold mb-0 text-primary">
+                                                #{{ $student->ranking ?? '-' }}
+                                            </h4>
+
+                                            <small class="text-muted">
+                                                Posisi peringkat siswa
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Jarak -->
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-white shadow-sm h-100"
+                                            style="border-radius: 12px; border-left: 5px solid #198754;">
+
+                                            <small class="text-muted d-block mb-1">
+                                                Jarak Rumah
+                                            </small>
+
+                                            <h5 class="fw-bold mb-0 text-success">
+                                                {{ $student->distance_detail ?? '-' }}
+                                            </h5>
+
+                                            <small class="text-muted">
+                                                Semakin dekat semakin prioritas
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Umur -->
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-white shadow-sm h-100"
+                                            style="border-radius: 12px; border-left: 5px solid #ffc107;">
+
+                                            <small class="text-muted d-block mb-1">
+                                                Umur
+                                            </small>
+
+                                            <h5 class="fw-bold mb-0 text-warning">
+                                                {{ $student->age_detail ?? '-' }}
+                                            </h5>
+
+                                            <small class="text-muted">
+                                                Prioritas umur lebih tua
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            @else
+                                <div class="alert alert-danger" role="alert">
+                                    Hasil Seleksi Tidak Tersedia karena berkas belum diterima panitia
+                                </div>
                             @endif
+
+                            <!-- Info Perhitungan -->
+                            <div class="alert alert-light border mt-4 mb-0" style="border-radius: 12px;">
+
+                                <small class="text-muted">
+                                    <strong>Sistem Seleksi:</strong>
+                                    Ranking dihitung berdasarkan
+                                    <strong>jarak rumah terdekat</strong>
+                                    dari sekolah dan
+                                    <strong>umur siswa paling tua</strong>
+                                    apabila jarak sama.
+                                </small>
+
+                            </div>
+
                         </div>
                     </div>
 

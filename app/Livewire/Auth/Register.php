@@ -31,7 +31,7 @@ class Register extends Component
         ], [
             'required' => ":attribute tidak boleh kosong",
             'unique' => ':attribute yang anda masukkan sudah tersedia',
-            'min' => ':attribute minimal karakter: min',
+            'min' => ':attribute minimal karakter: 8',
             'confirmed' => ':attribute tidak sama dengan konfirmasi password'
         ], [
             'email' => 'email',

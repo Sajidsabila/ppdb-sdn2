@@ -17,13 +17,52 @@
                 </div>
             @endif
 
-            <div class="col-12 d-flex justify-content-between">
+            <div class="col-12 d-flex flex-row gap-2">
+
+                <div class="col-md-3">
+                    <label class="form-label">Filter Status</label>
+
+                    <select wire:model.live="selectedStatus" class="form-control">
+                        <option value="">Semua Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="filterYear" class="form-label">Filter Tahun</label>
+                    <select id="filterYear" wire:model.live="selectedYear" class="form-control">
+                        <option value="">Pilih Tahun</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year->id }}">{{ $year->start_year . '/' . $year->end_year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="filterYear" class="form-label">Pencarian</label>
+                    <input type="search" wire:model.live="search" placeholder="Pencarian ..." class="form-control">
+                </div>
+
+
+            </div>
+
+            <div class="col-12 d-flex flex-wrap gap-2 my-2">
                 <div class="flex-start">
                     <a href="{{ route('admin.form') }}" class="btn btn-primary" wire:navigate>Tambah Data</a>
                 </div>
-                <div class="flex-end">
-                    <input type="search" wire:model.live="search" placeholder="Pencarian ..." class="form-control">
-                </div>
+                <button wire:click="exportExcel" class="btn btn-outline-success">
+                    <i class="ti ti-file-spreadsheet"></i>
+                    Export Excel
+                </button>
+
+                {{-- EXPORT PDF --}}
+                <button wire:click="print" class="btn btn-outline-danger">
+                    <i class="ti ti-file-type-pdf"></i>
+                    Export PDF
+                </button>
+
             </div>
             <div class="col-12 py-3">
                 <div class="table-responsive">
@@ -33,8 +72,11 @@
                                 <th class="fw-bold">#</th>
                                 <th class="fw-bold">ID Pendaftaran</th>
                                 <th class="fw-bold">Nama Siswa</th>
+                                <th class="fw-bold">Tanggal Lahir</th>
+                                <th class="fw-bold">Tanggal Pendaftaran</th>
+
                                 <th class="fw-bold">Status Berkas</th>
-                                <th class="fw-bold">Status</th>
+                                <th class="fw-bold">Status Penerimaan Berkas</th>
                                 <th class="fw-bold">Aksi</th>
                             </tr>
                         </thead>
@@ -44,6 +86,12 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
+                                    <td>
+                                        {{ $item->date_of_birth ? \Carbon\Carbon::parse($item->date_of_birth)->locale('id')->translatedFormat('d F Y') : '-' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->created_at ? \Carbon\Carbon::parse($item->created_at)->locale('id')->translatedFormat('d F Y') : '-' }}
+                                    </td>
                                     <td>
                                         @if ($item->isFilesComplete())
                                             <span class="badge badge-success">Lengkap</span>

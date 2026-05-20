@@ -43,22 +43,65 @@ class DummyStudentSeeder extends Seeder
         $pendidikan = ['SD', 'SMP', 'SMA', 'D3', 'S1'];
 
         $namaDepan = [
-            'Ahmad','Muhammad','Ali','Rizky','Fajar','Dimas','Budi','Agus','Bayu','Rian',
-            'Andi','Wahyu','Eko','Teguh','Arif','Rendra','Fikri','Yusuf','Hendra','Irfan'
+            'Ahmad',
+            'Muhammad',
+            'Ali',
+            'Rizky',
+            'Fajar',
+            'Dimas',
+            'Budi',
+            'Agus',
+            'Bayu',
+            'Rian',
+            'Andi',
+            'Wahyu',
+            'Eko',
+            'Teguh',
+            'Arif',
+            'Rendra',
+            'Fikri',
+            'Yusuf',
+            'Hendra',
+            'Irfan'
         ];
 
         $namaBelakang = [
-            'Saputra','Pratama','Wijaya','Santoso','Hidayat','Maulana','Utomo','Firmansyah','Prakoso','Ramadhan'
+            'Saputra',
+            'Pratama',
+            'Wijaya',
+            'Santoso',
+            'Hidayat',
+            'Maulana',
+            'Utomo',
+            'Firmansyah',
+            'Prakoso',
+            'Ramadhan'
         ];
 
         $namaAyah = [
-            'Sutrisno','Budi Santoso','Ahmad Fauzi','Joko Susilo','Haryanto',
-            'Suparman','Agus Widodo','Eko Prasetyo','Mulyono','Slamet Riyadi'
+            'Sutrisno',
+            'Budi Santoso',
+            'Ahmad Fauzi',
+            'Joko Susilo',
+            'Haryanto',
+            'Suparman',
+            'Agus Widodo',
+            'Eko Prasetyo',
+            'Mulyono',
+            'Slamet Riyadi'
         ];
 
         $namaIbu = [
-            'Sulastri','Sri Wahyuni','Dewi Lestari','Siti Aminah','Rina Kartika',
-            'Nur Aini','Wati','Endang Suryani','Sri Rahayu','Kartini'
+            'Sulastri',
+            'Sri Wahyuni',
+            'Dewi Lestari',
+            'Siti Aminah',
+            'Rina Kartika',
+            'Nur Aini',
+            'Wati',
+            'Endang Suryani',
+            'Sri Rahayu',
+            'Kartini'
         ];
 
         $alamatArea = [
@@ -82,7 +125,7 @@ class DummyStudentSeeder extends Seeder
         $baseLat = -6.94354;
         $baseLng = 110.500185;
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
 
             $userId = (string) Str::uuid();
             $studentId = 'STD' . str_pad($i, 4, '0', STR_PAD_LEFT);
@@ -130,7 +173,7 @@ class DummyStudentSeeder extends Seeder
                 'latitude' => $lat,
                 'longitude' => $lng,
 
-                'status' => collect(['pending','verified','accepted','rejected'])->random(),
+                'status' => collect(['pending', 'verified', 'accepted', 'rejected'])->random(),
 
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -153,26 +196,26 @@ class DummyStudentSeeder extends Seeder
     // ===============================
     // RANDOM COORDINATE WITH RADIUS
     // ===============================
-   private function generateRandomLocation($lat, $lng, $radiusInKm = 2.5)
-{
-    $earthRadius = 6371;
+    private function generateRandomLocation($lat, $lng, $radiusInKm = 2.5)
+    {
+        $earthRadius = 6371;
 
-    $distance = mt_rand(0, $radiusInKm * 1000); // meter
-    $bearing = deg2rad(mt_rand(0, 360));
+        $distance = mt_rand(0, $radiusInKm * 1000); // meter
+        $bearing = deg2rad(mt_rand(0, 360));
 
-    $lat1 = deg2rad($lat);
-    $lng1 = deg2rad($lng);
+        $lat1 = deg2rad($lat);
+        $lng1 = deg2rad($lng);
 
-    $lat2 = asin(
-        sin($lat1) * cos($distance / 1000 / $earthRadius) +
-        cos($lat1) * sin($distance / 1000 / $earthRadius) * cos($bearing)
-    );
+        $lat2 = asin(
+            sin($lat1) * cos($distance / 1000 / $earthRadius) +
+            cos($lat1) * sin($distance / 1000 / $earthRadius) * cos($bearing)
+        );
 
-    $lng2 = $lng1 + atan2(
-        sin($bearing) * sin($distance / 1000 / $earthRadius) * cos($lat1),
-        cos($distance / 1000 / $earthRadius) - sin($lat1) * sin($lat2)
-    );
+        $lng2 = $lng1 + atan2(
+            sin($bearing) * sin($distance / 1000 / $earthRadius) * cos($lat1),
+            cos($distance / 1000 / $earthRadius) - sin($lat1) * sin($lat2)
+        );
 
-    return [rad2deg($lat2), rad2deg($lng2)];
-}
+        return [rad2deg($lat2), rad2deg($lng2)];
+    }
 }

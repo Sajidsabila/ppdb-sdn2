@@ -39,6 +39,8 @@ Route::get('/home', function () {
     return redirect('/');
 });
 
+Route::get('/pengumuman-ppdb', \App\Livewire\Frontend\PengumumanComponent::class)->name('pengumuman');
+
 Route::middleware('guest')->group(function () {
     Route::get('/auth', Login::class)->name('login');
     Route::get('/admin/auth', AuthAdmin::class)->name('admin.login');
@@ -50,7 +52,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/about', DetailAbout::class)->name('about');
     Route::get('/gallery', DetailGallery::class)->name('gallery');
     Route::get('/teacher', DetailTeacher::class)->name('teacher');
-    Route::get('/pengumuman-ppdb', \App\Livewire\Frontend\PengumumanComponent::class)->name('pengumuman');
+
 });
 Route::group([
     'middleware' => ['auth', 'role:user'],
