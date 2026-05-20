@@ -12,8 +12,16 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card shadow-lg">
                             <!-- Image -->
-                            <img src="{{ asset('storage/' . $gallery->photo) }}" alt="Gallery Image" class="card-img-top"
-                                style="object-fit: cover; height: 200px;">
+                            <div class="custom-card">
+                                <div class="ratio ratio-2x3">
+                                    <img src="{{ asset('storage/' . $gallery->photo) }}"
+                                        class="img-fluid w-100 h-100 object-fit-cover" alt="{{ $gallery->name }}">
+                                </div>
+                            </div>
+                            {{-- <div style="height: 200px; overflow: hidden; border-radius: 10px;">
+                                <img src="{{ asset('storage/' . $gallery->photo) }}" class="img-fluid w-100 h-100"
+                                    style="object-fit: cover;" alt="Gallery Image">
+                            </div> --}}
 
                             <div class="card-body">
                                 <!-- Title -->

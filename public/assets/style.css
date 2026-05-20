@@ -1,7 +1,11 @@
 /* css untuk topbar */
-
+html, body {
+    overflow-x: hidden;
+}
 body {
     font-family: "Montserrat", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+
 }
 
 a, a:hover{
@@ -111,6 +115,8 @@ a.btn.btn-utama {
     
 }
 
+
+
 .nav-link{
     font-size: 14px;
     text-transform: uppercase;
@@ -151,11 +157,9 @@ a.btn.btn-utama {
 
 /* css untuk slider hero area */
 
-#hero-area .slider-item-content{
-    position: absolute;
-    top: 50%;
-    left: 48%;
-    transform: translate(-45% , -50%) ;
+
+.slider-item-content{
+    width: 50%;
     background-color: rgba(255, 255, 255, 0.7);
     padding: 30px 30px;
     display: flex;
@@ -163,6 +167,7 @@ a.btn.btn-utama {
     align-items: center;
     justify-content: center;
     height: auto;
+ 
 }
 
 #slider-hero-nav .owl-prev,
@@ -194,23 +199,29 @@ a.btn.btn-utama {
     cursor: pointer;
     background-color:#f2c808 ;
 }
+#hero-area{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
 
-#hero-area .slider-item-content h2{
+ .slider-item-content h2{
     font-size: 25px;
     font-weight: 600;
     color: #15477a;
 }
 
-#hero-area .slider-item-content p{
+ .slider-item-content p{
     color: #15477a;
 }
 
-#hero-area .slider-item-content .btn.btn-utama{
+.slider-item-content .btn.btn-utama{
     padding: 10px 15px;
     font-weight: 500;
 }
 
-#hero-area .slider-item-content .btn.btn-utama:hover{
+.slider-item-content .btn.btn-utama:hover{
     background-color: #062646;
 }
 
@@ -510,7 +521,7 @@ a.btn.btn-utama {
     position: absolute ;
     background-color: #fff;
     top: 50%;
-    right: -60px;
+right: 10px;
     z-index: 20;
     border: none;
     height: 35px;
@@ -527,7 +538,7 @@ a.btn.btn-utama {
 
 #slider-tools-2 .owl-prev,
 #slider-tools-3 .owl-prev{
-    left: -60px;
+left: 10px;
 }
 
 #slider-tools-2 .owl-prev:hover,
@@ -822,70 +833,158 @@ footer .footer-nav li a:hover{
 .footer-copyright h6 a:hover{
     border-bottom: 1px dashed rgba(255, 255, 255, 0.7)
 }
+.custom-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.custom-card-image {
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+}
+
+.custom-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.custom-card:hover .custom-card-image img {
+    transform: scale(1.05);
+}
+
+.custom-card-body {
+    padding: 18px;
+    text-align: center;
+}
+
+.custom-card-body h5 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.custom-card-body h6 {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+
+    .custom-card-image {
+        height: 240px;
+    }
+
+}
+
+
 
 /* Responsive styling untuk perangkat dengan lebar maksimum 768px */
 /* Responsive styling untuk perangkat dengan lebar maksimum 768px */
 @media (max-width: 768px) {
-    #hero-area {
 
+    #hero-area {
         position: relative;
-        overflow: hidden; /* hindari konten meluber */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
+        width: 100%;
+        min-height: 100vh;
+        overflow: hidden;
     }
 
-    #hero-area .slider-item-img {
+    #hero-area .slider-item {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+     .slider-item-img {
         position: absolute;
         inset: 0;
-        z-index: 0;
     }
 
-    #hero-area .slider-item-img img {
+   .slider-item-img img {
         width: 100%;
-        height: 100%;
+        height: 100vh;
         object-fit: cover;
     }
 
-    #hero-area .slider-item-content {
-        position: relative;
-        z-index: 1;
-        width: 90%;
-        max-height: auto;
-        overflow-y: auto;
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 20px 15px;
+   .slider-item-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        width: 92%;
+        padding: 20px;
+        border-radius: 12px;
+
+        background: rgba(255,255,255,0.88);
+        backdrop-filter: blur(4px);
+
+        z-index: 2;
         text-align: center;
-        box-sizing: border-box;
-        margin-top: 70%;
     }
 
-    #hero-area .slider-item-content h2 {
-        font-size: 18px;
+  .slider-item-content h2 {
+        font-size: 20px;
+        line-height: 1.3;
         margin-bottom: 10px;
     }
 
-    #hero-area .slider-item-content p {
+   .slider-item-content p {
         font-size: 14px;
-        line-height: 1.4;
+        line-height: 1.6;
+        margin-bottom: 10px;
     }
 
-    #hero-area .slider-item-content .btn.btn-utama {
-        padding: 8px 12px;
+    .slider-item-content .btn.btn-utama {
         font-size: 14px;
+        padding: 10px 16px;
         margin-top: 10px;
     }
 
     #slider-hero-nav .owl-prev,
     #slider-hero-nav .owl-next {
-        bottom: 10px;
         top: auto;
+        bottom: 20px;
         padding: 6px 12px;
+        font-size: 16px;
+    }
+      .custom-card-image {
+        height: auto;
+    }
+
+    .custom-card-body {
+        padding: 15px;
+    }
+
+    .custom-card-body h5 {
         font-size: 16px;
     }
 }
 
+
+@media (max-width: 576px) {
+
+    .custom-card-image {
+        height: auto;
+    }
+
+}
 
 
 

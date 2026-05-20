@@ -1,109 +1,8 @@
-@push('css')
-    <style>
-        .owl-carousel .gallery-item {
-            text-align: center;
-            /* Tengahkan isi galeri */
-            padding: 10px;
-            /* Jarak dalam setiap item */
-            background: #fff;
-            /* Warna latar putih */
-            border-radius: 8px;
-            /* Membuat sudut melengkung */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            /* Efek bayangan */
-        }
-
-        .owl-carousel .gallery-item img.foto-guru {
-            display: block;
-            /* Pastikan elemen gambar terlihat */
-            width: 100%;
-            /* Gambar menyesuaikan lebar kontainer */
-            height: auto;
-            /* Menjaga rasio gambar */
-            object-fit: cover;
-            /* Isi area kontainer tanpa distorsi */
-            border-radius: 8px;
-            /* Sudut gambar melengkung */
-        }
-
-        .owl-carousel .section-item-caption {
-            padding: 8px 0;
-            /* Jarak antara teks dan gambar */
-        }
-
-        .owl-carousel .section-item-caption h5,
-        .owl-carousel .section-item-caption h6 {
-            margin: 4px 0;
-            /* Jarak antar teks */
-            color: #333;
-            /* Warna teks utama */
-            font-weight: 600;
-            /* Teks lebih tebal */
-        }
-
-        @media (max-width: 1024px) {
-            .owl-carousel .gallery-item {
-                padding: 8px;
-                /* Kurangi padding di tablet */
-            }
-        }
-
-        @media (max-width: 768px) {
-            .owl-carousel .gallery-item {
-                padding: 6px;
-                /* Padding lebih kecil untuk layar kecil */
-            }
-
-            .owl-carousel .section-item-caption h5,
-            .owl-carousel .section-item-caption h6 {
-                font-size: 14px;
-                /* Ukuran font lebih kecil di mobile */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .owl-carousel .gallery-item {
-                padding: 4px;
-                /* Padding minimum di layar kecil */
-            }
-
-            .owl-carousel .section-item-caption h5 {
-                font-size: 12px;
-                /* Font heading lebih kecil */
-            }
-
-            .owl-carousel .section-item-caption h6 {
-                font-size: 10px;
-                /* Font subtitle lebih kecil */
-            }
-        }
-
-        @media (max-width: 600px) {
-            .owl-carousel .gallery-item {
-                display: block;
-                margin: 0 auto;
-                /* Tengahkan item */
-            }
-
-            .owl-carousel .gallery-item img.foto-guru {
-                max-width: 100%;
-                height: auto;
-            }
-
-            .empty-message {
-                text-align: center;
-                font-size: 14px;
-                color: #888;
-                margin-top: 16px;
-            }
-        }
-    </style>
-@endpush
 <div>
-    <section id="hero-area">
+    {{-- <section id="hero-area">
         <div id="slider-hero-nav"></div>
         <div id="slider-hero">
-            <div class="slider-item ">
+            <div class="slider-item">
                 <div class="slider-item-img">
                     <img src="assets/images/2.jpg" alt="" class="src">
                 </div>
@@ -135,6 +34,42 @@
             </div> <!-- slider item -->
 
         </div>
+    </section> --}}
+
+    <section id="hero-section" class="w-100 min-vh-100 d-flex align-items-center justify-content-center"
+        style="
+        background-image: url('{{ asset('assets/images/2.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    ">
+
+        <div class="slider-item-content">
+            <h2>Penerimaan Peserta Didik Baru Tahun {{ $ppdb->start_year }}/{{ $ppdb->end_year }}</h2>
+            <h2>Telah Dibuka !</h2>
+            <p>SDN Purwosari 2 membuka pendaftaran siswa baru untuk tahun ajaran
+                {{ $ppdb->start_year ?? 'Tahun Tidak Ada' }}/{{ $ppdb->end_year ?? 'Tahun Tidak Ada' }}. Calon
+                siswa dapat
+                mendaftar secara online melalui website ini atau langsung ke sekolah pendaftaran dibuka dari
+                <span
+                    class="fw-bold">{{ \Carbon\Carbon::parse($ppdb->start_registration)->locale('id')->isoFormat('D MMMM YYYY') }}
+                    hingga
+                    {{ \carbon\Carbon::parse($ppdb->end_registration)->locale('id')->isoFormat('D MMMM YYYY') ?? 'Tanggal Tidak Ada' }}.
+                </span>
+            </p>
+            <p>Klik <b>"Daftar Sekarang"</b> untuk memulai pendaftaran online. Informasi lebih lanjut, hubungi
+                email sdn.purwosari2@gmail.com.</p>
+            @if ($student || (now() >= $ppdb->start_registration && now() <= $ppdb->end_registration))
+                <a href="{{ route('user.ppdb') }}" class="btn btn-utama">
+                    Daftar Sekarang
+                </a>
+            @else
+                <button class="btn btn-utama" onclick="alert('Maaf, pendaftaran sudah ditutup')">
+                    Daftar Sekarang
+                </button>
+            @endif
+        </div>
+
     </section>
 
     <!-- Profile Sekolah -->
@@ -155,100 +90,119 @@
                     <h3>Sambutan oleh kepala sekolah</h3>
                     <p>{{ Str::limit($about->description ?? 'Description not available.', 300, '...') }}
                     </p>
-                    <a href="" class="btn btn-utama">Baca Selengkapnya</a>
+                    <a href="{{ url('/about') }}" class="btn btn-utama">Baca Selengkapnya</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id=galeri-pendidik style="margin-bottom: 50px;">
+    <section id="galeri-pendidik" style="margin-bottom: 50px;">
+
         <div class="container">
+
             <div class="section-title">
                 <h2>Galeri / Dokumentasi</h2>
             </div>
-            <div class="section-body">
-                <div id="slider-tools-3"></div>
-                <div class="owl-carousel" id="galeri-slider">
-                    @forelse($gallery as $key => $gallery)
-                        <div class="gallery-item">
-                            <img class="foto-guru" src="{{ asset('storage/' . $gallery->foto) }}"
-                                alt="{{ $gallery->name }}">
-                            <div class="section-item-caption">
-                                <a href="#">
-                                    <h5>{{ $gallery->name }}</h5>
-                                </a>
-                                <a href="#">
-                                    <h6>{{ \Carbon\Carbon::parse($gallery->created_at)->format('d M Y') }}</h6>
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="empty-message">Tidak ada galeri yang ditemukan.</p>
-                    @endforelse
-                </div>
 
-                <div class="tombol-selengkapnya">
-                    <a href="" class="btn btn-more">Lihat Galeri Lainnya</a>
-                </div>
+            <div class="row g-4">
+
+                @forelse($gallery as $item)
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
+                        <div class="custom-card">
+
+                            <div class="custom-card-image">
+                                <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->name }}"
+                                    class="foto-guru img-fluid">
+                            </div>
+
+                            <div class="custom-card-body">
+
+                                <h5>{{ $item->name }}</h5>
+
+                                <h6>
+                                    {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12">
+                        <p class="text-center text-muted">
+                            Tidak ada galeri yang ditemukan.
+                        </p>
+                    </div>
+                @endforelse
+
             </div>
+
+            <div class="tombol-selengkapnya mt-4 text-center">
+                <a href="{{ url('/galeri') }}" class="btn btn-more">
+                    Lihat Galeri Lainnya
+                </a>
+            </div>
+
         </div>
+
     </section>
 
     <!-- section tenaga pendidik -->
-    <section id=tenaga-pendidik style="margin-bottom: 50px;">
+    <section id="tenaga-pendidik" style="margin-bottom: 50px;">
+
         <div class="container">
+
             <div class="section-title">
                 <h2>Tenaga Pendidik</h2>
             </div>
-            <div class="section-body">
-                <div id="slider-tools-1"></div>
-                <div class="owl-carousel" id="tenaga-pendidik-slider">
-                    @forelse($teacher as $key => $teacher)
-                        <div class="section-item-slider">
-                            <img class="foto-guru" src="{{ asset('storage/' . $teacher->photo) }}" alt=""
-                                srcset="">
-                            <div class="section-item-caption">
-                                <a href="">
-                                    <h5>{{ $teacher->name }}</h5>
-                                </a>
-                                <a href=""></a>
-                                <h6>{{ $teacher->position }}</h6>
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                    @endforelse
 
-                </div>
-                <div class="tombol-selengkapnya">
-                    <a href="" class="btn btn-more">Lihat Semua Guru</a>
-                </div>
+            <div class="row g-4">
+
+                @forelse($teacher as $item)
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
+                        <div class="custom-card">
+
+                            <div class="ratio ratio-4x3">
+                                <img src="{{ asset('storage/' . $item->photo) }}"
+                                    class="img-fluid w-100 h-100 object-fit-cover" alt="{{ $item->name }}">
+                            </div>
+
+                            <div class="custom-card-body">
+                                <h5>{{ $item->name }}</h5>
+                                <h6>{{ $item->position }}</h6>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12">
+                        <p class="text-center text-muted">
+                            Data guru belum tersedia
+                        </p>
+                    </div>
+                @endforelse
+
             </div>
+
+            <div class="tombol-selengkapnya mt-4 text-center">
+                <a href="{{ url('/teacher') }}" class="btn btn-more">
+                    Lihat Semua Guru
+                </a>
+            </div>
+
         </div>
+
     </section>
 </div>
 @push('js')
-    <script>
-        $(document).ready(function() {
-            $('#galeri-slider').owlCarousel({
-                loop: true,
-                margin: 10,
-                nav: true,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    600: {
-                        items: 2
-                    },
-                    1000: {
-                        items: 3
-                    }
-                }
-            });
-        });
-    </script>
-
     <script>
         document.addEventListener('livewire:init', () => {
             window.Livewire.on('warning', message => {
