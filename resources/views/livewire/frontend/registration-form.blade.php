@@ -96,7 +96,7 @@
                                         <input type="text"
                                             class="form-control form-control-sm @error('nik') is-invalid @enderror"
                                             id="nik" name="nik" placeholder="NIK" style="font-size: 0.7rem;"
-                                            wire:model="nik" required>
+                                            wire:model="nik" maxlength="16" required>
                                         @error('nik')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -419,7 +419,7 @@
                                         wire:loading.remove>Submit</button>
                                 @else
                                     <button class="btn btn-utama" onclick="alert('Maaf, pendaftaran sudah ditutup')">
-                                        Daftar Sekarang
+                                        Submit
                                     </button>
                                 @endif
 

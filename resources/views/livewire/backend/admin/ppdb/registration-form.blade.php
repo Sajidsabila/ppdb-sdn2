@@ -112,7 +112,7 @@
                                             <label for="nik" class="fw-bold">NIK</label>
                                             <input type="text"
                                                 class="form-control @error('nik') is-invalid @enderror"
-                                                placeholder="Masukkan NIK" wire:model="nik">
+                                                placeholder="Masukkan NIK" wire:model="nik" maxlength="16">
                                             @error('nik')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

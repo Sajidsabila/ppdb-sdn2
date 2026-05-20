@@ -71,7 +71,7 @@
                                 <i class="bi bi-bar-chart-line-fill"></i>
                                 Hasil Perhitungan Seleksi
                             </h5>
-                            @if (!$student->status === 'accepted')
+                            @if ($student->status === 'accepted')
                                 <div class="row g-3">
 
                                     <!-- Ranking -->

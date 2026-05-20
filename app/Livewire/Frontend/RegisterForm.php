@@ -191,6 +191,7 @@ class RegisterForm extends Component
     public function render()
     {
         $user = auth()->user();
+        $ppdb = AcademicYear::where('is_active', '1')->first();
 
         if (!$user) {
             return redirect()->route('login');
@@ -200,7 +201,7 @@ class RegisterForm extends Component
 
         if ($user->role === 'user' && !$student) {
 
-            return view('livewire.frontend.registration-form')
+            return view('livewire.frontend.registration-form', compact('ppdb'))
                 ->layout('layouts.app');
         }
 
@@ -208,11 +209,11 @@ class RegisterForm extends Component
 
             $student = $this->calculateRanking($student);
 
-            return view('livewire.frontend.detail-registration', compact('student'))
+            return view('livewire.frontend.detail-registration', compact('student', 'ppdb'))
                 ->layout('layouts.app');
         }
 
-        return view('livewire.frontend.registration-form')
+        return view('livewire.frontend.registration-form', compact('ppdb'))
             ->layout('layouts.app');
     }
 
