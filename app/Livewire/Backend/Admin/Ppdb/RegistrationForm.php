@@ -2,16 +2,20 @@
 
 namespace App\Livewire\Backend\Admin\Ppdb;
 
+use App\Mail\NotificationPendaftaranPpdb;
 use App\Models\AcademicYear;
 use App\Models\File;
 use App\Models\Parents;
 use App\Models\Student;
+use App\Models\User;
 use App\Rules\NikValidasi;
 use App\Services\StudentService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Mail;
 
 class RegistrationForm extends Component
 {
@@ -36,8 +40,7 @@ class RegistrationForm extends Component
             'gender' => 'required',
             'religion' => 'required',
             'number_of_siblings' => 'required|numeric',
-            'email' => 'required|email',
-            'address' => 'required',
+
             'place_of_birth' => 'required',
             'date_of_birth' => 'required|date',
             'nik' => 'required',
@@ -106,6 +109,12 @@ class RegistrationForm extends Component
 
         // Validasi custom NIK
         if ($this->currentPage == 1) {
+            $userId = Student::find($this->studentId)?->user_id;
+
+            $rules['email'] = $this->isEdit
+                ? 'required|email|unique:users,email,' . $userId
+                : 'required|email|unique:users,email';
+
             $rules['nik'] = [
                 'required',
                 new NikValidasi(
@@ -165,13 +174,34 @@ class RegistrationForm extends Component
         ]);
         try {
             $academicYear = AcademicYear::where('is_active', 1)->latest()->value('id');
-            $user_id = auth()->user()->id;
+            // $user_id = auth()->user()->id;
 
             DB::beginTransaction();
+            if ($this->isEdit && $student?->user_id) {
+
+                $user = User::find($student->user_id);
+
+                $user->update([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                ]);
+
+            } else {
+
+                $user = User::updateOrCreate(
+                    ['email' => $this->email],
+                    [
+                        'name' => $this->name,
+                        'role' => 'user',
+                        'email_verified_at' => now(),
+                        'password' => Hash::make('ppdb'),
+                    ]
+                );
+            }
             $student = Student::updateOrCreate(
                 ['id' => $this->studentId],
                 [
-                    'user_id' => $user_id,
+                    'user_id' => $user->id,
                     'academic_year_id' => $academicYear,
                     'name' => $this->name,
                     'gender' => $this->gender,
@@ -251,7 +281,7 @@ class RegistrationForm extends Component
                 ]
             );
             DB::commit();
-
+            Mail::to($student->email)->send(new NotificationPendaftaranPpdb($student->id));
             return redirect()->route('admin.ppdb')->with('success', 'Form berhasil disubmit!');
         } catch (\Throwable $th) {
             DB::rollBack();

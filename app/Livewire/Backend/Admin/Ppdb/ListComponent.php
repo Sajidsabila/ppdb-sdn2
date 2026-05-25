@@ -164,7 +164,7 @@ class ListComponent extends Component
                 $query->where('status', $this->selectedStatus);
             })
 
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('livewire.backend.admin.ppdb.index', compact('students', 'years'))

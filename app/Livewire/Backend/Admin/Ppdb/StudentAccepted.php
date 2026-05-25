@@ -119,7 +119,7 @@ class StudentAccepted extends Component
                     ->orWhere('id', 'like', '%' . $this->search . '%');
             })
                 ->where('status', 'accepted')
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(10);
         }
 
