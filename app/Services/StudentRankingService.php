@@ -26,6 +26,7 @@ class StudentRankingService
             ->where('status', 'accepted')
             ->when($search, function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%');
+                $q->orWhere('id', 'like', '%' . $search . '%');
             })
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')

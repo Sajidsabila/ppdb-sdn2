@@ -63,6 +63,7 @@
 
                         <tr>
                             <th width="5%">#</th>
+                            <th>No Pendaftaran</th>
                             <th>Nama Siswa</th>
                             <th>Tanggal Lahir</th>
                             <th>Umur</th>
@@ -81,6 +82,8 @@
                                 <td class="text-center fw-bold">
                                     {{ $students->firstItem() + $key }}
                                 </td>
+
+                                <td>{{ $student->id }}</td>
 
                                 <td>
                                     {{ $student->name }}
@@ -127,7 +130,7 @@
                         @empty
 
                             <tr>
-                                <td colspan="7" class="text-center text-muted fw-bold py-4">
+                                <td colspan="8" class="text-center text-muted fw-bold py-4">
                                     Data siswa tidak ditemukan.
                                 </td>
                             </tr>

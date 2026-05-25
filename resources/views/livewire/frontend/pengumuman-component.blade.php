@@ -60,6 +60,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>No</th>
+                                    <th>ID Pendaftaran</th>
                                     <th>Nama</th>
                                     <th>Tanggal Lahir</th>
                                     <th>Umur</th>
@@ -76,7 +77,7 @@
                                         <td class="fw-bold text-center">
                                             {{ $loop->iteration }}
                                         </td>
-
+                                        <td>{{ $student->id }}</td>
                                         <td>{{ $student->name }}</td>
                                         <td>
                                             {{ $student->date_of_birth ? \Carbon\Carbon::parse($student->date_of_birth)->locale('id')->translatedFormat('d F Y') : '-' }}
