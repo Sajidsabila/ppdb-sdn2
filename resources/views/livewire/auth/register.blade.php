@@ -27,7 +27,7 @@
                     <form wire:submit.prevent="register">
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label text">Full Name</label>
+                            <label for="name" class="form-label text">Username</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                 id="name" name="name" placeholder="Enter your full name" wire:model="name">
                             @error('name')

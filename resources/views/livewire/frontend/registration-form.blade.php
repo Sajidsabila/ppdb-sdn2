@@ -341,8 +341,9 @@
                                             @enderror
                                             @if ($akte_kelahiran)
                                                 <div class="mt-2">
-                                                    <iframe src="{{ $akte_kelahiran }}" frameborder="0"
-                                                        style="width: 100%; height: 300px;" allowfullscreen></iframe>
+                                                    <iframe src="{{ $akte_kelahiran->temporaryUrl() }}"
+                                                        frameborder="0" style="width: 100%; height: 300px;"
+                                                        allowfullscreen></iframe>
                                                 </div>
                                             @endif
                                         </div>
@@ -358,14 +359,14 @@
                                             @error('kartu_keluarga')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            @if ($kartu_keluarga)
-                                                <div class="mt-2">
-                                                    <iframe src="{{ $kartu_keluarga }}" frameborder="0"
-                                                        style="width: 100%; height: 300px;" allowfullscreen></iframe>
-                                                </div>
-                                            @elseif(is_object($kartu_keluarga))
+                                            @if (is_object($kartu_keluarga))
                                                 <iframe src="{{ $kartu_keluarga->temporaryUrl() }}" frameborder="0"
-                                                    style="width: 100%; height: 300px;" allowfullscreen></iframe>
+                                                    style="width: 100%; height: 300px;" allowfullscreen>
+                                                </iframe>
+                                            @elseif($kartu_keluarga)
+                                                <iframe src="{{ $kartu_keluarga }}" frameborder="0"
+                                                    style="width: 100%; height: 300px;" allowfullscreen>
+                                                </iframe>
                                             @endif
                                         </div>
 

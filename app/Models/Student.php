@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Student extends Model
 {
@@ -26,21 +27,25 @@ class Student extends Model
 
     public static function generateIdPendaftaran()
     {
-        $year = date('Y');
-        $lastStudent = self::latest('id')->first();
+        return DB::transaction(function () {
 
-        if (!$lastStudent) {
-            return '0000001-' . $year;
-        }
+            $year = date('Y');
 
-        $lastNumber = (int) substr($lastStudent->id, 0, strpos($lastStudent->id, '-')); // Ambil nomor urut terakhir
+            $lastStudent = self::lockForUpdate()
+                ->where('id', 'like', '%-' . $year)
+                ->orderBy('id', 'desc')
+                ->first();
 
-        // Tambahkan nomor urut baru
-        $newNumber = str_pad($lastNumber + 1, 7, '0', STR_PAD_LEFT); // Pastikan panjang tetap 7 digit
+            if (!$lastStudent) {
+                return '0000001-' . $year;
+            }
 
-        return $newNumber . '-' . $year;
+            $lastNumber = (int) substr($lastStudent->id, 0, strpos($lastStudent->id, '-'));
 
+            $newNumber = str_pad($lastNumber + 1, 7, '0', STR_PAD_LEFT);
 
+            return $newNumber . '-' . $year;
+        });
     }
     public function parents()
     {
