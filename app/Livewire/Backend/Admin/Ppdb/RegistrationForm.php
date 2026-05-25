@@ -94,7 +94,7 @@ class RegistrationForm extends Component
 
             $this->pas_foto = $student->files && $student->files->pas_foto ? asset('storage/' . $student->files->pas_foto) : null;
             $this->akte_kelahiran = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
-            $this->kartu_keluarga = $student->files && $student->files->akte_kelahiran ? asset('storage/' . $student->files->akte_kelahiran) : null;
+            $this->kartu_keluarga = $student->files && $student->files->kartu_keluarga ? asset('storage/' . $student->files->kartu_keluarga) : null;
             $this->dokumen_pendukung = $student->files && $student->files->dokumen_pendukung ? asset('storage/' . $student->files->dokumen_pendukung) : null;
 
         }

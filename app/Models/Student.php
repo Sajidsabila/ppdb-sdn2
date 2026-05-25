@@ -61,6 +61,11 @@ class Student extends Model
     {
         return $this->belongsTo(AcademicYear::class, 'academic_year_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function isFilesComplete()
     {
         $files = $this->files()->first();

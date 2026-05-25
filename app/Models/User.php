@@ -50,6 +50,6 @@ class User extends Authenticatable
     ];
     public function student()
     {
-        return $this->hasMany(Student::class);
+        return $this->hasOne(Student::class);
     }
 }

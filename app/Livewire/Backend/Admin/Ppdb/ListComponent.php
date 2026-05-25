@@ -34,20 +34,44 @@ class ListComponent extends Component
     public function destroy($id)
     {
         try {
-            $student = Student::with('files')->findOrFail($id);
-            if ($student->files->kartu_keluarga) {
-                Storage::disk('public')->delete($student->files->kartu_keluarga);
+            $student = Student::with(['files', 'user'])->findOrFail($id);
+
+            // Hapus file jika ada
+            if ($student->files) {
+
+                if ($student->files->kartu_keluarga) {
+                    Storage::disk('public')->delete($student->files->kartu_keluarga);
+                }
+
+                if ($student->files->pas_foto) {
+                    Storage::disk('public')->delete($student->files->pas_foto);
+                }
+
+                if ($student->files->akte_kelahiran) {
+                    Storage::disk('public')->delete($student->files->akte_kelahiran);
+                }
+
+                // Hapus data files
+                $student->files->delete();
             }
-            if ($student->files->pas_foto) {
-                Storage::disk('public')->delete($student->files->pas_foto);
+
+            // Hapus user jika ada
+            if ($student->user) {
+                $student->user->delete();
             }
-            if ($student->files->akte_kelahiran) {
-                Storage::disk('public')->delete($student->files->akte_kelahiran);
-            }
+
+            // Hapus student
             $student->delete();
-            return response()->json(['success' => 'Data siswa berhasil dihapus'], 200);
+
+            return response()->json([
+                'success' => 'Data siswa berhasil dihapus'
+            ], 200);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Data siswa tidak ditemukan'], 404);
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 404);
         }
     }
     public function generatePdf($id)
