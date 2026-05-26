@@ -31,6 +31,7 @@ class ListComponent extends Component
     public $item;
     protected $listeners = ['deleteConfirmed'];
 
+
     public function destroy($id)
     {
         try {

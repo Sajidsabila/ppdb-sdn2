@@ -112,12 +112,16 @@ class UserComponent extends Component
     }
     public function render()
     {
-        $users = User::when($this->search, function ($query) {
-            $query->where('name', 'like', '%' . $this->search . '%');
-            $query->orWhere('email', 'like', '%' . $this->search . '%');
-        })
+        $users = User::query()
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                });
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
         return view('livewire.backend.admin.user.index', compact('users'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

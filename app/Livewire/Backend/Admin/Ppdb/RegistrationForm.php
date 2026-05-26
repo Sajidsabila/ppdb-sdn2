@@ -67,6 +67,7 @@ class RegistrationForm extends Component
         }
     }
 
+
     public function loadStudentData()
     {
         $student = Student::with(['parents', 'files'])->find($this->studentId);
