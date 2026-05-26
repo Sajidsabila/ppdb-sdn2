@@ -132,12 +132,16 @@ class TeacherComponent extends Component
 
     public function render()
     {
-        $teachers = Teacher::when($this->search, function ($query) {
-            $query->where('position', 'like', '%' . $this->search . '%');
-            $query->orWhere('name', 'like', '%' . $this->search . '%');
-        })
+        $teachers = Teacher::query()
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('position', 'like', '%' . $this->search . '%')
+                        ->orWhere('name', 'like', '%' . $this->search . '%');
+                });
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
         return view('livewire.backend.admin.teacher.index', compact('teachers'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

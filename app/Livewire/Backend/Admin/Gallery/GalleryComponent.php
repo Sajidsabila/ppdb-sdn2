@@ -126,13 +126,15 @@ class GalleryComponent extends Component
 
     public function render()
     {
-
-        $gallery = Gallery::when($this->search, function ($query) {
-            $query->where('name', 'like', '%' . $this->search . '%');
-
-        })
-            ->orderBY('created_at', 'desc')
+        $gallery = Gallery::query()
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
+
         return view('livewire.backend.admin.gallery.index', compact('gallery'))
             ->layout('layouts.admin', ['title' => $this->title]);
     }

@@ -19,7 +19,7 @@
                     <button class="btn btn-primary" wire:click="createTeacher">Tambah Data</button>
                 </div>
                 <div class="flex-end">
-                    <input type="search" wire:mode.live="search" placeholder="Pencarian ..." class="form-control">
+                    <input type="search" wire:model.live="search" placeholder="Pencarian ..." class="form-control">
                 </div>
             </div>
             <div class="col-12 py-3">
