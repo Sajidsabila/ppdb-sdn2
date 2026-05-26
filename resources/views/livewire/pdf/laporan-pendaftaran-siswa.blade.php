@@ -94,6 +94,7 @@
                 <th>ID Pendaftaran</th>
                 <th>Nama Siswa</th>
                 <th>Tanggal Lahir</th>
+                <th>Tanggal Pendaftaran</th>
                 <th>Nama Orang Tua</th>
                 <th>Status Berkas</th>
             </tr>

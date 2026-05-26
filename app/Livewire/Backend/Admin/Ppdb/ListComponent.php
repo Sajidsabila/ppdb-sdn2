@@ -113,31 +113,16 @@ class ListComponent extends Component
     public function print()
     {
         try {
+
             $configuration = Configuration::first();
+
             $year = AcademicYear::find($this->selectedYear);
 
-            $students = Student::with('files', 'parents', 'year')
-
-                ->when($this->search, function ($query) {
-                    $query->where(function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('id', 'like', '%' . $this->search . '%');
-                    });
-                })
-
-                ->when($this->selectedYear, function ($query) {
-                    $query->where('academic_year_id', $this->selectedYear);
-                })
-
-                ->when($this->selectedStatus, function ($query) {
-                    $query->where('status', $this->selectedStatus);
-                })
-
-                ->orderBy('id', 'desc')
-                ->get();
+            // ambil data dari render
+            $students = collect($this->data);
 
             if ($students->isEmpty()) {
-                return back()->with('error', 'Tidak ada data siswa untuk filter yang dipilih.');
+                return back()->with('error', 'Tidak ada data siswa.');
             }
 
             $pdf = Pdf::loadView('livewire.pdf.laporan-pendaftaran-siswa', [
@@ -153,6 +138,7 @@ class ListComponent extends Component
             }, $fileName);
 
         } catch (\Throwable $th) {
+
             return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
@@ -172,7 +158,7 @@ class ListComponent extends Component
     {
         $years = AcademicYear::limit(10)->get();
 
-        $students = Student::query()
+        $students = Student::with('files', 'parents', 'year')
 
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
@@ -191,6 +177,9 @@ class ListComponent extends Component
 
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
+        // simpan data paginate ke property
+        $this->data = $students->items();
 
         return view('livewire.backend.admin.ppdb.index', compact('students', 'years'))
             ->layout('layouts.admin', ['title' => $this->title]);
